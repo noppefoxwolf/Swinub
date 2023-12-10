@@ -9,15 +9,15 @@ fileprivate let logger = Logger(
 )
 
 public protocol Session: Sendable {
-    func response<T: Codable>(
-        for request: any Request
-    ) async throws -> (T, HTTPResponse)
+    func response<T: Request>(
+        for request: T
+    ) async throws -> (T.Response, HTTPResponse)
 }
 
 extension URLSession: Session {
-    public func response<T: Codable>(
-        for request: any Request
-    ) async throws -> (T, HTTPResponse) {
+    public func response<T: Request>(
+        for request: T
+    ) async throws -> (T.Response, HTTPResponse) {
         logger.info("\(request.method) \(request.path)")
         let urlRequest = try request.makeURLRequest()
         let (data, httpURLResponse) = try await self.data(for: urlRequest) as! (Data, HTTPURLResponse)
@@ -27,7 +27,7 @@ extension URLSession: Session {
         do {
             switch httpResponse.status.kind {
             case .successful:
-                let response = try decoder.decode(T.self, from: data)
+                let response = try decoder.decode(T.Response.self, from: data)
                 return (response, httpResponse)
             default:
                 if httpResponse.headerFields[.contentType] == "text/html" {

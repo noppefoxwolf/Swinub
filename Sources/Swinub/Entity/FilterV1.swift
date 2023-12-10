@@ -8,8 +8,9 @@ public struct FilterV1: Codable, Identifiable, Hashable, Sendable {
     public let irreversible: Bool
     public let wholeWord: Bool
     
-    public struct ID: Equatable, Hashable, Sendable, Codable {
+    public struct ID: Equatable, Hashable, Sendable, Codable, CustomStringConvertible {
         public let rawValue: String
+        public var description: String { rawValue }
         
         public init(rawValue: String) {
             self.rawValue = rawValue
@@ -44,8 +45,9 @@ public struct Filter: Codable, Identifiable, Hashable, Sendable {
     public let keywords: [FilterKeyword]?
     public let statuses: [FilterStatus]?
     
-    public struct ID: Equatable, Hashable, Sendable, Codable {
+    public struct ID: Equatable, Hashable, Sendable, Codable, CustomStringConvertible {
         public let rawValue: String
+        public var description: String { rawValue }
         
         public init(rawValue: String) {
             self.rawValue = rawValue
@@ -81,8 +83,9 @@ public struct FilterKeyword: Codable, Hashable, Sendable {
     public let keyword: String
     public let wholeWord: Bool
     
-    public struct ID: Equatable, Hashable, Sendable, Codable {
+    public struct ID: Equatable, Hashable, Sendable, Codable, CustomStringConvertible {
         public let rawValue: String
+        public var description: String { rawValue }
         
         public init(rawValue: String) {
             self.rawValue = rawValue
@@ -104,8 +107,9 @@ public struct FilterStatus: Codable, Hashable, Sendable {
     public let id: ID
     public let statusId: Status.ID
     
-    public struct ID: Equatable, Hashable, Sendable, Codable {
+    public struct ID: Equatable, Hashable, Sendable, Codable, CustomStringConvertible {
         public let rawValue: String
+        public var description: String { rawValue }
         
         public init(rawValue: String) {
             self.rawValue = rawValue

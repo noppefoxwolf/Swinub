@@ -3,8 +3,9 @@ import Foundation
 public struct Report: Codable, Identifiable {
     public let id: ID
     
-    public struct ID: Equatable, Hashable, Sendable, Codable {
+    public struct ID: Equatable, Hashable, Sendable, Codable, CustomStringConvertible {
         public let rawValue: String
+        public var description: String { rawValue }
         
         public init(rawValue: String) {
             self.rawValue = rawValue

@@ -11,8 +11,9 @@ public struct MediaAttachment: Codable, Identifiable, Sendable {
     public let description: String?
     //    public let blurhash: String
     
-    public struct ID: Equatable, Hashable, Sendable, Codable {
+    public struct ID: Equatable, Hashable, Sendable, Codable, CustomStringConvertible {
         public let rawValue: String
+        public var description: String { rawValue }
         
         public init(rawValue: String) {
             self.rawValue = rawValue

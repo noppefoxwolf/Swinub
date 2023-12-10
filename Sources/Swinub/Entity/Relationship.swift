@@ -9,8 +9,9 @@ public struct Relationship: Codable, Identifiable, Sendable {
     public let muting: Bool
     public let requested: Bool
     
-    public struct ID: Equatable, Hashable, Sendable, Codable {
+    public struct ID: Equatable, Hashable, Sendable, Codable, CustomStringConvertible {
         public let rawValue: String
+        public var description: String { rawValue }
         
         public init(rawValue: String) {
             self.rawValue = rawValue

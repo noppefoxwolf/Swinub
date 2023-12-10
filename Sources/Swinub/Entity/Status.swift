@@ -42,8 +42,9 @@ public struct Status: Codable, Identifiable, Sendable {
     // fedibird extensions
     public let emojiReactions: [EmojiReaction]?
     
-    public struct ID: Equatable, Hashable, Sendable, Codable {
+    public struct ID: Equatable, Hashable, Sendable, Codable, CustomStringConvertible {
         public let rawValue: String
+        public var description: String { rawValue }
         
         public init(rawValue: String) {
             self.rawValue = rawValue
@@ -116,8 +117,9 @@ extension Status {
         public let url: URL?
         public let acct: String
         
-        public struct ID: Equatable, Hashable, Sendable, Codable {
+        public struct ID: Equatable, Hashable, Sendable, Codable, CustomStringConvertible {
             public let rawValue: String
+            public var description: String { rawValue }
             
             public init(from decoder: any Decoder) throws {
                 let container = try decoder.singleValueContainer()

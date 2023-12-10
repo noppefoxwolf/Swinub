@@ -2,8 +2,8 @@ import Foundation
 import HTTPTypes
 
 // https://docs.joinmastodon.org/methods/search/#v2
-public struct GetV2Search: TimelineAuthorizationRequest {
-    public typealias Response = [Status]
+public struct GetV2Search: AuthorizationRequest {
+    public typealias Response = Search
 
     public init(authorization: Authorization, q: String) {
         self.authorization = authorization
@@ -30,10 +30,5 @@ public struct GetV2Search: TimelineAuthorizationRequest {
             "limit": limit,
             "resolve": resolve,
         ]
-    }
-
-    public func response(_ session: any Session) async throws -> ([Status], HTTPResponse) {
-        let (response, header) = try await response(session, type: Search.self)
-        return (response.statuses, header)
     }
 }

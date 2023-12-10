@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV1AccountStatuses: TimelineAuthorizationRequest {
+public struct GetV1AccountStatuses: AuthorizationRequest {
     public typealias Response = [Status]
 
     public init(accountID: String, authorization: Authorization) {

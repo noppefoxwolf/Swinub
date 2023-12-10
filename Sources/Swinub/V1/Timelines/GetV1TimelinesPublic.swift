@@ -2,7 +2,7 @@ import Foundation
 import HTTPTypes
 
 // https://docs.joinmastodon.org/methods/timelines/#see-also
-public struct GetV1TimelinesPublic: TimelineAuthorizationRequest {
+public struct GetV1TimelinesPublic: AuthorizationRequest {
     public typealias Response = [Status]
 
     public struct Parameters: Sendable {

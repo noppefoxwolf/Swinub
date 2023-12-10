@@ -10,7 +10,7 @@ public struct PostV1Statuses: AuthorizationRequest {
         public var status: String = ""
         public var visibility: String? = nil
         public var inReplyToId: String? = nil
-        public var mediaIDs: [String]? = nil
+        public var mediaIDs: [MediaAttachment.ID]? = nil
         public var sensitive: Bool = false
         public var spoilerText: String? = nil
         public var pollOptions: [String]? = nil
@@ -32,7 +32,7 @@ public struct PostV1Statuses: AuthorizationRequest {
             "visibility": _parameters.visibility,
             "in_reply_to_id": _parameters.inReplyToId,
             // JSONの場合はmedia_ids、multipartの場合はmedia_ids[]をキーにする
-            "media_ids": _parameters.mediaIDs as [any RequestParameterValue]?,
+            "media_ids": _parameters.mediaIDs?.map(\.rawValue) as [any RequestParameterValue]?,
             "sensitive": _parameters.sensitive,
             "spoiler_text": _parameters.spoilerText,
             "poll": pollParameters,

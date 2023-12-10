@@ -1,0 +1,39 @@
+import Foundation
+import HTTPTypes
+
+// https://docs.joinmastodon.org/methods/search/#v2
+public struct GetV2Search: TimelineAuthorizationRequest {
+    public typealias Response = [Status]
+
+    public init(authorization: Authorization, q: String) {
+        self.authorization = authorization
+        self.q = q
+    }
+    public var authorization: Authorization
+    let q: String
+    public var sinceID: String? = nil
+    public var nextCursor: NextCursor? = nil
+    public var prevCursor: PrevCursor? = nil
+    public var limit: Int = 20
+    public var resolve: Bool = false
+    
+    public var authority: String { authorization.host }
+    public let method: HTTPRequest.Method = .get
+    public var path: String { "/api/v2/search" }
+    public var parameters: [String : (any RequestParameterValue)?] {
+        [
+            "q": q,
+            "type": "statuses",
+            "since_id": sinceID,
+            "max_id": nextCursor?.maxID,
+            "min_id": prevCursor?.minID,
+            "limit": limit,
+            "resolve": resolve,
+        ]
+    }
+
+    public func response(_ session: any Session) async throws -> ([Status], HTTPResponse) {
+        let (response, header) = try await response(session, type: Search.self)
+        return (response.statuses, header)
+    }
+}

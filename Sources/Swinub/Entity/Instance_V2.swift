@@ -1,0 +1,54 @@
+public struct Instance: Codable, Sendable {
+    public let domain: String
+    public let title: String
+    public let version: String
+    public let description: String
+    public let rules: [Rule]
+    public let configuration: InstanceConfiguration
+}
+
+public struct Rule: Codable, Sendable {
+    public let id: ID
+    public let text: String
+    
+    public struct ID: Equatable, Hashable, Sendable, Codable {
+        public let rawValue: String
+        
+        public init(rawValue: String) {
+            self.rawValue = rawValue
+        }
+        
+        public init(from decoder: any Decoder) throws {
+            let container = try decoder.singleValueContainer()
+            self.rawValue = try container.decode(String.self)
+        }
+        
+        public func encode(to encoder: any Encoder) throws {
+            var container = encoder.singleValueContainer()
+            try container.encode(rawValue)
+        }
+    }
+}
+
+public struct Stats: Codable, Sendable {
+    public let userCount: Int
+    public let statusCount: Int
+    public let domainCount: Int
+}
+
+// https://fedibird.com/api/v1/instance
+public struct InstanceConfiguration: Codable, Sendable {
+    public let statuses: InstanceStatusesConfiguration
+    // fedibird拡張
+    public let search: InstanceSearchConfiguration?
+}
+
+public struct InstanceStatusesConfiguration: Codable, Sendable {
+    public let maxCharacters: Int
+    public let maxMediaAttachments: Int
+}
+
+public struct InstanceSearchConfiguration: Codable, Sendable {
+    // fedibird拡張ではあるが、同じキーがあるとは限らないので念の為optionalにしている
+    public let supportedPrefix: [String]?
+}

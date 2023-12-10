@@ -1,0 +1,116 @@
+import HTTPTypes
+import HTTPTypesFoundation
+import Foundation
+
+struct RequestFailedToMakeComponentsError: LocalizedError {
+    var errorDescription: String? { "Request failed to make url components." }
+}
+
+extension Request {
+    public var scheme: String { "https" }
+    public var url: URL {
+        var urlComponents = URLComponents()
+        urlComponents.scheme = scheme
+        urlComponents.host = authority
+        return URL(string: path, relativeTo: urlComponents.url!)!
+    }
+    
+    public var parameters: [String: (any RequestParameterValue)?] { [:] }
+    
+    public var decoder: JSONDecoder {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .millisecondsISO8601
+        return decoder
+    }
+    
+    public func makeURLRequest() throws -> URLRequest {
+        try makeURLRequest(
+            method: method,
+            url: url,
+            authorization: nil,
+            parameters: parameters
+        )
+    }
+    
+    func makeRequestURL(method: HTTPRequest.Method, url: URL, parameters: [String: (any RequestParameterValue)?]) throws -> URL {
+        guard var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+            throw RequestFailedToMakeComponentsError()
+        }
+        if method == .get {
+            let queryItems =
+                parameters
+                .compactMapValues({ $0 })
+                .map({ (key, value) in
+                    URLQueryItem(name: key, value: value.parameterValue)
+                })
+            if !queryItems.isEmpty {
+                urlComponents.queryItems = queryItems
+            }
+        }
+        return urlComponents.url!
+    }
+    
+    func makeURLRequest(
+        method: HTTPRequest.Method,
+        url: URL,
+        authorization: Authorization?,
+        parameters: [String: (any RequestParameterValue)?]
+    ) throws -> URLRequest {
+        let requestURL = try makeRequestURL(
+            method: method,
+            url: url,
+            parameters: parameters
+        )
+        var httpRequest = HTTPRequest(method: method, url: requestURL)
+        httpRequest.headerFields[.accept] = "application/json"
+        if let authorization {
+            httpRequest.headerFields[.authorization] = "Bearer \(authorization.oauthToken)"
+        }
+        var httpBody = Data()
+        let hasMultipart = parameters.contains(where: { $0.value?.multipartContentType != nil })
+        if [.post, .patch, .put].contains(method) && !hasMultipart {
+            httpBody = try JSONSerialization.data(
+                withJSONObject: parameters.compactMapValues({ $0 }),
+                options: []
+            )
+            httpRequest.headerFields[.contentType] = "application/json; charset=utf-8"
+        } else if [.post, .patch].contains(method) && hasMultipart {
+            // iOSシミュレータだと送れないことがある
+            /*
+             Task <C95152FC-AFE0-4E62-BF69-1BF22B42A85B>.<1> finished with error [40] Error Domain=NSPOSIXErrorDomain Code=40 "Message too long" UserInfo={_NSURLErrorFailingURLSessionTaskErrorKey=LocalDataTask <C95152FC-AFE0-4E62-BF69-1BF22B42A85B>.<1>, _kCFStreamErrorDomainKey=1, NSErrorPeerAddressKey=<CFData 0x600001ef2d50 [0x1043381d0]>{length = 16, capacity = 16, bytes = 0x100201bbac4399830000000000000000}, _kCFStreamErrorCodeKey=40, _NSURLErrorRelatedURLSessionTaskErrorKey=(
+                 "LocalDataTask <C95152FC-AFE0-4E62-BF69-1BF22B42A85B>.<1>"
+             )}
+             */
+            // https://github.com/mastodon/mastodon-ios/blob/85ad331a5e3a67e59ccc065d5df13497c71bce49/MastodonSDK/Sources/MastodonSDK/API/Mastodon%2BAPI%2BAccount%2BCredentials.swift#L208
+            let boundary = "__boundary__"
+            for parameter in parameters.compactMapValues({ $0 }) {
+                httpBody.append(
+                    .multipart(
+                        boundary: boundary,
+                        key: parameter.key,
+                        value: parameter.value
+                    )
+                )
+            }
+            httpBody.append(Data.multipartEnd(boundary: boundary))
+            httpRequest.headerFields[.contentType] = #"multipart/form-data; charset=utf-8; boundary="\#(boundary)""#
+        }
+        
+        var request = URLRequest(httpRequest: httpRequest)!
+        // workaround: HTTPRequest not support httpBody
+        request.httpBody = httpBody
+        return request
+    }
+}
+
+extension AuthorizationRequest {
+    public func makeURLRequest() throws -> URLRequest {
+        try makeURLRequest(
+            method: method,
+            url: url,
+            authorization: authorization,
+            parameters: parameters
+        )
+    }
+}

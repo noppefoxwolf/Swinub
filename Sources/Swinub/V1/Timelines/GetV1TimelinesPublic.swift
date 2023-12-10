@@ -35,7 +35,7 @@ public struct GetV1TimelinesPublic: AuthorizationRequest {
         self._parameters = parameters
     }
     public let authorization: Authorization
-    public var sinceID: String? = nil
+    public var sinceID: Status.ID? = nil
     public var nextCursor: NextCursor? = nil
     public var prevCursor: PrevCursor? = nil
     public var limit: Int = 20
@@ -51,7 +51,7 @@ public struct GetV1TimelinesPublic: AuthorizationRequest {
             "domain": _parameters.domain,
             "only_media": _parameters.onlyMedia,
             "limit": limit,
-            "since_id": sinceID,
+            "since_id": sinceID?.rawValue,
             "max_id": nextCursor?.maxID,
             "min_id": prevCursor?.minID,
         ]

@@ -2,7 +2,7 @@ import Foundation
 import HTTPTypes
 
 public struct MapAuthorizationRequest<Response: Codable & Sendable, Base: AuthorizationRequest>: AuthorizationRequest {
-    let base: Base
+    public let base: Base
     let transform: @Sendable (Base.Response) throws -> Response
     
     init(base: Base, transform: @escaping @Sendable (Base.Response) throws -> Response) {

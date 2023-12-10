@@ -41,7 +41,7 @@ public struct Message: Decodable {
             event = .update(status)
         case .delete:
             let payload = try container.decode(String.self, forKey: .payload)
-            event = .delete(statusID: payload)
+            event = .delete(statusID: .init(rawValue: payload))
         case .notification:
             let payload = try container.decode(String.self, forKey: .payload)
             let notification = try jsonDecoder.decode(
@@ -95,7 +95,7 @@ enum EventType: String, Codable {
 
 public enum Event {
     case update(Status)
-    case delete(statusID: String)
+    case delete(statusID: Status.ID)
     case notification(Notification)
     case filtersChanged
     case conversation(Conversation)

@@ -4,13 +4,13 @@ import HTTPTypes
 public struct PostV1AccountsUnblock: AuthorizationRequest {
     public typealias Response = Relationship
 
-    public init(id: String, authorization: Authorization) {
+    public init(id: Account.ID, authorization: Authorization) {
         self.accountID = id
         self.authorization = authorization
     }
 
-    public let accountID: String
-    public var byAccountID: String { authorization.accountID }
+    public let accountID: Account.ID
+    public var byAccountID: Account.ID { authorization.accountID }
     public var authorization: Authorization
     public var authority: String { authorization.host }
     public var path: String { "/api/v1/accounts/\(accountID)/unblock" }

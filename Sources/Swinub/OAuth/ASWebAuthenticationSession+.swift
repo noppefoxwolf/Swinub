@@ -8,7 +8,10 @@ extension ASWebAuthenticationSession {
         scopes: [Scope],
         completionHandler: @escaping ASWebAuthenticationSession.CompletionHandler
     ) -> ASWebAuthenticationSession {
-        var urlComponents = URLComponents(string: "https://\(host)/oauth/authorize")!
+        var urlComponents = URLComponents()
+        urlComponents.scheme = "https"
+        urlComponents.host = host
+        urlComponents.path = "/oauth/authorize"
         urlComponents.queryItems = [
             URLQueryItem(name: "response_type", value: "code"),
             URLQueryItem(name: "client_id", value: clientId),

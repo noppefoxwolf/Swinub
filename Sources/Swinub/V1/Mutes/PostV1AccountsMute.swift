@@ -5,13 +5,13 @@ import HTTPTypes
 public struct PostV1AccountsMute: AuthorizationRequest {
     public typealias Response = Relationship
 
-    public init(accountID: String, authorization: Authorization) {
+    public init(accountID: Account.ID, authorization: Authorization) {
         self.accountID = accountID
         self.authorization = authorization
     }
-    public let accountID: String
+    public let accountID: Account.ID
     public let authorization: Authorization
-    public var byAccountID: String { authorization.accountID }
+    public var byAccountID: Account.ID { authorization.accountID }
     public var notifications: Bool = true
     public var duration: Int = 0
     public var authority: String { authorization.host }

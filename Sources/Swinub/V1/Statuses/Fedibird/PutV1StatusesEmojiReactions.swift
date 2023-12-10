@@ -23,13 +23,13 @@ public struct PutV1StatusesEmojiReactions: AuthorizationRequest {
             return emoji
         }
     }
-    public init(id: String, emoji: Emoji, authorization: Authorization) {
+    public init(id: Status.ID, emoji: Emoji, authorization: Authorization) {
         self.authorization = authorization
         self.statusID = id
         self.emoji = emoji
     }
     public let authorization: Authorization
-    public let statusID: String
+    public let statusID: Status.ID
     public let emoji: Emoji
     public var authority: String { authorization.host }
     public let method: HTTPRequest.Method = .put

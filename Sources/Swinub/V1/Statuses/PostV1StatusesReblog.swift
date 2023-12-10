@@ -5,13 +5,13 @@ import HTTPTypes
 public struct PostV1StatusesReblog: AuthorizationRequest {
     public typealias Response = Status
 
-    public init(id: String, visibility: String, authorization: Authorization) {
+    public init(id: Status.ID, visibility: String, authorization: Authorization) {
         self.authorization = authorization
         self.statusID = id
         self.visibility = visibility
     }
     public let authorization: Authorization
-    public let statusID: String
+    public let statusID: Status.ID
     public let visibility: String
     public var authority: String { authorization.host }
     public let method: HTTPRequest.Method = .post

@@ -5,11 +5,11 @@ import HTTPTypes
 public struct PostV1PollsVotes: AuthorizationRequest {
     public typealias Response = Poll
 
-    public init(id: String, authorization: Authorization) {
+    public init(id: Poll.ID, authorization: Authorization) {
         self.pollID = id
         self.authorization = authorization
     }
-    let pollID: String
+    let pollID: Poll.ID
     public var choices: [Int] = []
     public let authorization: Authorization
     public var authority: String { authorization.host }

@@ -10,7 +10,7 @@ public struct GetV1AccountsRelationships: AuthorizationRequest {
     }
 
     public var accountIDs: [String]
-    public var byAccountID: String { authorization.accountID }
+    public var byAccountID: Account.ID { authorization.accountID }
     public let authorization: Authorization
     public var path: String { "/api/v1/accounts/relationships" }
     public let method: HTTPRequest.Method = .get

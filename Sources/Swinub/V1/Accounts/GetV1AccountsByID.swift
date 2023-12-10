@@ -4,12 +4,12 @@ import HTTPTypes
 public struct GetV1AccountsByID: AuthorizationRequest {
     public typealias Response = Account
 
-    public init(id: String, authorization: Authorization) {
+    public init(id: Account.ID, authorization: Authorization) {
         self.accountID = id
         self.authorization = authorization
     }
 
-    public var accountID: String
+    public var accountID: Account.ID
     public var authorization: Authorization
     public var path: String { "/api/v1/accounts/\(accountID)" }
     public let method: HTTPRequest.Method = .get

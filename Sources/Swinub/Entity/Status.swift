@@ -7,8 +7,8 @@ public struct Status: Codable, Identifiable, Sendable {
     public let account: Account
     public let content: String
     public let url: URL?
-    public let inReplyToId: String?
-    public let inReplyToAccountId: String?
+    public let inReplyToId: Status.ID?
+    public let inReplyToAccountId: Account.ID?
     public let visibility: String
 
     // kmy.blue

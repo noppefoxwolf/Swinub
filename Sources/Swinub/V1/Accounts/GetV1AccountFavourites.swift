@@ -8,7 +8,7 @@ public struct GetV1AccountFavourites: AuthorizationRequest {
         self.authorization = authorization
     }
     public let authorization: Authorization
-    public var sinceID: String? = nil
+    public var sinceID: Status.ID? = nil
     public var nextCursor: NextCursor? = nil
     public var prevCursor: PrevCursor? = nil
     public var limit: Int = 20
@@ -18,7 +18,7 @@ public struct GetV1AccountFavourites: AuthorizationRequest {
     public var authority: String { authorization.host }
     public var parameters: [String : (any RequestParameterValue)?] {
         [
-            "since_id": sinceID,
+            "since_id": sinceID?.rawValue,
             "max_id": nextCursor?.maxID,
             "min_id": prevCursor?.minID,
             "limit": limit,

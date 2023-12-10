@@ -14,7 +14,7 @@ public struct PostV1PushSubscription: AuthorizationRequest {
         self.authorization = authorization
 
         let hexToken = token.map { String(format: "%02x", $0) }.joined()
-        self.endpoint = endpoint.appending(path: hexToken).appending(path: authorization.accountID)
+        self.endpoint = endpoint.appending(path: hexToken).appending(path: authorization.accountID.rawValue)
         self.p256dh = p256dh
         self.authKey = authKey
     }

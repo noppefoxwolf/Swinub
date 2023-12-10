@@ -102,7 +102,7 @@ public struct FilterKeyword: Codable, Hashable, Sendable {
 
 public struct FilterStatus: Codable, Hashable, Sendable {
     public let id: ID
-    public let statusId: String
+    public let statusId: Status.ID
     
     public struct ID: Equatable, Hashable, Sendable, Codable {
         public let rawValue: String

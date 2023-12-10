@@ -5,14 +5,14 @@ public struct PostV1StatusesTranslate: AuthorizationRequest {
     public typealias Response = Translate
     
     /// ISO 639 language code
-    public init(id: String, lang: String? = nil, authorization: Authorization) {
+    public init(id: Status.ID, lang: String? = nil, authorization: Authorization) {
         self.authorization = authorization
         self.statusID = id
         self.lang = lang
     }
     
     public let authorization: Authorization
-    public let statusID: String
+    public let statusID: Status.ID
     let lang: String?
     public var authority: String { authorization.host }
     public let method: HTTPRequest.Method = .post

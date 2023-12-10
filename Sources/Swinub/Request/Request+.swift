@@ -17,11 +17,11 @@ extension Request {
     
     public var parameters: [String: (any RequestParameterValue)?] { [:] }
     
-    public var decoder: JSONDecoder {
+    public func decode(_ data: Data) throws -> Response {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         decoder.dateDecodingStrategy = .millisecondsISO8601
-        return decoder
+        return try decoder.decode(Response.self, from: data)
     }
     
     public func makeURLRequest() throws -> URLRequest {

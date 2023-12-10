@@ -40,12 +40,12 @@ public struct PostOAuthToken: Request {
             "scope": scopes.map(\.rawValue).joined(separator: " "),
         ]
     }
-
-    public var decoder: JSONDecoder {
+    
+    public func decode(_ data: Data) throws -> OAuthToken {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         decoder.dateDecodingStrategy = .secondsSince1970
-        return decoder
+        return try decoder.decode(OAuthToken.self, from: data)
     }
 }
 

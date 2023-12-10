@@ -8,7 +8,7 @@ fileprivate let logger = Logger(
 )
 
 public protocol Request: Sendable {
-    associatedtype Response: Codable
+    associatedtype Response: Codable & Sendable
     var method: HTTPRequest.Method { get }
     
     var scheme: String { get }
@@ -18,8 +18,8 @@ public protocol Request: Sendable {
     
     var parameters: [String: (any RequestParameterValue)?] { get }
     
-    var decoder: JSONDecoder { get }
     func makeURLRequest() throws -> URLRequest
+    func decode(_ data: Data) throws -> Response
 }
 
 public protocol AuthorizationRequest: Request {

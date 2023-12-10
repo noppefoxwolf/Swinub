@@ -23,11 +23,10 @@ extension URLSession: Session {
         let (data, httpURLResponse) = try await self.data(for: urlRequest) as! (Data, HTTPURLResponse)
         let httpResponse = httpURLResponse.httpResponse!
         
-        let decoder = request.decoder
         do {
             switch httpResponse.status.kind {
             case .successful:
-                let response = try decoder.decode(T.Response.self, from: data)
+                let response = try request.decode(data)
                 return (response, httpResponse)
             default:
                 if httpResponse.headerFields[.contentType] == "text/html" {
@@ -37,6 +36,9 @@ extension URLSession: Session {
                     )
                     throw GeneralError(errorDescription: errorDescription)
                 } else {
+                    let decoder = JSONDecoder()
+                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+                    decoder.dateDecodingStrategy = .millisecondsISO8601
                     throw try decoder.decode(MastodonError.self, from: data)
                 }
             }

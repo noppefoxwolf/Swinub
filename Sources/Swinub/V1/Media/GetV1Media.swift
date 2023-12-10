@@ -4,14 +4,14 @@ import HTTPTypes
 public struct GetV1Media: AuthorizationRequest {
     public typealias Response = MediaAttachment
 
-    public init(authorization: Authorization, mediaAttachmentID: String) {
+    public init(authorization: Authorization, id: MediaAttachment.ID) {
         self.authorization = authorization
-        self.mediaAttachmentID = mediaAttachmentID
+        self.mediaAttachmentID = id
     }
 
     public let authorization: Authorization
-    let mediaAttachmentID: String
+    let mediaAttachmentID: MediaAttachment.ID
     public var authority: String { authorization.host }
     public let method: HTTPRequest.Method = .get
-    public var path: String { "/api/v1/media/\(mediaAttachmentID)" }
+    public var path: String { "/api/v1/media/\(mediaAttachmentID.rawValue)" }
 }

@@ -22,7 +22,8 @@ let package = Package(
                 .product(name: "AsyncAlgorithms", package: "swift-async-algorithms"),
                 .product(name: "HTTPTypes", package: "swift-http-types"),
                 .product(name: "HTTPTypesFoundation", package: "swift-http-types"),
-            ]
+            ],
+            resources: [.copy("Resources/PrivacyInfo.xcprivacy")]
         ),
         .testTarget(
             name: "SwinubTests",

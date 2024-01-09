@@ -45,10 +45,10 @@ extension Request {
         }
         if method == .get {
             let queryItems =
-                parameters
+                try parameters
                 .compactMapValues({ $0 })
                 .map({ (key, value) in
-                    URLQueryItem(name: key, value: value.parameterValue)
+                    try URLQueryItem(name: key, value: value.parameterValue)
                 })
             if !queryItems.isEmpty {
                 urlComponents.queryItems = queryItems
@@ -78,14 +78,14 @@ extension Request {
             httpRequest.headerFields[.authorization] = "Bearer \(authorization.oauthToken)"
         }
         var httpBody = Data()
-        let hasMultipart = parameters.contains(where: { $0.value?.multipartContentType != nil })
-        if [.post, .patch, .put].contains(method) && !hasMultipart {
+        let isMultipartEmpty = parameters.compactMapValues({ $0?.multipartContentType }).isEmpty
+        if [.post, .patch, .put].contains(method) && isMultipartEmpty {
             httpBody = try JSONSerialization.data(
                 withJSONObject: parameters.compactMapValues({ $0 }),
                 options: []
             )
             httpRequest.headerFields[.contentType] = "application/json; charset=utf-8"
-        } else if [.post, .patch].contains(method) && hasMultipart {
+        } else if [.post, .patch].contains(method) && !isMultipartEmpty {
             // iOSシミュレータだと送れないことがある
             /*
              Task <C95152FC-AFE0-4E62-BF69-1BF22B42A85B>.<1> finished with error [40] Error Domain=NSPOSIXErrorDomain Code=40 "Message too long" UserInfo={_NSURLErrorFailingURLSessionTaskErrorKey=LocalDataTask <C95152FC-AFE0-4E62-BF69-1BF22B42A85B>.<1>, _kCFStreamErrorDomainKey=1, NSErrorPeerAddressKey=<CFData 0x600001ef2d50 [0x1043381d0]>{length = 16, capacity = 16, bytes = 0x100201bbac4399830000000000000000}, _kCFStreamErrorCodeKey=40, _NSURLErrorRelatedURLSessionTaskErrorKey=(
@@ -107,7 +107,9 @@ extension Request {
             httpRequest.headerFields[.contentType] = #"multipart/form-data; charset=utf-8; boundary="\#(boundary)""#
         }
         
-        var request = URLRequest(httpRequest: httpRequest)!
+        guard var request = URLRequest(httpRequest: httpRequest) else {
+            throw GeneralError(errorDescription: "Can not make URLRequest.")
+        }
         // workaround: HTTPRequest not support httpBody
         request.httpBody = httpBody
         return request

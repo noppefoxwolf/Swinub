@@ -2,7 +2,7 @@ import Foundation
 import os
 
 fileprivate let logger = Logger(
-    subsystem: Bundle.main.bundleIdentifier! + ".logger",
+    subsystem: "dev.noppe.swinub.logger",
     category: #file
 )
 

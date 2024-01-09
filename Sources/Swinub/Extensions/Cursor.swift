@@ -26,8 +26,8 @@ public struct ResponseHeaderLinkDecoder {
     public init() {}
 
     public func decode(from data: Data) -> (prev: PrevCursor?, next: NextCursor?) {
-        let urlReference = Reference<URL>()
-        let relReference = Reference<Relation>()
+        let urlReference = Reference<URL?>()
+        let relReference = Reference<Relation?>()
         let regex = Regex {
             "<"
             Capture(
@@ -37,7 +37,7 @@ public struct ResponseHeaderLinkDecoder {
                         CharacterClass.anyOf(">").inverted
                     }
                 },
-                transform: { URL(string: String($0))! }
+                transform: { URL(string: String($0)) }
             )
             ">"
             "; "
@@ -51,7 +51,7 @@ public struct ResponseHeaderLinkDecoder {
                         Relation.prev.rawValue
                     }
                 },
-                transform: { Relation(rawValue: String($0))! }
+                transform: { Relation(rawValue: String($0)) }
             )
             #"""#
         }
@@ -59,15 +59,22 @@ public struct ResponseHeaderLinkDecoder {
         var prevCursor: PrevCursor? = nil
         var nextCursor: NextCursor? = nil
 
-        let text = String(data: data, encoding: .utf8)!
+        let text = String(data: data, encoding: .utf8)
+        guard let text else {
+            return (prev: nil, next: nil)
+        }
+        
         for match in text.matches(of: regex) {
             let url = match[urlReference]
-            let components = URLComponents(
-                url: url,
-                resolvingAgainstBaseURL: false
-            )
-            guard let components else { continue }
+            let components = url.map {
+                URLComponents(
+                    url: $0,
+                    resolvingAgainstBaseURL: false
+                )
+            }.flatMap({ $0 })
             let rel = match[relReference]
+            
+            guard let components, let rel else { continue }
             switch rel {
             case .next:
                 guard let maxID = components.getQueryValue(forName: "max_id") else { continue }

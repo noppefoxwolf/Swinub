@@ -5,7 +5,7 @@ import Network
 import os
 
 fileprivate let logger = Logger(
-    subsystem: Bundle.main.bundleIdentifier! + ".logger",
+    subsystem: "dev.noppe.swinub.logger",
     category: #file
 )
 
@@ -44,8 +44,8 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
         var request = URLRequest(url: url)
         request.addValue(authorization, forHTTPHeaderField: "Authorization")
         request.addValue(userAgent, forHTTPHeaderField: "User-Agent")
-        webSocketTask = urlSession.webSocketTask(with: request)
-        webSocketTask!.delegate = self
+        let webSocketTask = urlSession.webSocketTask(with: request)
+        webSocketTask.delegate = self
 
         webSocketReceiveTask = Task.detached(
             priority: .background,
@@ -84,13 +84,15 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
             }
         )
 
-        stateObservation = webSocketTask!
+        stateObservation = webSocketTask
             .observe(\.state) { (task, change) in
                 logger.info("STATE \(task.state)")
             }
 
-        webSocketTask!.resume()
+        webSocketTask.resume()
         logger.info("CONNECT")
+        
+        self.webSocketTask = webSocketTask
     }
 
     public func disconnect() {

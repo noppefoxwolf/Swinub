@@ -54,7 +54,11 @@ extension Request {
                 urlComponents.queryItems = queryItems
             }
         }
-        return urlComponents.url!
+        let url = urlComponents.url
+        guard let url else {
+            throw GeneralError(errorDescription: "Can not append get query.")
+        }
+        return url
     }
     
     func makeURLRequest(

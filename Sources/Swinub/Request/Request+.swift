@@ -8,11 +8,17 @@ struct RequestFailedToMakeComponentsError: LocalizedError {
 
 extension Request {
     public var scheme: String { "https" }
+    
     public var url: URL {
-        var urlComponents = URLComponents()
-        urlComponents.scheme = scheme
-        urlComponents.host = authority
-        return URL(string: path, relativeTo: urlComponents.url!)!
+        get throws {
+            var urlComponents = URLComponents()
+            urlComponents.scheme = scheme
+            urlComponents.host = authority
+            let relativeToURL = urlComponents.url
+            let url = relativeToURL.map({ URL(string: path, relativeTo: $0) }).flatMap({ $0 })
+            guard let url else { throw GeneralError(errorDescription: "Can not convert URL from \(scheme):\(authority)") }
+            return url
+        }
     }
     
     public var parameters: [String: (any RequestParameterValue)?] { [:] }

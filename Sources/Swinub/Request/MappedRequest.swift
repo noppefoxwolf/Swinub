@@ -15,7 +15,7 @@ public struct MapAuthorizationRequest<Response: Codable & Sendable, Base: Author
     public var scheme: String { base.scheme }
     public var authority: String { base.authority }
     public var path: String { base.path }
-    public var url: URL { base.url }
+    public var url: URL { get throws { try base.url } }
     public var parameters: [String: (any RequestParameterValue)?] { base.parameters }
     public func makeURLRequest() throws -> URLRequest { try base.makeURLRequest() }
     public func decode(_ data: Data) throws -> Response {

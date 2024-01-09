@@ -14,7 +14,7 @@ public protocol Request: Sendable {
     var scheme: String { get }
     var authority: String { get }
     var path: String { get }
-    var url: URL { get }
+    var url: URL { get throws }
     
     var parameters: [String: (any RequestParameterValue)?] { get }
     

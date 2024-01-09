@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "Swinub",
-    platforms: [.iOS(.v16)],
+    platforms: [.iOS(.v16), .macOS(.v14)],
     products: [
         .library(
             name: "Swinub",

@@ -5,7 +5,7 @@ extension Data {
         boundary: String,
         key: String,
         value: any RequestParameterValue
-    ) -> Data {
+    ) throws -> Data {
         var data = Data()
         data.append(Data("\r\n--\(boundary)\r\n".utf8))
         data.append(Data("Content-Disposition: form-data; name=\"\(key)\"".utf8))
@@ -18,7 +18,7 @@ extension Data {
             data.append(Data("Content-Type: \(contentType)\r\n".utf8))
         }
         data.append(Data("\r\n".utf8))
-        data.append(value.multipartValue)
+        try data.append(value.multipartValue)
         return data
     }
 

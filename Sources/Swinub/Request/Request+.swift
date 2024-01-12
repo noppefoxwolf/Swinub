@@ -11,12 +11,9 @@ extension Request {
     
     public var url: URL {
         get throws {
-            var urlComponents = URLComponents()
-            urlComponents.scheme = scheme
-            urlComponents.host = authority
-            let relativeToURL = urlComponents.url
+            let relativeToURL = URL(string: "\(scheme)://\(authority)")
             let url = relativeToURL.map({ URL(string: path, relativeTo: $0) }).flatMap({ $0 })
-            guard let url else { throw GeneralError(errorDescription: "Can not convert URL from \(scheme):\(authority)") }
+            guard let url else { throw GeneralError(errorDescription: "Can not convert URL from \(scheme)://\(authority)") }
             return url
         }
     }
@@ -95,7 +92,7 @@ extension Request {
             // https://github.com/mastodon/mastodon-ios/blob/85ad331a5e3a67e59ccc065d5df13497c71bce49/MastodonSDK/Sources/MastodonSDK/API/Mastodon%2BAPI%2BAccount%2BCredentials.swift#L208
             let boundary = "__boundary__"
             for parameter in parameters.compactMapValues({ $0 }) {
-                httpBody.append(
+                try httpBody.append(
                     .multipart(
                         boundary: boundary,
                         key: parameter.key,

@@ -19,7 +19,7 @@ class RequestParameterValueTests: XCTestCase {
     }
 
     func testQueryItem() throws {
-        let item = URLQueryItem(name: "name", value: ["key": "value"].parameterValue)
+        let item = try URLQueryItem(name: "name", value: ["key": "value"].parameterValue)
         print(item.value as Any)
     }
 }

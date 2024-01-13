@@ -9,7 +9,7 @@ public struct MediaAttachment: Codable, Identifiable, Sendable {
     public let remoteUrl: URL?
     //    public let meta: String
     public let description: String?
-    public let blurhash: String
+    public let blurhash: String?
     
     public struct ID: Equatable, Hashable, Sendable, Codable, CustomStringConvertible {
         public let rawValue: String

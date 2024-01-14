@@ -13,7 +13,7 @@ public struct Status: Codable, Identifiable, Sendable {
 
     // kmy.blue
     // https://github.com/kmycode/mastodon/wiki/ローカル公開API#既存のオブジェクトに追加されたプロパティ
-    public let visibilityEx: String?
+    public let visibilityEx: StatusVisibility?
     public let sensitive: Bool
     public let spoilerText: String
     public let language: String?

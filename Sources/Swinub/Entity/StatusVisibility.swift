@@ -13,7 +13,7 @@ public struct StatusVisibility: Codable, Sendable, Equatable, Hashable {
     public static let `direct` = StatusVisibility(rawValue: "direct")
     public static let `private` = StatusVisibility(rawValue: "private")
     public static let limited = StatusVisibility(rawValue: "limited")  // fedibird
-    public static let mutualFollowersOnly = StatusVisibility(rawValue: "mutual_followers_only")  // fedibird
+    public static let mutualFollowersOnly = StatusVisibility(rawValue: "mutual")  // fedibird
 
     // https://github.com/kmycode/mastodon/wiki/ログインユーザーのみ公開API
     public static let login = StatusVisibility(rawValue: "login")  // kmy.blue

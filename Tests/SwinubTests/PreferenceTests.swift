@@ -20,6 +20,6 @@ class PreferenceTests: XCTestCase {
             }
             """
         let object = try JSONDecoder().decode(Preference.self, from: Data(json.utf8))
-        XCTAssertEqual(object.postingDefaultVisibility, "Hello")
+        XCTAssertEqual(object.postingDefaultVisibility, .init(rawValue: "Hello"))
     }
 }

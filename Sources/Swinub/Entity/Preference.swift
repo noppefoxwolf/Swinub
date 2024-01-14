@@ -7,7 +7,7 @@ public struct Preference: Codable, Sendable {
         case readingExpandSpoilers = "reading:expand:spoilers"
         case readingAutoplayGifs = "reading:autoplay:gifs"
     }
-    public let postingDefaultVisibility: String?
+    public let postingDefaultVisibility: StatusVisibility?
     public let postingDefaultSensitive: Bool?
     public let postingDefaultLanguage: String?
     public let readingExpandMedia: String?

@@ -21,6 +21,10 @@ class RequestTests: XCTestCase {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
         urlComponents.host = "pokemon.mastportal.info/"
-        XCTAssertNil(urlComponents.url)
+        if #available(iOS 16, macOS 13, *) {
+            XCTAssertNil(urlComponents.url)
+        } else {
+            XCTAssertEqual(urlComponents.url, URL(string: "https")!)
+        }
     }
 }

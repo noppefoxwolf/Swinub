@@ -9,7 +9,6 @@ fileprivate let logger = Logger(
 public struct StatusVisibility: Codable, Sendable, Equatable, Hashable {
     public let rawValue: String
     
-    // 公開範囲の狭い順
     public static let personal = StatusVisibility(rawValue: "personal")  // fedibird
     public static let `direct` = StatusVisibility(rawValue: "direct")
     public static let `private` = StatusVisibility(rawValue: "private")
@@ -26,10 +25,12 @@ public struct StatusVisibility: Codable, Sendable, Equatable, Hashable {
 
     public static let `public` = StatusVisibility(rawValue: "public")
 
+    // 標準のmastodonでサポートしている公開範囲
     public static var defaultCases: [Self] {
         [.direct, .private, .unlisted, .public]
     }
     
+    // 公開範囲の狭い順
     public static var allCases: [Self] {
         [.personal, .direct, .private, .limited, .mutualFollowersOnly, .login, .unlisted, .publicUnlisted, .public]
     }

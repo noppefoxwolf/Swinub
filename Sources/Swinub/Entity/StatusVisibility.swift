@@ -30,7 +30,7 @@ public struct StatusVisibility: Codable, Sendable, Equatable, Hashable {
         [.direct, .private, .unlisted, .public]
     }
     
-    public static var sortedByPublic: [Self] {
+    public static var allCases: [Self] {
         [.personal, .direct, .private, .limited, .mutualFollowersOnly, .login, .unlisted, .publicUnlisted, .public]
     }
 
@@ -76,8 +76,8 @@ public struct StatusVisibility: Codable, Sendable, Equatable, Hashable {
 
 extension StatusVisibility: Comparable {
     public static func < (lhs: StatusVisibility, rhs: StatusVisibility) -> Bool {
-        let lhsIndex = Self.sortedByPublic.firstIndex(of: lhs) ?? 0
-        let rhsIndex = Self.sortedByPublic.firstIndex(of: rhs) ?? 0
+        let lhsIndex = Self.allCases.firstIndex(of: lhs) ?? 0
+        let rhsIndex = Self.allCases.firstIndex(of: rhs) ?? 0
         return lhsIndex < rhsIndex
     }
 }

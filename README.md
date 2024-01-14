@@ -1,5 +1,7 @@
 # Swinub
 
+[![Swift Package Manager Test](https://github.com/noppefoxwolf/Swinub/actions/workflows/workflow.yml/badge.svg)](https://github.com/noppefoxwolf/Swinub/actions/workflows/workflow.yml)
+
 Swinub is simple mastodon api library.
 
 ```swift

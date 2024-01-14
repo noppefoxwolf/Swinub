@@ -14,4 +14,12 @@ class StatusVisibilityTests: XCTestCase {
         let visibility = StatusVisibility(rawValue: rawValue)
         XCTAssertEqual(visibility, .init(rawValue: "publicUnlisted"))
     }
+    
+    func testOrder() async throws {
+        XCTAssertGreaterThan(StatusVisibility.public, StatusVisibility.private)
+    }
+    
+    func testOrder2() async throws {
+        XCTAssertLessThan(StatusVisibility.private, StatusVisibility.public)
+    }
 }

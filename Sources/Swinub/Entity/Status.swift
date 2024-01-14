@@ -9,7 +9,7 @@ public struct Status: Codable, Identifiable, Sendable {
     public let url: URL?
     public let inReplyToId: Status.ID?
     public let inReplyToAccountId: Account.ID?
-    public let visibility: String
+    public let visibility: StatusVisibility
 
     // kmy.blue
     // https://github.com/kmycode/mastodon/wiki/ローカル公開API#既存のオブジェクトに追加されたプロパティ

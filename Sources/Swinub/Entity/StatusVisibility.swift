@@ -6,81 +6,32 @@ fileprivate let logger = Logger(
     category: #file
 )
 
-public enum StatusVisibility: RawRepresentable, Codable, Sendable, Equatable, Hashable,
-    Comparable
-{
-
-    public init(rawValue: String) {
-        switch rawValue {
-        case Self.personal.rawValue:
-            self = .personal
-        case Self.direct.rawValue:
-            self = .direct
-        case Self.private.rawValue:
-            self = .private
-        case Self.limited.rawValue:
-            self = .limited
-        case Self.mutualFollowersOnly.rawValue:
-            self = .mutualFollowersOnly
-        case Self.publicUnlisted.rawValue:
-            self = .publicUnlisted
-        case Self.login.rawValue:
-            self = .login
-        case Self.unlisted.rawValue:
-            self = .unlisted
-        case Self.public.rawValue:
-            self = .public
-        default:
-            logger.debug("custom \(rawValue)")
-            self = .custom(rawValue)
-        }
-    }
-
+public struct StatusVisibility: Codable, Sendable, Equatable, Hashable {
+    public let rawValue: String
+    
     // 公開範囲の狭い順
-    case personal  // fedibird
-    case `direct`
-    case `private`
-    case limited  // fedibird
-    case mutualFollowersOnly  // fedibird
-    case custom(String)
+    public static let personal = StatusVisibility(rawValue: "personal")  // fedibird
+    public static let `direct` = StatusVisibility(rawValue: "direct")
+    public static let `private` = StatusVisibility(rawValue: "private")
+    public static let limited = StatusVisibility(rawValue: "limited")  // fedibird
+    public static let mutualFollowersOnly = StatusVisibility(rawValue: "mutual_followers_only")  // fedibird
 
     // https://github.com/kmycode/mastodon/wiki/ログインユーザーのみ公開API
-    case login  // kmy.blue
+    public static let login = StatusVisibility(rawValue: "login")  // kmy.blue
 
-    case `unlisted`
+    public static let unlisted = StatusVisibility(rawValue: "unlisted")
 
     // https://github.com/kmycode/mastodon/wiki/ローカル公開API
-    case publicUnlisted  // kmy.blue
+    public static let publicUnlisted = StatusVisibility(rawValue: "public_unlisted")  // kmy.blue
 
-    case `public`
-
-    public var rawValue: String {
-        switch self {
-        case .public:
-            return "public"
-        case .unlisted:
-            return "unlisted"
-        case .private:
-            return "private"
-        case .direct:
-            return "direct"
-        case .limited:
-            return "limited"
-        case .personal:
-            return "personal"
-        case .mutualFollowersOnly:
-            return "mutual"
-        case .publicUnlisted:
-            return "public_unlisted"
-        case .login:
-            return "login"
-        case .custom(let string):
-            return string
-        }
-    }
+    public static let `public` = StatusVisibility(rawValue: "public")
 
     public static var defaultCases: [Self] {
         [.direct, .private, .unlisted, .public]
+    }
+    
+    public static var sortedByPublic: [Self] {
+        [.personal, .direct, .private, .limited, .mutualFollowersOnly, .login, .unlisted, .publicUnlisted, .public]
     }
 
     public var systemSymbolName: String {
@@ -103,19 +54,30 @@ public enum StatusVisibility: RawRepresentable, Codable, Sendable, Equatable, Ha
             return "key"
         case .publicUnlisted:
             return "cloud"
-        case .custom:
+        default:
             return "questionmark.bubble"
         }
     }
 
-    public func encode(to encoder: any Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(self.rawValue)
+    public init(rawValue: String) {
+        self.rawValue = rawValue
     }
-
+    
     public init(from decoder: any Decoder) throws {
         let container = try decoder.singleValueContainer()
-        let rawValue = try container.decode(String.self)
-        self.init(rawValue: rawValue)
+        self.rawValue = try container.decode(String.self)
+    }
+    
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(rawValue)
+    }
+}
+
+extension StatusVisibility: Comparable {
+    public static func < (lhs: StatusVisibility, rhs: StatusVisibility) -> Bool {
+        let lhsIndex = Self.sortedByPublic.firstIndex(of: lhs) ?? 0
+        let rhsIndex = Self.sortedByPublic.firstIndex(of: rhs) ?? 0
+        return lhsIndex < rhsIndex
     }
 }

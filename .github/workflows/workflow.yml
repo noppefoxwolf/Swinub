@@ -1,0 +1,15 @@
+name: Swift Package Manager Test
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: Test
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Build and test
+      run: swift test

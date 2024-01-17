@@ -9,7 +9,8 @@ let package = Package(
     products: [
         .library(
             name: "Swinub",
-            targets: ["Swinub"]),
+            targets: ["Swinub", "SwinubStreaming"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-async-algorithms", from: "0.1.0"),
@@ -24,6 +25,14 @@ let package = Package(
                 .product(name: "HTTPTypesFoundation", package: "swift-http-types"),
             ],
             resources: [.copy("Resources/PrivacyInfo.xcprivacy")]
+        ),
+        .target(
+            name: "SwinubStreaming",
+            dependencies: ["Swinub"]
+        ),
+        .testTarget(
+            name: "SwinubStreamingTests",
+            dependencies: ["SwinubStreaming"]
         ),
         .testTarget(
             name: "SwinubTests",

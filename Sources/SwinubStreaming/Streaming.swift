@@ -1,31 +1,39 @@
 import AsyncAlgorithms
 import Combine
 import Foundation
+import Swinub
 
 public struct Streaming: Sendable {
     let stream: Stream
     let webSocket: WebSocket
     let decoder: JSONDecoder
 
-    public var message: AnyPublisher<Message, Never> {
+    public var message: AnyPublisher<Result<Message, any Error>, Never> {
         webSocket.message
-            .compactMap { message -> Message? in
-                guard case .string(let string) = message else { return nil }
+            .compactMap({
+                if case .string(let string) = $0 {
+                    return string
+                } else {
+                    return nil
+                }
+            })
+            .map { string -> Result<Message, any Error> in
                 do {
-                    return try decoder.decode(
+                    let message = try decoder.decode(
                         Message.self,
                         from: Data(string.utf8)
                     )
+                    return .success(message)
                 } catch {
                     print(#function, string)
                     print(#function, error)
-                    return nil
+                    return .failure(error)
                 }
             }
             .eraseToAnyPublisher()
     }
 
-    public init?(endpoint: String, stream: Stream, authorization: Authorization) {
+    public init?(endpoint: String, stream: Stream, authorization: Swinub.Authorization) {
         self.stream = stream
         let path = "\(endpoint)/api/v1/streaming"
         var urlComponents = URLComponents(string: path)

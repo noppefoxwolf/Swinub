@@ -1,6 +1,6 @@
 import XCTest
-
 @testable import Swinub
+@testable import SwinubStreaming
 
 class StatusTests: XCTestCase {
     func testCodable() throws {
@@ -57,7 +57,7 @@ class StatusTests: XCTestCase {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         decoder.dateDecodingStrategy = .millisecondsISO8601
-        let status = try decoder.decode(Status.self, from: Data(json.utf8))
+        let status = try decoder.decode(Swinub.Status.self, from: Data(json.utf8))
         XCTAssertEqual(status.id.rawValue, "110064600195523314")
     }
 
@@ -68,7 +68,7 @@ class StatusTests: XCTestCase {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         decoder.dateDecodingStrategy = .millisecondsISO8601
-        _ = try decoder.decode(Message.self, from: Data(json.utf8))
+        _ = try decoder.decode(SwinubStreaming.Message.self, from: Data(json.utf8))
 
     }
 

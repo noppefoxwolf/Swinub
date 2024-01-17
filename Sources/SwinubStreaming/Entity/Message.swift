@@ -1,20 +1,5 @@
+import Swinub
 import Foundation
-
-// https://docs.joinmastodon.org/methods/streaming/#events
-public enum Stream: String, Codable, Sendable {
-    case `public`
-    case publicMedia = "public:media"
-    case publicLocal = "public:local"
-    case publicLocalMedia = "public:local:media"
-    case publicRemote = "public:remote"
-    case publicRemoteMedia = "public:remote:media"
-    case hashtag
-    case hashtagLocal = "hashtag:local"
-    case user
-    case userNotification = "user:notification"
-    case list
-    case direct
-}
 
 public struct Message: Decodable {
     public let stream: [Stream]
@@ -79,29 +64,3 @@ public struct Message: Decodable {
     }
 }
 
-// https://docs.joinmastodon.org/methods/streaming/#events
-enum EventType: String, Codable {
-    case update
-    case delete
-    case notification
-    case filtersChanged
-    case conversation
-    case announcement
-    case announcementReaction = "announcement.reaction"
-    case announcementDelete = "announcement.delete"
-    case statusUpdate = "status.update"
-    case encryptedMessage
-}
-
-public enum Event {
-    case update(Status)
-    case delete(statusID: Status.ID)
-    case notification(Notification)
-    case filtersChanged
-    case conversation(Conversation)
-    case announcement(Announcement)
-    case announcementReaction
-    case announcementDelete
-    case statusUpdate(Status)
-    case encryptedMessage
-}

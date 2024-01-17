@@ -46,7 +46,6 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
         request.addValue(userAgent, forHTTPHeaderField: "User-Agent")
         let webSocketTask = urlSession.webSocketTask(with: request)
         webSocketTask.delegate = self
-
         webSocketReceiveTask = Task.detached(
             priority: .background,
             operation: { [weak self] in
@@ -56,6 +55,7 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
                         self?.message.send(message)
                     }
                 } catch let error as NSError {
+                    // error    NSURLError    domain: "NSPOSIXErrorDomain" - code: 57    0x0000600000cda730
                     logger.warning("ERROR \(error.localizedDescription)")
                     await self?.retry()
                 } catch {
@@ -77,6 +77,7 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
                         try await Task.sleep(for: .seconds(20))
                     }
                 } catch let error as NSError {
+                    
                     logger.warning("PING ERR \(error.localizedDescription)")
                 } catch {
                     logger.warning("PING ERR \(error)")
@@ -152,62 +153,3 @@ extension URLSessionWebSocketTask {
     }
 }
 
-extension URLSessionTask.State: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .running:
-            return "Running"
-        case .suspended:
-            return "Suspended"
-        case .canceling:
-            return "Canceling"
-        case .completed:
-            return "Completed"
-        @unknown default:
-            return "Default"
-        }
-    }
-}
-
-extension URLSessionWebSocketTask.CloseCode: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .invalid:
-            return "invalid"
-        case .normalClosure:
-            return "normalClosure"
-        case .goingAway:
-            return "goingAway"
-        case .protocolError:
-            return "protocolError"
-        case .unsupportedData:
-            return "unsupportedData"
-        case .noStatusReceived:
-            return "noStatusReceived"
-        case .abnormalClosure:
-            return "abnormalClosure"
-        case .invalidFramePayloadData:
-            return "invalidFramePayloadData"
-        case .policyViolation:
-            return "policyViolation"
-        case .messageTooBig:
-            return "messageTooBig"
-        case .mandatoryExtensionMissing:
-            return "mandatoryExtensionMissing"
-        case .internalServerError:
-            return "internalServerError"
-        case .tlsHandshakeFailure:
-            return "tlsHandshakeFailure"
-        @unknown default:
-            return "Default"
-        }
-    }
-}
-
-extension URLSessionWebSocketTask {
-    func messages() -> AsyncThrowingStream<URLSessionWebSocketTask.Message, any Error> {
-        AsyncThrowingStream<URLSessionWebSocketTask.Message, any Error> {
-            try await self.receive()
-        }
-    }
-}

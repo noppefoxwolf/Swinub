@@ -14,7 +14,7 @@ enum EventType: String, Codable {
     case encryptedMessage
 }
 
-public enum Event {
+public enum Event: Sendable {
     case update(Status)
     case delete(statusID: Status.ID)
     case notification(Swinub.Notification)

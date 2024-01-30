@@ -1,7 +1,7 @@
 import Swinub
 import Foundation
 
-public struct Message: Decodable {
+public struct Message: Decodable, Sendable {
     public let stream: [Stream]
     public let event: Event
 

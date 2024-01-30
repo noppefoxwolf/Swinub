@@ -11,13 +11,13 @@ fileprivate let logger = Logger(
 public protocol Session: Sendable {
     func response<T: Request>(
         for request: T
-    ) async throws -> (T.Response, HTTPResponse)
+    ) async throws -> (response: T.Response, httpResponse: HTTPResponse)
 }
 
 extension URLSession: Session {
     public func response<T: Request>(
         for request: T
-    ) async throws -> (T.Response, HTTPResponse) {
+    ) async throws -> (response: T.Response, httpResponse: HTTPResponse) {
         logger.info("\(request.method) \(request.path)")
         let urlRequest = try request.makeURLRequest()
         let (data, httpURLResponse) = try await self.data(for: urlRequest) as! (Data, HTTPURLResponse)

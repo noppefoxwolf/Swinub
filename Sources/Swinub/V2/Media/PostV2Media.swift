@@ -15,13 +15,15 @@ public struct PostV2Media: AuthorizationRequest {
 
     public let authorization: Authorization
     let media: any UploadMedia & RequestParameterValue & Sendable
+    public var description: String?
     
     public var authority: String { authorization.host }
     public var path: String { "/api/v2/media" }
     public let method: HTTPRequest.Method = .post
     public var parameters: [String : (any RequestParameterValue)?] {
         [
-            "file": media
+            "file": media,
+            "description": description
         ]
     }
 }

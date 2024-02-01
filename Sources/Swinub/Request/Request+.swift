@@ -123,3 +123,14 @@ extension AuthorizationRequest {
         )
     }
 }
+
+extension OptionalAuthorizationRequest {
+    public func makeURLRequest() throws -> URLRequest {
+        try makeURLRequest(
+            method: method,
+            url: url,
+            authorization: authorization,
+            parameters: parameters
+        )
+    }
+}

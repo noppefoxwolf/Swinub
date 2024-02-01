@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct DeleteV2FiltersKeywords: AuthorizationRequest {
+public struct DeleteV2FiltersKeywords: AuthorizationRequest, Sendable {
     public typealias Response = DeleteV2FiltersKeywordsResponse
 
     public init(
@@ -19,4 +19,4 @@ public struct DeleteV2FiltersKeywords: AuthorizationRequest {
     public let method: HTTPRequest.Method = .delete
 }
 
-public struct DeleteV2FiltersKeywordsResponse: Codable {}
+public struct DeleteV2FiltersKeywordsResponse: Codable, Sendable {}

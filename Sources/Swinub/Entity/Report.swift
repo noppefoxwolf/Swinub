@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Report: Codable, Identifiable {
+public struct Report: Codable, Identifiable, Sendable {
     public let id: ID
     
     public struct ID: Equatable, Hashable, Sendable, Codable, CustomStringConvertible {

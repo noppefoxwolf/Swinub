@@ -26,3 +26,6 @@ public protocol AuthorizationRequest: Request {
     var authorization: Authorization { get }
 }
 
+public protocol OptionalAuthorizationRequest: Request {
+    var authorization: Authorization? { get }
+}

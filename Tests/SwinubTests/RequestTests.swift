@@ -4,7 +4,7 @@ import HTTPTypes
 
 class RequestTests: XCTestCase {
     func testConvertURL() async throws {
-        struct MockRequest: Request {
+        struct MockRequest: Request, Sendable {
             struct Response: Codable {}
             
             var method: HTTPTypes.HTTPRequest.Method = .get

@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct PostOAuthToken: Request {
+public struct PostOAuthToken: Request, Sendable {
     public typealias Response = OAuthToken
 
     public init(
@@ -49,7 +49,7 @@ public struct PostOAuthToken: Request {
     }
 }
 
-public struct OAuthToken: Codable {
+public struct OAuthToken: Codable, Sendable {
     public let accessToken: String
     public let tokenType: String
     public let scope: String

@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct PostV1StatusesTranslate: AuthorizationRequest {
+public struct PostV1StatusesTranslate: AuthorizationRequest, Sendable {
     public typealias Response = Translate
     
     /// ISO 639 language code

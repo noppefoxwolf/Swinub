@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV1AccountFollowing: AuthorizationRequest {
+public struct GetV1AccountFollowing: AuthorizationRequest, Sendable {
     public typealias Response = [Account]
 
     public init(accountID: Account.ID, authorization: Authorization) {

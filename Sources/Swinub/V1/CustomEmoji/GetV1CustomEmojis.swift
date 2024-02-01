@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV1CustomEmojis: Request {
+public struct GetV1CustomEmojis: Request, Sendable {
     public typealias Response = [CustomEmoji]
 
     public init(host: String) {

@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV2Filter: AuthorizationRequest {
+public struct GetV2Filter: AuthorizationRequest, Sendable {
     public typealias Response = Filter
 
     public init(authorization: Authorization, filterID: String) {

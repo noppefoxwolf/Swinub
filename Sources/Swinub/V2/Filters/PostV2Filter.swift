@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct PostV2Filter: AuthorizationRequest {
+public struct PostV2Filter: AuthorizationRequest, Sendable {
     public typealias Response = Filter
 
     public init(

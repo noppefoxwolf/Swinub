@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV1Announcements: AuthorizationRequest {
+public struct GetV1Announcements: AuthorizationRequest, Sendable {
     public typealias Response = [Announcement]
 
     public init(authorization: Authorization) {

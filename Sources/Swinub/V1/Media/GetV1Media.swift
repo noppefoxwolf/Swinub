@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV1Media: AuthorizationRequest {
+public struct GetV1Media: AuthorizationRequest, Sendable {
     public typealias Response = MediaAttachment
 
     public init(authorization: Authorization, id: MediaAttachment.ID) {

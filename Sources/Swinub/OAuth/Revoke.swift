@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct PostOAuthRevoke: Request {
+public struct PostOAuthRevoke: Request, Sendable {
     public typealias Response = PostOAuthRevokeResponse
 
     public init(host: String, clientID: String, clientSecret: String, token: String) {
@@ -28,5 +28,4 @@ public struct PostOAuthRevoke: Request {
     }
 }
 
-public struct PostOAuthRevokeResponse: Codable {
-}
+public struct PostOAuthRevokeResponse: Codable, Sendable {}

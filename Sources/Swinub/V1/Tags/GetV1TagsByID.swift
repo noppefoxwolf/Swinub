@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV1TagsByID: AuthorizationRequest {
+public struct GetV1TagsByID: AuthorizationRequest, Sendable {
     public typealias Response = Tag
 
     public init(id: String, authorization: Authorization) {

@@ -2,7 +2,7 @@ import Foundation
 import HTTPTypes
 
 // https://docs.joinmastodon.org/methods/accounts/#mute
-public struct PostV1AccountsUnmute: AuthorizationRequest {
+public struct PostV1AccountsUnmute: AuthorizationRequest, Sendable {
     public typealias Response = Relationship
 
     public init(accountID: Account.ID, authorization: Authorization) {

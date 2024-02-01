@@ -2,7 +2,7 @@ import Foundation
 import HTTPTypes
 
 //https://docs.joinmastodon.org/methods/statuses/#create
-public struct PostV1Statuses: AuthorizationRequest {
+public struct PostV1Statuses: AuthorizationRequest, Sendable {
     public typealias Response = Status
 
     public struct Parameters: Sendable {

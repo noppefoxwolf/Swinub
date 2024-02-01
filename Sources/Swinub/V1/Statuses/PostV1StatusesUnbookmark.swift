@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct PostV1StatusesUnbookmark: AuthorizationRequest {
+public struct PostV1StatusesUnbookmark: AuthorizationRequest, Sendable {
     public typealias Response = Status
 
     public init(id: Status.ID, authorization: Authorization) {

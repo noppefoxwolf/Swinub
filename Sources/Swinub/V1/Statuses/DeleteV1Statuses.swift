@@ -2,7 +2,7 @@ import Foundation
 import HTTPTypes
 
 // https://docs.joinmastodon.org/methods/statuses/#delete
-public struct DeleteV1Statuses: AuthorizationRequest {
+public struct DeleteV1Statuses: AuthorizationRequest, Sendable {
     public typealias Response = DeleteV1StatusesResponse
 
     public init(statusID: Status.ID, authorization: Authorization) {
@@ -16,4 +16,4 @@ public struct DeleteV1Statuses: AuthorizationRequest {
     public var path: String { "/api/v1/statuses/\(statusID)" }
 }
 
-public struct DeleteV1StatusesResponse: Codable {}
+public struct DeleteV1StatusesResponse: Codable, Sendable {}

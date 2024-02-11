@@ -38,6 +38,10 @@ let package = Package(
             name: "SwinubTests",
             dependencies: ["Swinub"]
         ),
+        .testTarget(
+            name: "SwinubServerResponseTests",
+            dependencies: ["Swinub"]
+        ),
     ]
 )
 

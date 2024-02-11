@@ -40,6 +40,7 @@ public struct Stats: Codable, Sendable {
 // https://fedibird.com/api/v1/instance
 public struct InstanceConfiguration: Codable, Sendable {
     public let statuses: InstanceStatusesConfiguration
+    public let mediaAttachments: InstanceMediaAttachmentsConfiguration
     // fedibird拡張
     public let search: InstanceSearchConfiguration?
 }
@@ -47,6 +48,15 @@ public struct InstanceConfiguration: Codable, Sendable {
 public struct InstanceStatusesConfiguration: Codable, Sendable {
     public let maxCharacters: Int
     public let maxMediaAttachments: Int
+}
+
+public struct InstanceMediaAttachmentsConfiguration: Codable, Sendable {
+    public let supportedMimeTypes: [String]
+    public let imageSizeLimit: Int
+    public let imageMatrixLimit: Int
+    public let videoSizeLimit: Int
+    public let videoFrameRateLimit: Int
+    public let videoMatrixLimit: Int
 }
 
 public struct InstanceSearchConfiguration: Codable, Sendable {

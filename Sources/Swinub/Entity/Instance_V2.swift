@@ -41,6 +41,7 @@ public struct Stats: Codable, Sendable {
 public struct InstanceConfiguration: Codable, Sendable {
     public let statuses: InstanceStatusesConfiguration
     public let mediaAttachments: InstanceMediaAttachmentsConfiguration
+    public let polls: InstancePollsConfiguration
     // fedibird拡張
     public let search: InstanceSearchConfiguration?
 }
@@ -57,6 +58,13 @@ public struct InstanceMediaAttachmentsConfiguration: Codable, Sendable {
     public let videoSizeLimit: Int
     public let videoFrameRateLimit: Int
     public let videoMatrixLimit: Int
+}
+
+public struct InstancePollsConfiguration: Codable, Sendable {
+    public let maxOptions: Int
+    public let maxCharactersPerOption: Int
+    public let minExpiration: Int
+    public let maxExpiration: Int
 }
 
 public struct InstanceSearchConfiguration: Codable, Sendable {

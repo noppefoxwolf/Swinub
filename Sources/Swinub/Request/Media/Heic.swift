@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Png: RequestParameterValue, UploadMedia, Sendable {
+public struct Heic: RequestParameterValue, UploadMedia, Sendable {
     public init(data: Data, name: String) {
         self.data = data
         self.name = name
@@ -11,6 +11,6 @@ public struct Png: RequestParameterValue, UploadMedia, Sendable {
 
     public var parameterValue: String { fatalError() }
     public var multipartValue: Data { data }
-    public var multipartFilename: String? { "\(name).png" }
-    public var multipartContentType: String? { "image/png" }
+    public var multipartFilename: String? { "\(name).heic" }
+    public var multipartContentType: String? { "image/heic" }
 }

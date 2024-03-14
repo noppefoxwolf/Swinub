@@ -3,25 +3,24 @@ import Combine
 import Foundation
 import Network
 import os
+import HTTPTypes
 
 fileprivate let logger = Logger(
     subsystem: "dev.noppe.swinub.logger",
     category: #file
 )
 
-public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked Sendable {
+public final class WebSocket: Sendable {
     let url: URL
     let authorization: String
     let userAgent: String
-
+    let handler = SessionWebSocketHandler()
     var webSocketTask: URLSessionWebSocketTask?
     var webSocketReceiveTask: Task<Void, any Error>?
-    var pingTask: Task<Void, any Error>?
-    var stateObservation: NSKeyValueObservation? = nil
+    var stateObservation: AnyCancellable? = nil
+    var pingTimerCanceller: AnyCancellable? = nil
 
-    var retryCount: Int = 0
-
-    public let message: PassthroughSubject<URLSessionWebSocketTask.Message, Never> = .init()
+    public let message: PassthroughSubject<URLSessionWebSocketTask.Message, any Error> = .init()
 
     public init(url: URL, authorization: String, userAgent: String = "dawn") {
         self.url = url
@@ -30,8 +29,7 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
     }
 
     deinit {
-        webSocketReceiveTask?.cancel()
-        pingTask?.cancel()
+        disconnect()
     }
 
     // https://docs.joinmastodon.org/methods/streaming/#websocket
@@ -39,56 +37,33 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
     // https://github.com/cinderella-project/iMast/issues/140
     // https://github.com/h3poteto/megalodon/pull/49/files
     public func connect() {
-        let urlSession = URLSession(configuration: .ephemeral)
-        urlSession.configuration.waitsForConnectivity = true
+        var configuration = URLSessionConfiguration.ephemeral
+        configuration.waitsForConnectivity = true
+        let urlSession = URLSession(configuration: configuration)
         var request = URLRequest(url: url)
+        request.networkServiceType = .responsiveData
+        request.timeoutInterval = 10
         request.addValue(authorization, forHTTPHeaderField: "Authorization")
         request.addValue(userAgent, forHTTPHeaderField: "User-Agent")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         let webSocketTask = urlSession.webSocketTask(with: request)
-        webSocketTask.delegate = self
-        webSocketReceiveTask = Task.detached(
-            priority: .background,
-            operation: { [weak self] in
-                guard let webSocketTask = self?.webSocketTask else { return }
-                do {
-                    for try await message in webSocketTask.messages() {
-                        self?.message.send(message)
-                    }
-                } catch let error as NSError {
-                    // error    NSURLError    domain: "NSPOSIXErrorDomain" - code: 57    0x0000600000cda730
-                    logger.warning("ERROR \(error.localizedDescription)")
-                    await self?.retry()
-                } catch {
-                    logger.warning("ERROR \(error)")
-                }
-            }
-        )
-
-        pingTask = Task.detached(
-            priority: .background,
-            operation: { [weak self] in
-                do {
-                    while true {
-                        let host = self?.url.host() ?? "unknown host"
-                        logger.info("PING \(host)")
-                        try await self?.webSocketTask?.sendPing()
-                        logger.info("PING OK")
-                        // https://stackoverflow.com/a/25235877
-                        try await Task.sleep(for: .seconds(20))
-                    }
-                } catch let error as NSError {
-                    
-                    logger.warning("PING ERR \(error.localizedDescription)")
-                } catch {
-                    logger.warning("PING ERR \(error)")
-                }
-            }
-        )
+        webSocketTask.delegate = handler
+        
+        startReceiveMessages()
+        startPing()
 
         stateObservation = webSocketTask
-            .observe(\.state) { (task, change) in
-                logger.info("STATE \(task.state)")
-            }
+            .publisher(for: \.state)
+            .removeDuplicates()
+            .sink(receiveValue: { state in
+                logger.info("STATE \(state)")
+            })
+        
+        handler.onOpen = {}
+        handler.onClose = { [weak message] closeCode in
+            // https://developer.apple.com/documentation/foundation/urlsessionwebsockettask/closecode
+            message?.send(completion: .failure(WebSocketCloseError(closeCode: closeCode)))
+        }
 
         webSocketTask.resume()
         logger.info("CONNECT")
@@ -97,49 +72,77 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
     }
 
     public func disconnect() {
-        webSocketTask?.cancel(with: .goingAway, reason: nil)
+        webSocketTask?.cancel(with: .normalClosure, reason: nil)
 
-        pingTask?.cancel()
+        pingTimerCanceller?.cancel()
         webSocketReceiveTask?.cancel()
 
-        stateObservation?.invalidate()
+        stateObservation?.cancel()
 
         logger.info("DISCONNECT")
     }
-
-    func retry() async {
-        logger.info("RETRY \(self.retryCount)")
-        try? await Task.sleep(for: .seconds(retryCount))
-        disconnect()
-        guard retryCount > 15 else {
-            logger.warning("TOO MANY RETRY")
-            return
-        }
-        connect()
-        retryCount += 1
+    
+    func startReceiveMessages() {
+        webSocketReceiveTask = Task.detached(
+            priority: .background,
+            operation: { [weak webSocketTask, weak message] in
+                guard let webSocketTask else { return }
+                do {
+                    for try await receivedMessage in webSocketTask.messages() {
+                        message?.send(receivedMessage)
+                    }
+                } catch let error as NSError {
+                    // PING ERR Error Domain=NSPOSIXErrorDomain Code=53 "Software caused connection abort" UserInfo={NSDescription=Software caused connection abort}
+                    // error    NSURLError    domain: "NSPOSIXErrorDomain" - code: 57    0x0000600000cda730
+                    logger.warning("ERROR \(error.localizedDescription)")
+                    message?.send(completion: .failure(error))
+                } catch {
+                    logger.warning("ERROR \(error)")
+                    message?.send(completion: .failure(error))
+                }
+            }
+        )
     }
 
-    public func urlSession(
-        _ session: URLSession,
-        webSocketTask: URLSessionWebSocketTask,
-        didOpenWithProtocol protocol: String?
-    ) {
-        let host = url.host() ?? "unknown"
-        logger.info("OPEN \(host)")
+    func startPing() {
+        pingTimerCanceller = Timer.publish(every: 20, on: .main, in: .common)
+            .autoconnect()
+            .sink(receiveValue: { [weak self] _ in
+                self?.sendPing()
+        })
     }
-
-    public func urlSession(
-        _ session: URLSession,
-        webSocketTask: URLSessionWebSocketTask,
-        didCloseWith closeCode: URLSessionWebSocketTask.CloseCode,
-        reason: Data?
-    ) {
-        logger.warning("CLOSE \(closeCode.description)")
+    
+    func sendPing() {
+        let host = url.host()!
+        logger.info("PING \(host)")
+        webSocketTask!.sendPing(pongReceiveHandler: { [weak message] error in
+            if let error {
+                logger.warning("PING ERR \(error)")
+                message?.send(completion: .failure(error))
+            } else {
+                logger.info("PING OK")
+            }
+        })
     }
 }
 
+public struct WebSocketCloseError: Error {
+    public let closeCode: URLSessionWebSocketTask.CloseCode
+}
+
+public struct WebSocketPingError: Error {
+    public let state: URLSessionTask.State
+}
+
 extension URLSessionWebSocketTask {
+    @PingActor
     func sendPing() async throws {
+        if let error {
+            throw error
+        }
+        if state != .running {
+            throw WebSocketPingError(state: state)
+        }
         try await withCheckedThrowingContinuation {
             (continuation: CheckedContinuation<Void, Error>) in
             sendPing(pongReceiveHandler: { error in
@@ -151,5 +154,12 @@ extension URLSessionWebSocketTask {
             })
         }
     }
+}
+
+@globalActor
+struct PingActor {
+  actor ActorType { }
+
+  static let shared: ActorType = ActorType()
 }
 

@@ -3,6 +3,7 @@ import Combine
 import Foundation
 import Network
 import os
+import HTTPTypes
 
 fileprivate let logger = Logger(
     subsystem: "dev.noppe.swinub.logger",
@@ -19,9 +20,7 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
     var pingTask: Task<Void, any Error>?
     var stateObservation: NSKeyValueObservation? = nil
 
-    var retryCount: Int = 0
-
-    public let message: PassthroughSubject<URLSessionWebSocketTask.Message, Never> = .init()
+    public let message: PassthroughSubject<URLSessionWebSocketTask.Message, any Error> = .init()
 
     public init(url: URL, authorization: String, userAgent: String = "dawn") {
         self.url = url
@@ -39,8 +38,9 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
     // https://github.com/cinderella-project/iMast/issues/140
     // https://github.com/h3poteto/megalodon/pull/49/files
     public func connect() {
-        let urlSession = URLSession(configuration: .ephemeral)
-        urlSession.configuration.waitsForConnectivity = true
+        var configuration = URLSessionConfiguration.ephemeral
+        configuration.waitsForConnectivity = true
+        let urlSession = URLSession(configuration: configuration)
         var request = URLRequest(url: url)
         request.addValue(authorization, forHTTPHeaderField: "Authorization")
         request.addValue(userAgent, forHTTPHeaderField: "User-Agent")
@@ -57,9 +57,10 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
                 } catch let error as NSError {
                     // error    NSURLError    domain: "NSPOSIXErrorDomain" - code: 57    0x0000600000cda730
                     logger.warning("ERROR \(error.localizedDescription)")
-                    await self?.retry()
+                    self?.message.send(completion: .failure(error))
                 } catch {
                     logger.warning("ERROR \(error)")
+                    self?.message.send(completion: .failure(error))
                 }
             }
         )
@@ -84,7 +85,7 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
                 }
             }
         )
-
+        
         stateObservation = webSocketTask
             .observe(\.state) { (task, change) in
                 logger.info("STATE \(task.state)")
@@ -107,18 +108,6 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
         logger.info("DISCONNECT")
     }
 
-    func retry() async {
-        logger.info("RETRY \(self.retryCount)")
-        try? await Task.sleep(for: .seconds(retryCount))
-        disconnect()
-        guard retryCount > 15 else {
-            logger.warning("TOO MANY RETRY")
-            return
-        }
-        connect()
-        retryCount += 1
-    }
-
     public func urlSession(
         _ session: URLSession,
         webSocketTask: URLSessionWebSocketTask,
@@ -135,7 +124,13 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
         reason: Data?
     ) {
         logger.warning("CLOSE \(closeCode.description)")
+        // https://developer.apple.com/documentation/foundation/urlsessionwebsockettask/closecode
+        message.send(completion: .failure(WebSocketError(closeCode: closeCode)))
     }
+}
+
+public struct WebSocketError: Error {
+    public let closeCode: URLSessionWebSocketTask.CloseCode
 }
 
 extension URLSessionWebSocketTask {

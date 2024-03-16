@@ -98,8 +98,8 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
         let host = url.host() ?? "unknown"
         logger.info("OPEN \(host)")
         
-        pingTask = Task.detached(
-            priority: .low,
+        pingTask = Task(
+            priority: .background,
             operation: { [weak self] in
                 do {
                     while true {

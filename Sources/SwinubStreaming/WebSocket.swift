@@ -68,28 +68,6 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
             }
         )
 
-        pingTask = Task.detached(
-            priority: .background,
-            operation: { [weak self] in
-                do {
-                    while true {
-                        let host = self?.url.host() ?? "unknown host"
-                        logger.info("PING \(host)")
-                        // nw_read_request_report [C1] Receive failed with error "Socket is not connected"
-                        try await self?.webSocketTask?.sendPing()
-                        logger.info("PING OK")
-                        // https://stackoverflow.com/a/25235877
-                        try await Task.sleep(for: .seconds(20))
-                    }
-                } catch let error as NSError {
-                    
-                    logger.warning("PING ERR \(error.localizedDescription)")
-                } catch {
-                    logger.warning("PING ERR \(error)")
-                }
-            }
-        )
-        
         stateObservation = webSocketTask
             .observe(\.state) { (task, change) in
                 logger.info("STATE \(task.state)")
@@ -119,6 +97,28 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
     ) {
         let host = url.host() ?? "unknown"
         logger.info("OPEN \(host)")
+        
+        pingTask = Task.detached(
+            priority: .background,
+            operation: { [weak self] in
+                do {
+                    while true {
+                        let host = self?.url.host() ?? "unknown host"
+                        logger.info("PING \(host)")
+                        // nw_read_request_report [C1] Receive failed with error "Socket is not connected"
+                        try await self?.webSocketTask?.sendPing()
+                        logger.info("PING OK")
+                        // https://stackoverflow.com/a/25235877
+                        try await Task.sleep(for: .seconds(20))
+                    }
+                } catch let error as NSError {
+                    
+                    logger.warning("PING ERR \(error.localizedDescription)")
+                } catch {
+                    logger.warning("PING ERR \(error)")
+                }
+            }
+        )
     }
 
     public func urlSession(

@@ -100,6 +100,7 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
         
         pingTask = Task(
             priority: .background,
+            timeout: Duration.seconds(10),
             operation: { [weak self] in
                 do {
                     while true {

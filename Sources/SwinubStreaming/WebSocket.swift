@@ -46,6 +46,7 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
         request.timeoutInterval = 10
         request.addValue(authorization, forHTTPHeaderField: "Authorization")
         request.addValue(userAgent, forHTTPHeaderField: "User-Agent")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         let webSocketTask = urlSession.webSocketTask(with: request)
         webSocketTask.delegate = self
         webSocketReceiveTask = Task.detached(

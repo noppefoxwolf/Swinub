@@ -74,6 +74,7 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
                     while true {
                         let host = self?.url.host() ?? "unknown host"
                         logger.info("PING \(host)")
+                        // nw_read_request_report [C1] Receive failed with error "Socket is not connected"
                         try await self?.webSocketTask?.sendPing()
                         logger.info("PING OK")
                         // https://stackoverflow.com/a/25235877
@@ -127,16 +128,26 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
     ) {
         logger.warning("CLOSE \(closeCode.description)")
         // https://developer.apple.com/documentation/foundation/urlsessionwebsockettask/closecode
-        message.send(completion: .failure(WebSocketError(closeCode: closeCode)))
+        message.send(completion: .failure(WebSocketCloseError(closeCode: closeCode)))
     }
 }
 
-public struct WebSocketError: Error {
+public struct WebSocketCloseError: Error {
     public let closeCode: URLSessionWebSocketTask.CloseCode
+}
+
+public struct WebSocketPingError: Error {
+    public let state: URLSessionTask.State
 }
 
 extension URLSessionWebSocketTask {
     func sendPing() async throws {
+        if let error {
+            throw error
+        }
+        if state != .running {
+            throw WebSocketPingError(state: state)
+        }
         try await withCheckedThrowingContinuation {
             (continuation: CheckedContinuation<Void, Error>) in
             sendPing(pongReceiveHandler: { error in

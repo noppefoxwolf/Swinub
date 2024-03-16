@@ -50,7 +50,7 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
         let webSocketTask = urlSession.webSocketTask(with: request)
         webSocketTask.delegate = self
         webSocketReceiveTask = Task.detached(
-            priority: .low,
+            priority: .background,
             operation: { [weak self] in
                 guard let webSocketTask = self?.webSocketTask else { return }
                 do {
@@ -99,7 +99,7 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
         logger.info("OPEN \(host)")
         
         pingTask = Task.detached(
-            priority: .background,
+            priority: .low,
             operation: { [weak self] in
                 do {
                     while true {

@@ -42,6 +42,8 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
         configuration.waitsForConnectivity = true
         let urlSession = URLSession(configuration: configuration)
         var request = URLRequest(url: url)
+        request.networkServiceType = .responsiveData
+        request.timeoutInterval = 10
         request.addValue(authorization, forHTTPHeaderField: "Authorization")
         request.addValue(userAgent, forHTTPHeaderField: "User-Agent")
         let webSocketTask = urlSession.webSocketTask(with: request)

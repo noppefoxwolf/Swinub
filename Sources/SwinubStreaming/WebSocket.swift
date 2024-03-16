@@ -50,7 +50,7 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
         let webSocketTask = urlSession.webSocketTask(with: request)
         webSocketTask.delegate = self
         webSocketReceiveTask = Task.detached(
-            priority: .background,
+            priority: .low,
             operation: { [weak self] in
                 guard let webSocketTask = self?.webSocketTask else { return }
                 do {

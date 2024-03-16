@@ -142,6 +142,7 @@ public struct WebSocketPingError: Error {
 }
 
 extension URLSessionWebSocketTask {
+    @PingActor
     func sendPing() async throws {
         if let error {
             throw error
@@ -160,5 +161,12 @@ extension URLSessionWebSocketTask {
             })
         }
     }
+}
+
+@globalActor
+struct PingActor {
+  actor ActorType { }
+
+  static let shared: ActorType = ActorType()
 }
 

@@ -27,19 +27,19 @@ public struct Streaming: Sendable {
             .eraseToAnyPublisher()
     }
     
-    public init?(endpoint: String, stream: Stream, authorization: Swinub.Authorization) {
+    public init?(endpoint: String, stream: Stream, token: String) {
         self.stream = stream
         let path = "\(endpoint)/api/v1/streaming"
         var urlComponents = URLComponents(string: path)
         // https://docs.joinmastodon.org/methods/streaming/#streams
         urlComponents?.queryItems = [
-            URLQueryItem(name: "access_token", value: authorization.oauthToken),
+            URLQueryItem(name: "access_token", value: token),
             URLQueryItem(name: "stream", value: stream.rawValue),
         ]
         guard let url = urlComponents?.url else { return nil }
         webSocket = WebSocket(
             url: url,
-            authorization: "Bearer \(authorization.oauthToken)"
+            authorization: "Bearer \(token)"
         )
         decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase

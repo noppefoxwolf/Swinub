@@ -63,7 +63,7 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
             }
         )
 
-        pingTask = Task.detached(
+        pingTask = Task(
             priority: .background,
             operation: { [weak self] in
                 do {

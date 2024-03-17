@@ -8,7 +8,7 @@ public struct Streaming: Sendable {
     let webSocket: WebSocket
     let decoder: JSONDecoder
 
-    public var message: AnyPublisher<Result<Message, any Error>, Never> {
+    public var message: AnyPublisher<Message, any Error> {
         webSocket.message
             .compactMap({
                 if case .string(let string) = $0 {
@@ -17,19 +17,13 @@ public struct Streaming: Sendable {
                     return nil
                 }
             })
-            .map { string -> Result<Message, any Error> in
-                do {
-                    let message = try decoder.decode(
-                        Message.self,
-                        from: Data(string.utf8)
-                    )
-                    return .success(message)
-                } catch {
-                    print(#function, string)
-                    print(#function, error)
-                    return .failure(error)
-                }
-            }
+            .tryMap({ string -> Message in
+                let message = try decoder.decode(
+                    Message.self,
+                    from: Data(string.utf8)
+                )
+                return message
+            })
             .eraseToAnyPublisher()
     }
 

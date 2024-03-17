@@ -5,7 +5,7 @@ extension URLSessionWebSocketTask {
         try await withThrowingTaskGroup(of: Void.self) { group -> Void in
             group.addTask {
                 try await withTaskCancellationHandler {
-                    try await withCheckedThrowingContinuation { continuation in
+                    try await withUnsafeThrowingContinuation { continuation in
                         self.sendPing { error in
                             if let error {
                                 continuation.resume(throwing: error)

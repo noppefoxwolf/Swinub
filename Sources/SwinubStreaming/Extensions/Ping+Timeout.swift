@@ -4,23 +4,27 @@ extension URLSessionWebSocketTask {
     func sendPing(timeout: Duration) async throws {
         try await withThrowingTaskGroup(of: Void.self) { group -> Void in
             group.addTask {
-                try await withCheckedThrowingContinuation { continuation in
-                    self.sendPing { error in
-                        if let error {
-                            continuation.resume(throwing: error)
-                        } else {
-                            continuation.resume()
+                try await withTaskCancellationHandler {
+                    try await withCheckedThrowingContinuation { continuation in
+                        self.sendPing { error in
+                            if let error {
+                                continuation.resume(throwing: error)
+                            } else {
+                                continuation.resume()
+                            }
                         }
                     }
+                } onCancel: {
+                    self.cancel()
                 }
             }
             group.addTask {
-                try await _Concurrency.Task.sleep(for: timeout)
+                try await Task.sleep(for: timeout)
                 throw TimeoutError()
                 
             }
             guard let success = try await group.next() else {
-                throw _Concurrency.CancellationError()
+                throw CancellationError()
             }
             group.cancelAll()
             return success

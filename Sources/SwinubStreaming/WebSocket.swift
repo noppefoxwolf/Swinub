@@ -97,7 +97,7 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
     }
 
     public func disconnect() {
-        webSocketTask?.cancel(with: .goingAway, reason: nil)
+        webSocketTask?.cancel(with: .normalClosure, reason: nil)
 
         pingTask?.cancel()
         webSocketReceiveTask?.cancel()

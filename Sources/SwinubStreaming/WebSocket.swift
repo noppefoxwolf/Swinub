@@ -10,15 +10,15 @@ fileprivate let logger = Logger(
     category: #file
 )
 
-public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked Sendable {
+public final class WebSocket: Sendable {
     let url: URL
     let authorization: String
     let userAgent: String
-
+    let handler = SessionWebSocketHandler()
     var webSocketTask: URLSessionWebSocketTask?
     var webSocketReceiveTask: Task<Void, any Error>?
-    var pingTask: Task<Void, any Error>?
-    var stateObservation: NSKeyValueObservation? = nil
+    var stateObservation: AnyCancellable? = nil
+    var pingTimerCanceller: AnyCancellable? = nil
 
     public let message: PassthroughSubject<URLSessionWebSocketTask.Message, any Error> = .init()
 
@@ -29,8 +29,7 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
     }
 
     deinit {
-        webSocketReceiveTask?.cancel()
-        pingTask?.cancel()
+        disconnect()
     }
 
     // https://docs.joinmastodon.org/methods/streaming/#websocket
@@ -48,7 +47,42 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
         request.addValue(userAgent, forHTTPHeaderField: "User-Agent")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         let webSocketTask = urlSession.webSocketTask(with: request)
-        webSocketTask.delegate = self
+        webSocketTask.delegate = handler
+        
+        startReceiveMessages()
+        startPing()
+
+        stateObservation = webSocketTask
+            .publisher(for: \.state)
+            .removeDuplicates()
+            .sink(receiveValue: { state in
+                logger.info("STATE \(state)")
+            })
+        
+        handler.onOpen = {}
+        handler.onClose = { [weak message] closeCode in
+            // https://developer.apple.com/documentation/foundation/urlsessionwebsockettask/closecode
+            message?.send(completion: .failure(WebSocketCloseError(closeCode: closeCode)))
+        }
+
+        webSocketTask.resume()
+        logger.info("CONNECT")
+        
+        self.webSocketTask = webSocketTask
+    }
+
+    public func disconnect() {
+        webSocketTask?.cancel(with: .normalClosure, reason: nil)
+
+        pingTimerCanceller?.cancel()
+        webSocketReceiveTask?.cancel()
+
+        stateObservation?.cancel()
+
+        logger.info("DISCONNECT")
+    }
+    
+    func startReceiveMessages() {
         webSocketReceiveTask = Task.detached(
             priority: .background,
             operation: { [weak self] in
@@ -67,72 +101,26 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
                 }
             }
         )
-
-        stateObservation = webSocketTask
-            .observe(\.state) { (task, change) in
-                logger.info("STATE \(task.state)")
-            }
-
-        webSocketTask.resume()
-        logger.info("CONNECT")
-        
-        self.webSocketTask = webSocketTask
-    }
-
-    public func disconnect() {
-        webSocketTask?.cancel(with: .goingAway, reason: nil)
-
-        pingTask?.cancel()
-        webSocketReceiveTask?.cancel()
-
-        stateObservation?.invalidate()
-
-        logger.info("DISCONNECT")
     }
 
     func startPing() {
-        pingTask = Task(
-            priority: .background,
-            timeout: Duration.seconds(30),
-            operation: { [weak self] in
-                do {
-                    let host = self?.url.host() ?? "unknown host"
-                    logger.info("PING \(host)")
-                    // nw_read_request_report [C1] Receive failed with error "Socket is not connected"
-                    try await self?.webSocketTask?.sendPing()
-                    logger.info("PING OK")
-                    // https://stackoverflow.com/a/25235877
-                    try await Task.sleep(for: .seconds(20))
-                    self?.startPing()
-                } catch let error as NSError {
-                    logger.warning("PING ERR \(error.localizedDescription)")
-                } catch {
-                    logger.warning("PING ERR \(error)")
-                }
-            }
-        )
+        pingTimerCanceller = Timer.publish(every: 20, on: .main, in: .common)
+            .autoconnect()
+            .sink(receiveValue: { [weak self] _ in
+                self?.sendPing()
+        })
     }
     
-    public func urlSession(
-        _ session: URLSession,
-        webSocketTask: URLSessionWebSocketTask,
-        didOpenWithProtocol protocol: String?
-    ) {
-        let host = url.host() ?? "unknown"
-        logger.info("OPEN \(host)")
-        
-        startPing()
-    }
-
-    public func urlSession(
-        _ session: URLSession,
-        webSocketTask: URLSessionWebSocketTask,
-        didCloseWith closeCode: URLSessionWebSocketTask.CloseCode,
-        reason: Data?
-    ) {
-        logger.warning("CLOSE \(closeCode.description)")
-        // https://developer.apple.com/documentation/foundation/urlsessionwebsockettask/closecode
-        message.send(completion: .failure(WebSocketCloseError(closeCode: closeCode)))
+    func sendPing() {
+        let host = url.host()!
+        logger.info("PING \(host)")
+        webSocketTask!.sendPing(pongReceiveHandler: { error in
+            if let error {
+                logger.warning("PING ERR \(error)")
+            } else {
+                logger.info("PING OK")
+            }
+        })
     }
 }
 

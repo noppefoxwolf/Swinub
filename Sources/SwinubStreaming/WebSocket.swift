@@ -19,9 +19,7 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
     var pingTask: Task<Void, any Error>?
     var stateObservation: NSKeyValueObservation? = nil
 
-    var retryCount: Int = 0
-
-    public let message: PassthroughSubject<URLSessionWebSocketTask.Message, Never> = .init()
+    public let message: PassthroughSubject<URLSessionWebSocketTask.Message, any Error> = .init()
 
     public init(url: URL, authorization: String, userAgent: String = "dawn") {
         self.url = url
@@ -57,9 +55,10 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
                 } catch let error as NSError {
                     // error    NSURLError    domain: "NSPOSIXErrorDomain" - code: 57    0x0000600000cda730
                     logger.warning("ERROR \(error.localizedDescription)")
-                    await self?.retry()
+                    self?.message.send(completion: .failure(error))
                 } catch {
                     logger.warning("ERROR \(error)")
+                    self?.message.send(completion: .failure(error))
                 }
             }
         )
@@ -71,16 +70,17 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
                     while true {
                         let host = self?.url.host() ?? "unknown host"
                         logger.info("PING \(host)")
-                        try await self?.webSocketTask?.sendPing()
+                        try await self?.webSocketTask?.sendPing(timeout: .seconds(3))
                         logger.info("PING OK")
                         // https://stackoverflow.com/a/25235877
                         try await Task.sleep(for: .seconds(20))
                     }
                 } catch let error as NSError {
-                    
                     logger.warning("PING ERR \(error.localizedDescription)")
+                    self?.message.send(completion: .failure(error))
                 } catch {
                     logger.warning("PING ERR \(error)")
+                    self?.message.send(completion: .failure(error))
                 }
             }
         )
@@ -107,18 +107,6 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
         logger.info("DISCONNECT")
     }
 
-    func retry() async {
-        logger.info("RETRY \(self.retryCount)")
-        try? await Task.sleep(for: .seconds(retryCount))
-        disconnect()
-        guard retryCount > 15 else {
-            logger.warning("TOO MANY RETRY")
-            return
-        }
-        connect()
-        retryCount += 1
-    }
-
     public func urlSession(
         _ session: URLSession,
         webSocketTask: URLSessionWebSocketTask,
@@ -137,19 +125,3 @@ public final class WebSocket: NSObject, URLSessionWebSocketDelegate, @unchecked 
         logger.warning("CLOSE \(closeCode.description)")
     }
 }
-
-extension URLSessionWebSocketTask {
-    func sendPing() async throws {
-        try await withCheckedThrowingContinuation {
-            (continuation: CheckedContinuation<Void, Error>) in
-            sendPing(pongReceiveHandler: { error in
-                if let error {
-                    continuation.resume(throwing: error)
-                } else {
-                    continuation.resume()
-                }
-            })
-        }
-    }
-}
-

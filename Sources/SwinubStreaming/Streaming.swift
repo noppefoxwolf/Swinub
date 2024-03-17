@@ -9,7 +9,7 @@ public struct Streaming: Sendable {
     let decoder: JSONDecoder
     
     public var message: AnyPublisher<Message, any Error> {
-        webSocket.message
+        webSocket.messagePublisher
             .compactMap({
                 if case .string(let string) = $0 {
                     return string

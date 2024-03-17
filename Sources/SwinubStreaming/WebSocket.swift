@@ -85,19 +85,20 @@ public final class WebSocket: Sendable {
     func startReceiveMessages() {
         webSocketReceiveTask = Task.detached(
             priority: .background,
-            operation: { [weak self] in
-                guard let webSocketTask = self?.webSocketTask else { return }
+            operation: { [weak webSocketTask, weak message] in
+                guard let webSocketTask else { return }
                 do {
-                    for try await message in webSocketTask.messages() {
-                        self?.message.send(message)
+                    for try await receivedMessage in webSocketTask.messages() {
+                        message?.send(receivedMessage)
                     }
                 } catch let error as NSError {
+                    // PING ERR Error Domain=NSPOSIXErrorDomain Code=53 "Software caused connection abort" UserInfo={NSDescription=Software caused connection abort}
                     // error    NSURLError    domain: "NSPOSIXErrorDomain" - code: 57    0x0000600000cda730
                     logger.warning("ERROR \(error.localizedDescription)")
-                    self?.message.send(completion: .failure(error))
+                    message?.send(completion: .failure(error))
                 } catch {
                     logger.warning("ERROR \(error)")
-                    self?.message.send(completion: .failure(error))
+                    message?.send(completion: .failure(error))
                 }
             }
         )
@@ -114,9 +115,10 @@ public final class WebSocket: Sendable {
     func sendPing() {
         let host = url.host()!
         logger.info("PING \(host)")
-        webSocketTask!.sendPing(pongReceiveHandler: { error in
+        webSocketTask!.sendPing(pongReceiveHandler: { [weak message] error in
             if let error {
                 logger.warning("PING ERR \(error)")
+                message?.send(completion: .failure(error))
             } else {
                 logger.info("PING OK")
             }

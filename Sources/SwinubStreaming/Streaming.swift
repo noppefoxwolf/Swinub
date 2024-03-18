@@ -34,8 +34,9 @@ public struct Streaming: Sendable {
         // https://docs.joinmastodon.org/methods/streaming/#streams
         urlComponents?.queryItems = [
             URLQueryItem(name: "access_token", value: token),
-            URLQueryItem(name: "stream", value: stream.rawValue),
-        ]
+            URLQueryItem(name: "stream", value: stream.streamValue),
+            stream.queryItem
+        ].compactMap({ $0 })
         guard let url = urlComponents?.url else { return nil }
         webSocket = WebSocket(
             url: url,

@@ -3,7 +3,7 @@ import Combine
 import Foundation
 import Swinub
 
-public struct Streaming: Sendable {
+public struct StreamingSession: Sendable {
     let webSocket: WebSocket
     let decoder: JSONDecoder
     
@@ -26,16 +26,18 @@ public struct Streaming: Sendable {
             .eraseToAnyPublisher()
     }
     
-    public init?(endpoint: String, stream: StreamQuery, token: String) {
-        let path = "\(endpoint)/api/v1/streaming"
-        var urlComponents = URLComponents(string: path)
+    public init(endpoint: URL, stream: StreamQuery, token: String) {
         // https://docs.joinmastodon.org/methods/streaming/#streams
-        urlComponents?.queryItems = [
+        let queryItems = [
             URLQueryItem(name: "access_token", value: token),
             URLQueryItem(name: "stream", value: stream.stream.rawValue),
             stream.queryItem
         ].compactMap({ $0 })
-        guard let url = urlComponents?.url else { return nil }
+        
+        let url = endpoint
+            .appending(path: "/api/v1/streaming")
+            .appending(queryItems: queryItems)
+        
         webSocket = WebSocket(
             url: url,
             authorization: "Bearer \(token)"

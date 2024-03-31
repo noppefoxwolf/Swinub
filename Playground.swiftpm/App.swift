@@ -13,11 +13,11 @@ struct App: SwiftUI.App {
 
 struct ContentView: View {
     @State
-    var streaming = Streaming(
-        endpoint: "wss://example.com/api/v1/streaming",
+    var streaming = StreamingSession(
+        endpoint: URL(string: "wss://example.com")!,
         stream: .userNotification,
         token: ""
-    )!
+    )
     
     var body: some View {
         Text("Hello, World!")

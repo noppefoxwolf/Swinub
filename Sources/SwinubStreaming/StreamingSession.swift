@@ -4,7 +4,7 @@ import Foundation
 import Swinub
 
 public struct StreamingSession: Sendable {
-    let webSocket: WebSocket
+    public let webSocket: WebSocket
     let decoder: JSONDecoder
     
     public var message: AnyPublisher<Message, any Error> {

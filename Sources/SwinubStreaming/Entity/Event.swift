@@ -25,4 +25,5 @@ public enum Event: Sendable {
     case announcementDelete
     case statusUpdate(Status)
     case encryptedMessage
+    // case ownVotes
 }

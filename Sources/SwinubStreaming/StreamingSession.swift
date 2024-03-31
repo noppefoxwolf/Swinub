@@ -2,6 +2,12 @@ import AsyncAlgorithms
 import Combine
 import Foundation
 import Swinub
+import os
+
+fileprivate let logger = Logger(
+    subsystem: Bundle.main.bundleIdentifier! + ".logger",
+    category: #file
+)
 
 public struct StreamingSession: Sendable {
     public let webSocket: WebSocket
@@ -16,12 +22,16 @@ public struct StreamingSession: Sendable {
                     return nil
                 }
             })
-            .tryMap({ string -> Message in
-                let message = try decoder.decode(
-                    Message.self,
-                    from: Data(string.utf8)
-                )
-                return message
+            .compactMap({ string -> Message? in
+                do {
+                    return try decoder.decode(
+                        Message.self,
+                        from: Data(string.utf8)
+                    )
+                } catch {
+                    logger.error("\(error)")
+                    return nil
+                }
             })
             .eraseToAnyPublisher()
     }

@@ -10,7 +10,7 @@ fileprivate let logger = Logger(
 )
 
 public final class WebSocket: Sendable {
-    let url: URL
+    public let url: URL
     let authorization: String
     let userAgent: String
 

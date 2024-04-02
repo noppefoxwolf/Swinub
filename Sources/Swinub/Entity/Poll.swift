@@ -10,7 +10,7 @@ public struct Poll: Codable, Identifiable, Sendable {
     public let options: [PollOption]
     public let emojis: [CustomEmoji]
     public let voted: Bool?
-    public let ownVotes: [Int]
+    public let ownVotes: [Int]?
     
     public struct ID: Equatable, Hashable, Sendable, Codable, CustomStringConvertible {
         public let rawValue: String

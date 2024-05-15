@@ -65,7 +65,7 @@ public struct Status: Codable, Identifiable, Sendable {
 public struct EmojiReaction: Codable, Sendable {
     public let name: String
     public let count: Int
-    public let accountIds: [String]?
+    public let accountIds: [Account.ID]?
     public let me: Bool
 
     // ondemand resource emoji

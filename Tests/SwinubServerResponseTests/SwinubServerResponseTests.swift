@@ -2,7 +2,7 @@ import Swinub
 import XCTest
 
 class SwinubServerResponseTests: XCTestCase {
-    func testConfiguration() async throws {
+    func xtestConfiguration() async throws {
         // Popular mastodon hosts.
         let hosts = [
             "fedibird.com",

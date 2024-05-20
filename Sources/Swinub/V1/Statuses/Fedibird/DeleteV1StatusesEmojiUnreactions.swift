@@ -10,8 +10,8 @@ public struct DeleteV1StatusesEmojiUnreactions: AuthorizationRequest, Sendable {
             self.domain = domain
         }
 
-        let name: String
-        let domain: String?
+        public let name: String
+        public let domain: String?
 
         // emoji@fedibird.com
         var parameterValue: String {

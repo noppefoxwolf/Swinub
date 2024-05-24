@@ -7,7 +7,14 @@ struct RequestFailedToMakeComponentsError: LocalizedError {
 }
 
 extension Request {
-    public var scheme: String { "https" }
+    public var scheme: String {
+        switch method {
+        case .connect:
+            "wss"
+        default:
+            "https"
+        }
+    }
     
     public var url: URL {
         get throws {

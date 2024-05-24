@@ -16,7 +16,10 @@ public final class WebSocketTask<Message: Decodable & Sendable>: Sendable {
                 do {
                     return try request.decode(data)
                 } catch {
+                    // skip decode error
+                    #if DEBUG
                     print(error)
+                    #endif
                     return nil
                 }
             }

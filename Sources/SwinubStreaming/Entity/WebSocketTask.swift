@@ -1,16 +1,15 @@
 import Foundation
 import Swinub
 
-public final class WebSocketTask<RequestType: Request>: Sendable {
+public final class WebSocketTask<Message: Decodable & Sendable>: Sendable {
     let task: URLSessionWebSocketTask
-    let requset: RequestType
-    public let messages: AsyncThrowingStream<RequestType.Response, any Error>
+    public let messages: AsyncThrowingStream<Message, any Error>
     
-    init(_ task: URLSessionWebSocketTask, request: RequestType) {
+    init<RequestType: Request>(_ task: URLSessionWebSocketTask, request: RequestType) where RequestType.Response == Message {
         self.task = task
-        self.requset = request
-        self.messages = AsyncThrowingStream<RequestType.Response, any Error>(
+        self.messages = AsyncThrowingStream<Message, any Error>(
             unfolding: {
+                try Task.checkCancellation()
                 let message = try await task.receive()
                 guard let string = message.string() else { return nil }
                 let data = Data(string.utf8)

@@ -15,33 +15,46 @@ struct ContentView: View {
     @State
     var webSocketTask: WebSocketTask<SwinubStreaming.Message>
     
+    @State
+    var statuses: [Swinub.Status] = []
+    
     @MainActor
     init() {
-        let authorization = Authorization(
-            host: "mstdn.jp",
-            accountID: Account.ID(rawValue: ""),
-            oauthToken: ""
-        )
         let request = ConnectV1Streaming(
             stream: .public,
-            authorization: authorization
+            host: "mstdn.jp"
         )
         webSocketTask = try! SwinubDefaults.streamingSession.webSocketTask(for: request)
     }
     
     var body: some View {
-        Text("Hello, World!")
-            .task {
-                do {
-                    for try await message in webSocketTask.messages {
-                        print(message)
-                    }
-                } catch {
-                    print(error)
+        NavigationView(content: {
+            List {
+                ForEach(statuses) { status in
+                    Text(status.id.rawValue)
                 }
             }
-            .onAppear(perform: {
-                webSocketTask.resume()
-            })
+            .navigationTitle("Swinub")
+            .navigationBarTitleDisplayMode(.inline)
+        })
+        .task {
+            do {
+                for try await message in webSocketTask.messages {
+                    switch message.event {
+                    case .update(let status):
+                        withAnimation {
+                            statuses.insert(status, at: 0)
+                        }
+                    default:
+                        break
+                    }
+                }
+            } catch {
+                print(error)
+            }
+        }
+        .onAppear(perform: {
+            webSocketTask.resume()
+        })
     }
 }

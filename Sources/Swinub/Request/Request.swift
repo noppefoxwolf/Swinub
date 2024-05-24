@@ -1,11 +1,5 @@
-import os
 import HTTPTypes
 import Foundation
-
-fileprivate let logger = Logger(
-    subsystem: Bundle.main.bundleIdentifier! + ".logger",
-    category: #file
-)
 
 public protocol Request: Sendable {
     associatedtype Response: Codable & Sendable

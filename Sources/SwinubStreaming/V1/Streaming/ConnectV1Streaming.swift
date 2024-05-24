@@ -20,4 +20,9 @@ public struct ConnectV1Streaming: AuthorizationRequest {
         }
         return parameters
     }
+    
+    public init(stream: StreamQuery, authorization: Authorization) {
+        self.stream = stream
+        self.authorization = authorization
+    }
 }

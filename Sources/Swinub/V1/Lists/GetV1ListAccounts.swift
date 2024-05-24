@@ -12,6 +12,6 @@ public struct GetV1ListAccounts: AuthorizationRequest, Sendable {
     public let authorization: Authorization
     public let listID: String
     public var authority: String { authorization.host }
-    public let method: HTTPRequest.Method = .get
+    public let method: RequestMethod = .http(.get)
     public var path: String { "/api/v1/lists/\(listID)/accounts" }
 }

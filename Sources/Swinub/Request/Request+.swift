@@ -9,10 +9,10 @@ struct RequestFailedToMakeComponentsError: LocalizedError {
 extension Request {
     public var scheme: String {
         switch method {
-        case .connect:
-            "wss"
-        default:
+        case .http:
             "https"
+        case .webSocket:
+            "wss"
         }
     }
     
@@ -43,34 +43,30 @@ extension Request {
         )
     }
     
-    func makeRequestURL(method: HTTPRequest.Method, url: URL, parameters: [String: (any RequestParameterValue)?]) throws -> URL {
-        guard var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
-            throw RequestFailedToMakeComponentsError()
-        }
-        if [.get, .connect].contains(method) {
+    func makeRequestURL(
+        method: HTTPRequest.Method,
+        url: URL,
+        parameters: [String: (any RequestParameterValue)?]
+    ) throws -> URL {
+        var url = url
+        if [.get].contains(method) {
             let queryItems =
-                try parameters
+            try parameters
                 .compactMapValues({ $0 })
                 .map({ (key, value) in
                     try URLQueryItem(name: key, value: value.parameterValue)
                 })
-            if !queryItems.isEmpty {
-                urlComponents.queryItems = queryItems
-            }
-        }
-        let url = urlComponents.url
-        guard let url else {
-            throw GeneralError(errorDescription: "Can not append get query.")
+            url.append(queryItems: queryItems)
         }
         return url
     }
     
-    func makeURLRequest(
+    func makeHTTPRequest(
         method: HTTPRequest.Method,
         url: URL,
         authorization: Authorization?,
         parameters: [String: (any RequestParameterValue)?]
-    ) throws -> URLRequest {
+    ) throws -> (HTTPRequest, Data) {
         let requestURL = try makeRequestURL(
             method: method,
             url: url,
@@ -111,13 +107,48 @@ extension Request {
             httpBody.append(Data.multipartEnd(boundary: boundary))
             httpRequest.headerFields[.contentType] = #"multipart/form-data; charset=utf-8; boundary="\#(boundary)""#
         }
-        
-        guard var request = URLRequest(httpRequest: httpRequest) else {
-            throw GeneralError(errorDescription: "Can not make URLRequest.")
+        return (httpRequest, httpBody)
+    }
+    
+    func makeURLRequest(
+        method: RequestMethod,
+        url: URL,
+        authorization: Authorization?,
+        parameters: [String: (any RequestParameterValue)?]
+    ) throws -> URLRequest {
+        switch method {
+        case .http(let method):
+            let (httpRequest, httpBody) = try makeHTTPRequest(
+                method: method,
+                url: url,
+                authorization: authorization,
+                parameters: parameters
+            )
+            guard var request = URLRequest(httpRequest: httpRequest) else {
+                throw GeneralError(errorDescription: "Can not make URLRequest.")
+            }
+            // workaround: HTTPRequest not support httpBody
+            request.httpBody = httpBody
+            return request
+        case .webSocket:
+            var url = url
+            let queryItems = try parameters.compactMapValues({ $0 }).compactMap({
+                try URLQueryItem(name: $0.key, value: $0.value.parameterValue)
+            })
+            try url.append(queryItems: queryItems)
+            var urlRequset = URLRequest(url: url)
+            if let authorization {
+                urlRequset.addValue(
+                    authorization.oauthToken,
+                    forHTTPHeaderField: HTTPField.Name.authorization.rawName
+                )
+                urlRequset.addValue(
+                    authorization.userAgent,
+                    forHTTPHeaderField: HTTPField.Name.userAgent.rawName
+                )
+            }
+            return urlRequset
         }
-        // workaround: HTTPRequest not support httpBody
-        request.httpBody = httpBody
-        return request
     }
 }
 

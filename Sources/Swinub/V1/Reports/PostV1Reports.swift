@@ -12,7 +12,7 @@ public struct PostV1Reports: AuthorizationRequest, Sendable {
     public let accountID: Account.ID
     public var comment: String = ""
     public var authority: String { authorization.host }
-    public let method: HTTPRequest.Method = .post
+    public let method: RequestMethod = .http(.post)
     public var path: String { "/api/v1/reports" }
     public var parameters: [String : (any RequestParameterValue)?] {
         [

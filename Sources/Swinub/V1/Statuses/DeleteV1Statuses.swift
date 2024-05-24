@@ -12,7 +12,7 @@ public struct DeleteV1Statuses: AuthorizationRequest, Sendable {
     public var authorization: Authorization
     public let statusID: Status.ID
     public var authority: String { authorization.host }
-    public let method: HTTPRequest.Method = .delete
+    public let method: RequestMethod = .http(.delete)
     public var path: String { "/api/v1/statuses/\(statusID)" }
 }
 

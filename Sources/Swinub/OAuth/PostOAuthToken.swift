@@ -29,7 +29,7 @@ public struct PostOAuthToken: Request, Sendable {
     
     public var authority: String { host }
     public var path: String { "/oauth/token" }
-    public let method: HTTPRequest.Method = .post
+    public let method: RequestMethod = .http(.post)
     public var parameters: [String : (any RequestParameterValue)?] {
         [
             "grant_type": "authorization_code",

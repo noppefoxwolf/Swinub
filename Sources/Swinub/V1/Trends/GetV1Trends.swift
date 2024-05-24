@@ -11,6 +11,6 @@ public struct GetV1Trends: Request, Sendable {
     let host: String
     
     public var authority: String { host }
-    public let method: HTTPRequest.Method = .get
+    public let method: RequestMethod = .http(.get)
     public var path: String { "/api/v1/trends" }
 }

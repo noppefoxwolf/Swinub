@@ -15,7 +15,7 @@ public struct GetV1Bookmarks: AuthorizationRequest, Sendable {
 
     public var authority: String { authorization.host }
     public let path = "/api/v1/bookmarks"
-    public let method: HTTPRequest.Method = .get
+    public let method: RequestMethod = .http(.get)
     public var parameters: [String : (any RequestParameterValue)?] {
         [
             "since_id": sinceID?.rawValue,

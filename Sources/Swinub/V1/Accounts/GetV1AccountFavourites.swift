@@ -13,7 +13,7 @@ public struct GetV1AccountFavourites: AuthorizationRequest, Sendable {
     public var prevCursor: PrevCursor? = nil
     public var limit: Int = 20
 
-    public let method: HTTPRequest.Method = .get
+    public let method: RequestMethod = .http(.get)
     public var path: String { "/api/v1/favourites" }
     public var authority: String { authorization.host }
     public var parameters: [String : (any RequestParameterValue)?] {

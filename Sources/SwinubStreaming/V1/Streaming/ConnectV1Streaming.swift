@@ -7,7 +7,7 @@ public struct ConnectV1Streaming: AuthorizationRequest {
     let stream: StreamQuery
     public var authorization: Authorization
     public var authority: String { authorization.host }
-    public var method: HTTPTypes.HTTPRequest.Method = .connect
+    public var method: RequestMethod = .webSocket
     public let path: String = "/api/v1/streaming"
     
     public var parameters: [String : (any RequestParameterValue)?] {

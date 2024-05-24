@@ -18,7 +18,7 @@ public struct PostOAuthRevoke: Request, Sendable {
     
     public var authority: String { host }
     public var path: String { "/oauth/revoke" }
-    public let method: HTTPRequest.Method = .post
+    public let method: RequestMethod = .http(.post)
     public var parameters: [String : (any RequestParameterValue)?] {
         [
             "client_id": clientID,

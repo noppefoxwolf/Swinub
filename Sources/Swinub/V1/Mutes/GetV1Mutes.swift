@@ -10,7 +10,7 @@ public struct GetV1Mutes: AuthorizationRequest, Sendable {
     public let authorization: Authorization
     public var limit: Int = 40
     public var authority: String { authorization.host }
-    public let method: HTTPRequest.Method = .get
+    public let method: RequestMethod = .http(.get)
     public var path: String { "/api/v1/mutes" }
     public var parameters: [String : (any RequestParameterValue)?] {
         [

@@ -10,5 +10,5 @@ public struct GetV1AccountsVerifyCredentials: AuthorizationRequest, Sendable {
     public let authorization: Authorization
     public var authority: String { authorization.host }
     public var path: String { "/api/v1/accounts/verify_credentials" }
-    public let method: HTTPRequest.Method = .get
+    public let method: RequestMethod = .http(.get)
 }

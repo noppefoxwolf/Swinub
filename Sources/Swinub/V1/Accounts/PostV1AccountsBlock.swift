@@ -14,5 +14,5 @@ public struct PostV1AccountsBlock: AuthorizationRequest, Sendable {
     public var authorization: Authorization
     public var authority: String { authorization.host }
     public var path: String { "/api/v1/accounts/\(accountID)/block" }
-    public let method: HTTPRequest.Method = .post
+    public let method: RequestMethod = .http(.post)
 }

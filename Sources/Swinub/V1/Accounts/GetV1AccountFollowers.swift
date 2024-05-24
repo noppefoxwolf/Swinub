@@ -10,7 +10,7 @@ public struct GetV1AccountFollowers: AuthorizationRequest, Sendable {
     }
     public let accountID: Account.ID
     public let authorization: Authorization
-    public let method: HTTPRequest.Method = .get
+    public let method: RequestMethod = .http(.get)
     public var path: String { "/api/v1/accounts/\(accountID)/followers" }
     public var authority: String { authorization.host }
     public var parameters: [String : (any RequestParameterValue)?] {

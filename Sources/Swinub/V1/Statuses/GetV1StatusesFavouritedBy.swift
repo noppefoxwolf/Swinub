@@ -11,6 +11,6 @@ public struct GetV1StatusesFavouritedBy: AuthorizationRequest, Sendable {
     public var authorization: Authorization
     public let statusID: Status.ID
     public var authority: String { authorization.host }
-    public let method: HTTPRequest.Method = .get
+    public let method: RequestMethod = .http(.get)
     public var path: String { "/api/v1/statuses/\(statusID)/favourited_by" }
 }

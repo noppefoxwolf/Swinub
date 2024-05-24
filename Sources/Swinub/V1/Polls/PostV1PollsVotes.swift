@@ -13,7 +13,7 @@ public struct PostV1PollsVotes: AuthorizationRequest, Sendable {
     public var choices: [Int] = []
     public let authorization: Authorization
     public var authority: String { authorization.host }
-    public let method: HTTPRequest.Method = .post
+    public let method: RequestMethod = .http(.post)
     public var path: String { "/api/v1/polls/\(pollID)/votes" }
     public var parameters: [String : (any RequestParameterValue)?] {
         [

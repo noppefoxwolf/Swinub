@@ -18,7 +18,7 @@ public struct GetV2Search: AuthorizationRequest, Sendable {
     public var resolve: Bool = false
     
     public var authority: String { authorization.host }
-    public let method: HTTPRequest.Method = .get
+    public let method: RequestMethod = .http(.get)
     public var path: String { "/api/v2/search" }
     public var parameters: [String : (any RequestParameterValue)?] {
         [

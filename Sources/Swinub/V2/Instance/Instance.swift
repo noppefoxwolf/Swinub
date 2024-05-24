@@ -12,5 +12,5 @@ public struct GetV2Instance: OptionalAuthorizationRequest, Sendable {
     public var authorization: Authorization?
     public var authority: String { host }
     public var path: String { "/api/v2/instance" }
-    public let method: HTTPRequest.Method = .get
+    public let method: RequestMethod = .http(.get)
 }

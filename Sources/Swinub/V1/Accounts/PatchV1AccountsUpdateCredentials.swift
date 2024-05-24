@@ -16,7 +16,7 @@ public struct PatchV1AccountsUpdateCredentials: AuthorizationRequest, Sendable {
 
     public var authority: String { authorization.host }
     public var path: String { "/api/v1/accounts/update_credentials" }
-    public let method: HTTPRequest.Method = .patch
+    public let method: RequestMethod = .http(.patch)
     public var parameters: [String : (any RequestParameterValue)?] {
         [
             "display_name": displayName,

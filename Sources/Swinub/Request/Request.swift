@@ -1,9 +1,15 @@
 import HTTPTypes
 import Foundation
 
+public enum RequestMethod: Equatable, Sendable {
+    case http(HTTPTypes.HTTPRequest.Method)
+    case webSocket
+}
+
 public protocol Request: Sendable {
     associatedtype Response: Decodable & Sendable
-    var method: HTTPRequest.Method { get }
+    
+    var method: RequestMethod { get }
     
     var scheme: String { get }
     var authority: String { get }

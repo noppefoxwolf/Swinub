@@ -32,7 +32,7 @@ public struct PutV1StatusesEmojiReactions: AuthorizationRequest, Sendable {
     public let statusID: Status.ID
     public let emoji: Emoji
     public var authority: String { authorization.host }
-    public let method: HTTPRequest.Method = .put
+    public let method: RequestMethod = .http(.put)
     public var path: String {
         let emoji =
             emoji.parameterValue.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""

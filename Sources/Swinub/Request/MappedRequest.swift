@@ -10,7 +10,7 @@ public struct MapAuthorizationRequest<Response: Codable & Sendable, Base: Author
         self.transform = transform
     }
     
-    public var method: HTTPRequest.Method { base.method }
+    public var method: RequestMethod { base.method }
     public var authorization: Authorization { base.authorization }
     public var scheme: String { base.scheme }
     public var authority: String { base.authority }

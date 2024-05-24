@@ -31,7 +31,7 @@ public struct PutV2Filter: AuthorizationRequest, Sendable {
     
     public var authority: String { authorization.host }
     public var path: String { "/api/v2/filters/\(filterID)" }
-    public let method: HTTPRequest.Method = .put
+    public let method: RequestMethod = .http(.put)
     public var parameters: [String : (any RequestParameterValue)?] {
         [
             "phrase": phrase,

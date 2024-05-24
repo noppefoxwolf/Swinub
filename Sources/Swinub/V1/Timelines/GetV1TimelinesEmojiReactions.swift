@@ -16,7 +16,7 @@ public struct GetV1TimelinesEmojiReactions: AuthorizationRequest, Sendable {
     
     public var authority: String { authorization.host }
     public var path: String { "/api/v1/emoji_reactions" }
-    public let method: HTTPRequest.Method = .get
+    public let method: RequestMethod = .http(.get)
     public var parameters: [String : (any RequestParameterValue)?] {
         [
             "since_id": sinceID?.rawValue,

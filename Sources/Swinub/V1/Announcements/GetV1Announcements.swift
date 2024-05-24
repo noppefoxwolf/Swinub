@@ -12,5 +12,5 @@ public struct GetV1Announcements: AuthorizationRequest, Sendable {
     public let host: String
     public var authority: String { authorization.host }
     public var path: String { "/api/v1/announcements" }
-    public let method: HTTPRequest.Method = .get
+    public let method: RequestMethod = .http(.get)
 }

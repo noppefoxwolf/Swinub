@@ -13,7 +13,12 @@ public final class WebSocketTask<Message: Decodable & Sendable>: Sendable {
                 let message = try await task.receive()
                 guard let string = message.string() else { return nil }
                 let data = Data(string.utf8)
-                return try? request.decode(data)
+                do {
+                    return try request.decode(data)
+                } catch {
+                    print(error)
+                    return nil
+                }
             }
         )
     }

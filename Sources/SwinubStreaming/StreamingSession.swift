@@ -4,11 +4,6 @@ import Foundation
 import Swinub
 import os
 
-fileprivate let logger = Logger(
-    subsystem: Bundle.main.bundleIdentifier! + ".logger",
-    category: #file
-)
-
 public struct StreamingSession: Sendable {
     public let webSocket: WebSocket
     let decoder: JSONDecoder
@@ -29,6 +24,10 @@ public struct StreamingSession: Sendable {
                         from: Data(string.utf8)
                     )
                 } catch {
+                    let logger = Logger(
+                        subsystem: Bundle.main.bundleIdentifier! + ".logger",
+                        category: #file
+                    )
                     logger.error("\(error)")
                     return nil
                 }

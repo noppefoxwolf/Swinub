@@ -45,26 +45,22 @@ let package = Package(
     ]
 )
 
-
-// Only development
-/*
-let warnConcurrency = "-warn-concurrency"
-let enableActorDataRaceChecks = "-enable-actor-data-race-checks"
 let swiftSettings: [SwiftSetting] = [
-    .enableUpcomingFeature("BareSlashRegexLiterals"),
-    .enableUpcomingFeature("ConciseMagicFile"),
-    .enableUpcomingFeature("ExistentialAny"),
-    .enableUpcomingFeature("ForwardTrailingClosures"),
-    .enableUpcomingFeature("ImplicitOpenExistentials"),
-    .enableUpcomingFeature("StrictConcurrency"),
-    .unsafeFlags([
-        warnConcurrency,
-        enableActorDataRaceChecks,
-    ]),
+    .enableExperimentalFeature("BareSlashRegexLiterals"),
+    .enableExperimentalFeature("ConciseMagicFile"),
+    .enableExperimentalFeature("ExistentialAny"),
+    .enableExperimentalFeature("ForwardTrailingClosures"),
+    .enableExperimentalFeature("ImplicitOpenExistentials"),
+    .enableExperimentalFeature("StrictConcurrency"),
+
+    .enableExperimentalFeature("ImportObjcForwardDeclarations"),
+    .enableExperimentalFeature("DisableOutwardActorInference"),
+    .enableExperimentalFeature("DeprecateApplicationMain"),
+    .enableExperimentalFeature("IsolatedDefaultValues"),
+    .enableExperimentalFeature("GlobalConcurrency"),
 ]
 
 package.targets.forEach { target in
     target.swiftSettings = target.swiftSettings ?? []
     target.swiftSettings?.append(contentsOf: swiftSettings)
 }
-*/

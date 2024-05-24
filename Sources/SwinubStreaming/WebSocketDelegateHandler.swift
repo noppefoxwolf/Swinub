@@ -1,12 +1,12 @@
 import Foundation
 import os
 
-fileprivate let logger = Logger(
-    subsystem: "dev.noppe.swinub.logger",
-    category: #file
-)
-
 final class WebSocketDelegateHandler: NSObject, URLSessionWebSocketDelegate {
+    let logger = Logger(
+        subsystem: "dev.noppe.swinub.logger",
+        category: #file
+    )
+    
     func urlSession(
         _ session: URLSession,
         webSocketTask: URLSessionWebSocketTask,

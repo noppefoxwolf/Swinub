@@ -1,10 +1,4 @@
 import Foundation
-import os
-
-fileprivate let logger = Logger(
-    subsystem: "dev.noppe.swinub.logger",
-    category: #file
-)
 
 public struct StatusVisibility: Codable, Sendable, Equatable, Hashable {
     public let rawValue: String

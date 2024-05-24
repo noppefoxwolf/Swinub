@@ -7,7 +7,7 @@ class RequestTests: XCTestCase {
         struct MockRequest: Request, Sendable {
             struct Response: Codable {}
             
-            var method: HTTPTypes.HTTPRequest.Method = .get
+            var method: RequestMethod = .http(.get)
             
             var authority: String = "pokemon.mastportal.info/"
             

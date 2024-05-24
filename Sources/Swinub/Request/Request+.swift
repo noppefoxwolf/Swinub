@@ -40,7 +40,7 @@ extension Request {
         guard var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
             throw RequestFailedToMakeComponentsError()
         }
-        if method == .get {
+        if [.get, .connect].contains(method) {
             let queryItems =
                 try parameters
                 .compactMapValues({ $0 })
@@ -73,6 +73,7 @@ extension Request {
         httpRequest.headerFields[.accept] = "application/json"
         if let authorization {
             httpRequest.headerFields[.authorization] = "Bearer \(authorization.oauthToken)"
+            httpRequest.headerFields[.userAgent] = authorization.userAgent
         }
         var httpBody = Data()
         let isMultipartEmpty = parameters.compactMapValues({ $0?.multipartContentType }).isEmpty

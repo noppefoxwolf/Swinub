@@ -2,7 +2,7 @@ import HTTPTypes
 import Foundation
 
 public protocol Request: Sendable {
-    associatedtype Response: Codable & Sendable
+    associatedtype Response: Decodable & Sendable
     var method: HTTPRequest.Method { get }
     
     var scheme: String { get }

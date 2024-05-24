@@ -10,6 +10,6 @@ public struct GetV1Lists: AuthorizationRequest, Sendable {
 
     public let authorization: Authorization
     public var authority: String { authorization.host }
-    public let method: RequestMethod = .http(.get)
+    public let method: RequestMethod = .get
     public var path: String { "/api/v1/lists" }
 }

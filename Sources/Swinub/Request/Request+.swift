@@ -135,7 +135,7 @@ extension Request {
             let queryItems = try parameters.compactMapValues({ $0 }).compactMap({
                 try URLQueryItem(name: $0.key, value: $0.value.parameterValue)
             })
-            try url.append(queryItems: queryItems)
+            url.append(queryItems: queryItems)
             var urlRequset = URLRequest(url: url)
             if let authorization {
                 urlRequset.addValue(

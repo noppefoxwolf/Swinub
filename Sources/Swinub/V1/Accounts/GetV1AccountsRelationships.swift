@@ -13,7 +13,7 @@ public struct GetV1AccountsRelationships: AuthorizationRequest, Sendable {
     public var byAccountID: Account.ID { authorization.accountID }
     public let authorization: Authorization
     public var path: String { "/api/v1/accounts/relationships" }
-    public let method: RequestMethod = .http(.get)
+    public let method: RequestMethod = .get
     public var authority: String { authorization.host }
     public var parameters: [String : (any RequestParameterValue)?] {
         ["id": accountIDs.map(\.rawValue).joined(separator: ",")]

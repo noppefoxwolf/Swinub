@@ -11,5 +11,5 @@ public struct GetV2Filters: AuthorizationRequest, Sendable {
     
     public var authority: String { authorization.host }
     public var path: String { "/api/v2/filters" }
-    public let method: RequestMethod = .http(.get)
+    public let method: RequestMethod = .get
 }

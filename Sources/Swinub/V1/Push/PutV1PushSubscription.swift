@@ -12,7 +12,7 @@ public struct PutV1PushSubscription: AuthorizationRequest, Sendable {
     public var authorization: Authorization
     public var configuration: SubscriptionConfiguration = .init()
     public var authority: String { authorization.host }
-    public let method: RequestMethod = .http(.put)
+    public let method: RequestMethod = .put
     public var path: String { "/api/v1/push/subscription" }
     public var parameters: [String : (any RequestParameterValue)?] {
         [

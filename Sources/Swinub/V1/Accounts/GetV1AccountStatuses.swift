@@ -18,7 +18,7 @@ public struct GetV1AccountStatuses: AuthorizationRequest, Sendable {
     public var onlyMedia: Bool = false
     
     public var path: String { "/api/v1/accounts/\(accountID)/statuses" }
-    public let method: RequestMethod = .http(.get)
+    public let method: RequestMethod = .get
     public var authority: String { authorization.host }
     public var parameters: [String : (any RequestParameterValue)?] {
         [

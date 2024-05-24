@@ -24,7 +24,7 @@ public struct PostV1Statuses: AuthorizationRequest, Sendable {
     public var authorization: Authorization
     var _parameters: Parameters
     public var authority: String { authorization.host }
-    public let method: RequestMethod = .http(.post)
+    public let method: RequestMethod = .post
     public var path: String { "/api/v1/statuses" }
     public var parameters: [String : (any RequestParameterValue)?] {
         [

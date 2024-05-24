@@ -43,7 +43,7 @@ public struct GetV1TimelinesPublic: AuthorizationRequest, Sendable {
 
     public var authority: String { authorization.host }
     public let path = "/api/v1/timelines/public"
-    public let method: RequestMethod = .http(.get)
+    public let method: RequestMethod = .get
     public var parameters: [String : (any RequestParameterValue)?] {
         [
             "local": _parameters.local,

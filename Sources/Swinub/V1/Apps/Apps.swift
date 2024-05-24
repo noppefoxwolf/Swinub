@@ -41,7 +41,7 @@ public struct PostV1Apps: Request, Sendable {
     var scopes: [Scope]
     public var authority: String { host }
     public var path: String { "/api/v1/apps" }
-    public let method: RequestMethod = .http(.post)
+    public let method: RequestMethod = .post
     public var parameters: [String : (any RequestParameterValue)?] {
         [
             "client_name": clientName,

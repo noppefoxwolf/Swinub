@@ -26,7 +26,7 @@ public struct PostV1Filter: AuthorizationRequest, Sendable {
     let wholeWord: Bool
     let expiresIn: Int?
     public var authority: String { authorization.host }
-    public let method: RequestMethod = .http(.post)
+    public let method: RequestMethod = .post
     public var path: String { "/api/v1/filters" }
     public var parameters: [String : (any RequestParameterValue)?] {
         [

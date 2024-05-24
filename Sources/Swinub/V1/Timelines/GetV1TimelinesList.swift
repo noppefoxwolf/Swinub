@@ -17,7 +17,7 @@ public struct GetV1TimelinesList: AuthorizationRequest, Sendable {
 
     public var authority: String { authorization.host }
     public var path: String { "/api/v1/timelines/list/\(listID)" }
-    public let method: RequestMethod = .http(.get)
+    public let method: RequestMethod = .get
     public var parameters: [String : (any RequestParameterValue)?] {
         [
             "since_id": sinceID?.rawValue,

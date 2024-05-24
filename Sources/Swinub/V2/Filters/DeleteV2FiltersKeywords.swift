@@ -16,7 +16,7 @@ public struct DeleteV2FiltersKeywords: AuthorizationRequest, Sendable {
     
     public var authority: String { authorization.host }
     public var path: String { "/api/v2/filters/keywords/\(keywordID)" }
-    public let method: RequestMethod = .http(.delete)
+    public let method: RequestMethod = .delete
 }
 
 public struct DeleteV2FiltersKeywordsResponse: Codable, Sendable {}

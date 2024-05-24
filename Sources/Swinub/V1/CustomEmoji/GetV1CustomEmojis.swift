@@ -12,5 +12,5 @@ public struct GetV1CustomEmojis: OptionalAuthorizationRequest, Sendable {
     public let host: String
     public var authority: String { host }
     public var path: String { "/api/v1/custom_emojis" }
-    public let method: RequestMethod = .http(.get)
+    public let method: RequestMethod = .get
 }

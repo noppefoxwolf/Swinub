@@ -14,5 +14,5 @@ public struct PostV1AccountsFollow: AuthorizationRequest, Sendable {
     public var authorization: Authorization
     public var authority: String { authorization.host }
     public var path: String { "/api/v1/accounts/\(accountID)/follow" }
-    public let method: RequestMethod = .http(.post)
+    public let method: RequestMethod = .post
 }

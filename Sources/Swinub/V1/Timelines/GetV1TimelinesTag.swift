@@ -14,7 +14,7 @@ public struct GetV1TimelinesTag: AuthorizationRequest, Sendable {
     public var prevCursor: PrevCursor? = nil
     public var limit: Int = 20
     let hashtag: String
-    public let method: RequestMethod = .http(.get)
+    public let method: RequestMethod = .get
 
     public var authority: String { authorization.host }
     public var path: String { "/api/v1/timelines/tag/\(hashtag)" }

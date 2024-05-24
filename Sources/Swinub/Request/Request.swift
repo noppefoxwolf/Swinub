@@ -4,6 +4,13 @@ import Foundation
 public enum RequestMethod: Equatable, Sendable {
     case http(HTTPTypes.HTTPRequest.Method)
     case webSocket
+    
+    // convenience
+    public static var get: RequestMethod { .http(.get) }
+    public static var post: RequestMethod { .http(.post) }
+    public static var put: RequestMethod { .http(.put) }
+    public static var patch: RequestMethod { .http(.patch) }
+    public static var delete: RequestMethod { .http(.delete) }
 }
 
 public protocol Request: Sendable {

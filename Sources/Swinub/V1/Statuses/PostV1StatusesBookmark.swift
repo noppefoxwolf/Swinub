@@ -11,6 +11,6 @@ public struct PostV1StatusesBookmark: AuthorizationRequest, Sendable {
     public let authorization: Authorization
     public let statusID: Status.ID
     public var authority: String { authorization.host }
-    public let method: RequestMethod = .http(.post)
+    public let method: RequestMethod = .post
     public var path: String { "/api/v1/statuses/\(statusID)/bookmark" }
 }

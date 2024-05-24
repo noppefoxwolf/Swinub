@@ -28,7 +28,7 @@ public struct PostV2Filter: AuthorizationRequest, Sendable {
     
     public var authority: String { authorization.host }
     public var path: String { "/api/v2/filters" }
-    public let method: RequestMethod = .http(.post)
+    public let method: RequestMethod = .post
     public var parameters: [String : (any RequestParameterValue)?] {
         [
             "title": title,

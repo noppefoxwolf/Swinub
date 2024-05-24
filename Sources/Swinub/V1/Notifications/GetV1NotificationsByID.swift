@@ -12,6 +12,6 @@ public struct GetV1NotificationsByID: AuthorizationRequest, Sendable {
     public let authorization: Authorization
     public var notificationID: Notification.ID
     public var authority: String { authorization.host }
-    public let method: RequestMethod = .http(.get)
+    public let method: RequestMethod = .get
     public var path: String { "/api/v1/notifications/\(notificationID)" }
 }

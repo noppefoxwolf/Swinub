@@ -31,7 +31,7 @@ public struct DeleteV1StatusesEmojiUnreactions: AuthorizationRequest, Sendable {
     public let statusID: Status.ID
     public let emoji: Emoji
     public var authority: String { authorization.host }
-    public let method: RequestMethod = .http(.delete)
+    public let method: RequestMethod = .delete
     public var path: String {
         let emoji =
             emoji.parameterValue.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""

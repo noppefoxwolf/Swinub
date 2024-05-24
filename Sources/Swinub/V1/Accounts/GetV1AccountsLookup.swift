@@ -12,7 +12,7 @@ public struct GetV1AccountsLookup: Request, Sendable {
     public var host: String
     public var acct: String
     public var path: String { "/api/v1/accounts/lookup" }
-    public let method: RequestMethod = .http(.get)
+    public let method: RequestMethod = .get
     public var authority: String { host }
     public var parameters: [String : (any RequestParameterValue)?] {
         [

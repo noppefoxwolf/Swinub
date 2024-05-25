@@ -31,6 +31,6 @@ public final class WebSocketTask<Message: Decodable & Sendable>: Sendable {
     }
     
     public func cancel() {
-        task.cancel()
+        task.cancel(with: .normalClosure, reason: nil)
     }
 }

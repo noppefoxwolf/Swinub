@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct PostV1AccountsUnblock: AuthorizationEndpointRequest, Sendable {
+public struct PostV1AccountsUnblock: HTTPEndpointRequest, Sendable {
     public typealias Response = Relationship
 
     public init(id: Account.ID, authorization: Authorization) {

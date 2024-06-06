@@ -24,6 +24,10 @@ extension EndpointRequest {
     }
 }
 
+extension EndpointRequest where AuthorizationType == Never {
+    public var authorization: Never { fatalError() }
+}
+
 extension HTTPEndpointRequest {
     public var scheme: String {
         "https"
@@ -110,7 +114,7 @@ extension HTTPEndpointRequest {
     }
 }
 
-extension AuthorizationEndpointRequest {
+extension HTTPEndpointRequest where AuthorizationType == Authorization {
     public func makeHTTPRequest() throws -> (HTTPRequest, Data) {
         try makeHTTPRequest(
             method: method,
@@ -121,7 +125,7 @@ extension AuthorizationEndpointRequest {
     }
 }
 
-extension OptionalAuthorizationHTTPEndpointRequest {
+extension HTTPEndpointRequest where AuthorizationType == Authorization? {
     public func makeHTTPRequest() throws -> (HTTPRequest, Data) {
         try makeHTTPRequest(
             method: method,

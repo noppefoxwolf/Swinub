@@ -2,7 +2,7 @@ import Foundation
 import HTTPTypes
 
 // https://docs.joinmastodon.org/methods/statuses/#delete
-public struct DeleteV1Statuses: AuthorizationEndpointRequest, Sendable {
+public struct DeleteV1Statuses: HTTPEndpointRequest, Sendable {
     public typealias Response = DeleteV1StatusesResponse
 
     public init(statusID: Status.ID, authorization: Authorization) {

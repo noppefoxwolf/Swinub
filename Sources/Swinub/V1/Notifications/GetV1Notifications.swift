@@ -2,7 +2,7 @@ import Foundation
 import HTTPTypes
 
 // https://docs.joinmastodon.org/methods/notifications/#get
-public struct GetV1Notifications: AuthorizationEndpointRequest, Sendable {
+public struct GetV1Notifications: HTTPEndpointRequest, Sendable {
     public typealias Response = [Notification]
 
     public init(authorization: Authorization) {

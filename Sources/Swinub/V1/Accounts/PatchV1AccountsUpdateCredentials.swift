@@ -2,7 +2,7 @@ import Foundation
 import HTTPTypes
 
 // https://docs.joinmastodon.org/methods/accounts/#update_credentials
-public struct PatchV1AccountsUpdateCredentials: AuthorizationEndpointRequest, Sendable {
+public struct PatchV1AccountsUpdateCredentials: HTTPEndpointRequest, Sendable {
     public typealias Response = Account
 
     public init(authorization: Authorization) {

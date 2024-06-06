@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV1TimelinesTag: AuthorizationEndpointRequest, Sendable {
+public struct GetV1TimelinesTag: HTTPEndpointRequest, Sendable {
     public typealias Response = [Status]
 
     public init(authorization: Authorization, hashtag: String) {

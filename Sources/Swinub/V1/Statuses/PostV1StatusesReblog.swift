@@ -2,7 +2,7 @@ import Foundation
 import HTTPTypes
 
 // https://docs.joinmastodon.org/methods/statuses/#boost
-public struct PostV1StatusesReblog: AuthorizationEndpointRequest, Sendable {
+public struct PostV1StatusesReblog: HTTPEndpointRequest, Sendable {
     public typealias Response = Status
 
     public init(id: Status.ID, visibility: StatusVisibility, authorization: Authorization) {

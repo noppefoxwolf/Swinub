@@ -2,7 +2,7 @@ import Foundation
 import HTTPTypes
 
 // https://github.com/kmycode/mastodon/wiki/絵文字リアクションAPI
-public struct PutV1StatusesEmojiReactions: AuthorizationEndpointRequest, Sendable {
+public struct PutV1StatusesEmojiReactions: HTTPEndpointRequest, Sendable {
     public typealias Response = Status
 
     public struct Emoji: Sendable {

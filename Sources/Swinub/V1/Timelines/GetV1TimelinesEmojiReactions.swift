@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV1TimelinesEmojiReactions: AuthorizationEndpointRequest, Sendable {
+public struct GetV1TimelinesEmojiReactions: HTTPEndpointRequest, Sendable {
     public typealias Response = [Status]
 
     public init(authorization: Authorization) {

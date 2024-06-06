@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV1Mutes: AuthorizationEndpointRequest, Sendable {
+public struct GetV1Mutes: HTTPEndpointRequest, Sendable {
     public typealias Response = [Account]
 
     public init(authorization: Authorization) {

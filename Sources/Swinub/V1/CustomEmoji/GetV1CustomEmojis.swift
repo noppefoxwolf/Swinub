@@ -1,9 +1,10 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV1CustomEmojis: OptionalAuthorizationHTTPEndpointRequest, Sendable {
+public struct GetV1CustomEmojis: HTTPEndpointRequest, Sendable {
     public typealias Response = [CustomEmoji]
-
+    public typealias AuthorizationType = Never
+    
     public init(host: String) {
         self.host = host
     }

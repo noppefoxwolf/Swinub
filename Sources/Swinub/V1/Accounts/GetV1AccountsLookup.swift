@@ -3,6 +3,7 @@ import HTTPTypes
 
 public struct GetV1AccountsLookup: HTTPEndpointRequest, Sendable {
     public typealias Response = Account
+    public typealias AuthorizationType = Never
 
     public init(host: String, acct: String) {
         self.host = host

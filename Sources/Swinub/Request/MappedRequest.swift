@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct MapAuthorizationRequest<Response: Codable & Sendable, Base: AuthorizationEndpointRequest>: AuthorizationEndpointRequest {
+public struct MapHTTPEndpointRequest<Response: Codable & Sendable, Base: HTTPEndpointRequest>: HTTPEndpointRequest {
     public var base: Base
     let transform: @Sendable (Base.Response) throws -> Response
     
@@ -11,7 +11,7 @@ public struct MapAuthorizationRequest<Response: Codable & Sendable, Base: Author
     }
     
     public var method: HTTPRequest.Method { base.method }
-    public var authorization: Authorization { base.authorization }
+    public var authorization: Base.AuthorizationType { base.authorization }
     public var scheme: String { base.scheme }
     public var authority: String { base.authority }
     public var path: String { base.path }
@@ -24,8 +24,8 @@ public struct MapAuthorizationRequest<Response: Codable & Sendable, Base: Author
     }
 }
 
-extension AuthorizationEndpointRequest {
-    public func map<T: Codable>(_ transform: @escaping @Sendable (Self.Response) throws -> T) -> MapAuthorizationRequest<T, Self> {
-        MapAuthorizationRequest(base: self, transform: transform)
+extension HTTPEndpointRequest {
+    public func map<T: Codable>(_ transform: @escaping @Sendable (Self.Response) throws -> T) -> MapHTTPEndpointRequest<T, Self> {
+        MapHTTPEndpointRequest(base: self, transform: transform)
     }
 }

@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct DeleteV1StatusesEmojiUnreactions: AuthorizationEndpointRequest, Sendable {
+public struct DeleteV1StatusesEmojiUnreactions: HTTPEndpointRequest, Sendable {
     public typealias Response = Status
 
     public struct Emoji: Sendable {

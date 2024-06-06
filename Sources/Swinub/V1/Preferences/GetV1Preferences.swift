@@ -2,7 +2,7 @@ import Foundation
 import HTTPTypes
 
 // https://docs.joinmastodon.org/methods/preferences/
-public struct GetV1Preferences: AuthorizationEndpointRequest, Sendable {
+public struct GetV1Preferences: HTTPEndpointRequest, Sendable {
     public typealias Response = Preference
 
     public init(authorization: Authorization) {

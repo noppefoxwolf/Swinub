@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV1TimelinesList: AuthorizationEndpointRequest, Sendable {
+public struct GetV1TimelinesList: HTTPEndpointRequest, Sendable {
     public typealias Response = [Status]
 
     public init(authorization: Authorization, listID: String) {

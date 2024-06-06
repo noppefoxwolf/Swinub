@@ -2,7 +2,7 @@ import Foundation
 import HTTPTypes
 
 // https://docs.joinmastodon.org/methods/preferences/
-public struct PostV1PollsVotes: AuthorizationEndpointRequest, Sendable {
+public struct PostV1PollsVotes: HTTPEndpointRequest, Sendable {
     public typealias Response = Poll
 
     public init(id: Poll.ID, authorization: Authorization) {

@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct PostV1PushSubscription: AuthorizationEndpointRequest, Sendable {
+public struct PostV1PushSubscription: HTTPEndpointRequest, Sendable {
     public typealias Response = WebPushSubscription
 
     public init(

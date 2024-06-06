@@ -2,7 +2,7 @@ import Foundation
 import HTTPTypes
 
 // https://docs.joinmastodon.org/methods/search/#v2
-public struct GetV2Search: AuthorizationEndpointRequest, Sendable {
+public struct GetV2Search: HTTPEndpointRequest, Sendable {
     public typealias Response = Search
 
     public init(authorization: Authorization, q: String) {

@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct PostV1StatusesUnpin: AuthorizationEndpointRequest, Sendable {
+public struct PostV1StatusesUnpin: HTTPEndpointRequest, Sendable {
     public typealias Response = Status
 
     public init(statusID: Status.ID, authorization: Authorization) {

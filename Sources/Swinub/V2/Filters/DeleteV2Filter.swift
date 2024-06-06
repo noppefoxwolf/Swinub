@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct DeleteV2Filter: AuthorizationEndpointRequest, Sendable {
+public struct DeleteV2Filter: HTTPEndpointRequest, Sendable {
     public typealias Response = DeleteV2FilterResponse
 
     public init(

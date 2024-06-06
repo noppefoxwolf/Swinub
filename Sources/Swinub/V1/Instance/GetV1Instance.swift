@@ -3,8 +3,9 @@ import HTTPTypes
 
 // https://fedibird.com/api/v1/instance
 // https://docs.joinmastodon.org/methods/instance/#v1
-public struct GetV1Instance: OptionalAuthorizationHTTPEndpointRequest, Sendable {
+public struct GetV1Instance: HTTPEndpointRequest, Sendable {
     public typealias Response = InstanceV1
+    public typealias AuthorizationType = Never
 
     public init(host: String) {
         self.host = host

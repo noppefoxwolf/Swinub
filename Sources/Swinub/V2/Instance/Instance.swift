@@ -1,8 +1,9 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV2Instance: OptionalAuthorizationHTTPEndpointRequest, Sendable {
+public struct GetV2Instance: HTTPEndpointRequest, Sendable {
     public typealias Response = Instance
+    public typealias AuthorizationType = Never
 
     public init(host: String) {
         self.host = host

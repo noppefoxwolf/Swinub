@@ -2,7 +2,7 @@ import Foundation
 import HTTPTypes
 
 // https://docs.joinmastodon.org/methods/media/#v2
-public struct PostV2Media: AuthorizationEndpointRequest, Sendable {
+public struct PostV2Media: HTTPEndpointRequest, Sendable {
     public typealias Response = MediaAttachment
 
     public init(

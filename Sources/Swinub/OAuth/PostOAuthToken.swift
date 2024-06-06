@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct PostOAuthToken: Request, Sendable {
+public struct PostOAuthToken: EndpointRequest, Sendable {
     public typealias Response = OAuthToken
 
     public init(

@@ -5,7 +5,7 @@ public final class WebSocketTask<Message: Decodable & Sendable>: Sendable {
     let task: URLSessionWebSocketTask
     public let messages: AsyncThrowingStream<Message, any Error>
     
-    init<RequestType: Request>(_ task: URLSessionWebSocketTask, request: RequestType) where RequestType.Response == Message {
+    init<RequestType: EndpointRequest>(_ task: URLSessionWebSocketTask, request: RequestType) where RequestType.Response == Message {
         self.task = task
         self.messages = AsyncThrowingStream<Message, any Error>(
             unfolding: {

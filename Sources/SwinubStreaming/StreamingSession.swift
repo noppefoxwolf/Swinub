@@ -2,13 +2,13 @@ import Swinub
 import Foundation
 
 public protocol StreamingSession: Sendable {
-    func webSocketTask<T: Request>(
+    func webSocketTask<T: EndpointRequest>(
         for request: T
     ) throws -> WebSocketTask<T.Response>
 }
 
 extension URLSession: StreamingSession {
-    public func webSocketTask<T: Request>(for request: T) throws -> WebSocketTask<T.Response> {
+    public func webSocketTask<T: EndpointRequest>(for request: T) throws -> WebSocketTask<T.Response> {
         let urlRequest = try request.makeURLRequest()
         let webSocketTask = webSocketTask(with: urlRequest)
         return WebSocketTask(webSocketTask, request: request)

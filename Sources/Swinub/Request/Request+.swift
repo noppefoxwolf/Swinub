@@ -6,7 +6,7 @@ struct RequestFailedToMakeComponentsError: LocalizedError {
     var errorDescription: String? { "Request failed to make url components." }
 }
 
-extension Request {
+extension EndpointRequest {
     public var scheme: String {
         switch method {
         case .http:

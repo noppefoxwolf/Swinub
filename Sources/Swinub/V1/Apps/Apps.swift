@@ -18,7 +18,7 @@ public struct Application: Codable, Identifiable, Sendable {
     public let vapidKey: String
 }
 
-public struct PostV1Apps: Request, Sendable {
+public struct PostV1Apps: EndpointRequest, Sendable {
     public typealias Response = Application
 
     public init(

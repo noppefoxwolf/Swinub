@@ -4,13 +4,13 @@ import HTTPTypes
 import HTTPTypesFoundation
 
 public protocol Session: Sendable {
-    func response<T: Request>(
+    func response<T: EndpointRequest>(
         for request: T
     ) async throws -> (response: T.Response, httpResponse: HTTPResponse)
 }
 
 extension URLSession: Session {
-    public func response<T: Request>(
+    public func response<T: EndpointRequest>(
         for request: T
     ) async throws -> (response: T.Response, httpResponse: HTTPResponse) {
         let urlRequest = try request.makeURLRequest()

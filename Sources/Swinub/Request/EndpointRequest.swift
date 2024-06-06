@@ -13,7 +13,7 @@ public enum RequestMethod: Equatable, Sendable {
     public static var delete: RequestMethod { .http(.delete) }
 }
 
-public protocol Request: Sendable {
+public protocol EndpointRequest: Sendable {
     associatedtype Response: Decodable & Sendable
     
     var method: RequestMethod { get }
@@ -29,10 +29,10 @@ public protocol Request: Sendable {
     func decode(_ data: Data) throws -> Response
 }
 
-public protocol AuthorizationRequest: Request {
+public protocol AuthorizationRequest: EndpointRequest {
     var authorization: Authorization { get }
 }
 
-public protocol OptionalAuthorizationRequest: Request {
+public protocol OptionalAuthorizationRequest: EndpointRequest {
     var authorization: Authorization? { get }
 }

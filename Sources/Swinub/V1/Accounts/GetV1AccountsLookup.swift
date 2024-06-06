@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV1AccountsLookup: Request, Sendable {
+public struct GetV1AccountsLookup: EndpointRequest, Sendable {
     public typealias Response = Account
 
     public init(host: String, acct: String) {

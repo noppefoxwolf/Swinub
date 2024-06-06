@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV1Trends: Request, Sendable {
+public struct GetV1Trends: EndpointRequest, Sendable {
     public typealias Response = [Tag]
 
     public init(host: String) {

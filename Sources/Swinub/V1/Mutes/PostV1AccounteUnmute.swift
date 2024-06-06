@@ -2,7 +2,7 @@ import Foundation
 import HTTPTypes
 
 // https://docs.joinmastodon.org/methods/accounts/#mute
-public struct PostV1AccountsUnmute: AuthorizationRequest, Sendable {
+public struct PostV1AccountsUnmute: AuthorizationEndpointRequest, Sendable {
     public typealias Response = Relationship
 
     public init(accountID: Account.ID, authorization: Authorization) {
@@ -13,6 +13,6 @@ public struct PostV1AccountsUnmute: AuthorizationRequest, Sendable {
     public let authorization: Authorization
     public var byAccountID: Account.ID { authorization.accountID }
     public var authority: String { authorization.host }
-    public let method: RequestMethod = .post
+    public let method: HTTPRequest.Method = .post
     public var path: String { "/api/v1/accounts/\(accountID)/unmute" }
 }

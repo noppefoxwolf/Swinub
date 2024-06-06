@@ -4,23 +4,29 @@ import HTTPTypes
 import HTTPTypesFoundation
 
 public protocol Session: Sendable {
-    func response<T: EndpointRequest>(
+    func response<T: HTTPEndpointRequest>(
         for request: T
     ) async throws -> (response: T.Response, httpResponse: HTTPResponse)
 }
 
 extension URLSession: Session {
-    public func response<T: EndpointRequest>(
+    public func response<T: HTTPEndpointRequest>(
         for request: T
     ) async throws -> (response: T.Response, httpResponse: HTTPResponse) {
-        let urlRequest = try request.makeURLRequest()
-        let (data, httpURLResponse) = try await self.data(for: urlRequest) as! (Data, HTTPURLResponse)
-        let httpResponse = httpURLResponse.httpResponse!
+        let (httpRequest, data) = try request.makeHTTPRequest()
+        
+        let (responseData, httpResponse): (Data, HTTPResponse)
+        switch request.method {
+        case .post:
+            (responseData, httpResponse) = try await self.upload(for: httpRequest, from: data)
+        default:
+            (responseData, httpResponse) = try await self.data(for: httpRequest)
+        }
         
         do {
             switch httpResponse.status.kind {
             case .successful:
-                let response = try request.decode(data)
+                let response = try request.decode(responseData)
                 return (response, httpResponse)
             default:
                 if httpResponse.headerFields[.contentType] == "text/html" {
@@ -33,7 +39,7 @@ extension URLSession: Session {
                     let decoder = JSONDecoder()
                     decoder.keyDecodingStrategy = .convertFromSnakeCase
                     decoder.dateDecodingStrategy = .millisecondsISO8601
-                    throw try decoder.decode(MastodonError.self, from: data)
+                    throw try decoder.decode(MastodonError.self, from: responseData)
                 }
             }
         } catch {

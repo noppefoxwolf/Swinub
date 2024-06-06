@@ -2,7 +2,7 @@ import Foundation
 import HTTPTypes
 
 //https://docs.joinmastodon.org/methods/statuses/#create
-public struct PostV1Statuses: AuthorizationRequest, Sendable {
+public struct PostV1Statuses: AuthorizationEndpointRequest, Sendable {
     public typealias Response = Status
 
     public struct Parameters: Sendable {
@@ -24,7 +24,7 @@ public struct PostV1Statuses: AuthorizationRequest, Sendable {
     public var authorization: Authorization
     var _parameters: Parameters
     public var authority: String { authorization.host }
-    public let method: RequestMethod = .post
+    public let method: HTTPRequest.Method = .post
     public var path: String { "/api/v1/statuses" }
     public var parameters: [String : (any RequestParameterValue)?] {
         [

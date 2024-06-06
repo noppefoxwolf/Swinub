@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct PostV2FiltersKeywords: AuthorizationRequest, Sendable {
+public struct PostV2FiltersKeywords: AuthorizationEndpointRequest, Sendable {
     public typealias Response = FilterKeyword
 
     public init(
@@ -19,7 +19,7 @@ public struct PostV2FiltersKeywords: AuthorizationRequest, Sendable {
     
     public var authority: String { authorization.host }
     public var path: String { "/api/v2/filters/\(filterID)/keywords" }
-    public let method: RequestMethod = .post
+    public let method: HTTPRequest.Method = .post
     public var parameters: [String : (any RequestParameterValue)?] {
         [
             "keyword": keywordsAttribute.keyword,

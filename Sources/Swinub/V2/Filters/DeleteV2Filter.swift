@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct DeleteV2Filter: AuthorizationRequest, Sendable {
+public struct DeleteV2Filter: AuthorizationEndpointRequest, Sendable {
     public typealias Response = DeleteV2FilterResponse
 
     public init(
@@ -16,7 +16,7 @@ public struct DeleteV2Filter: AuthorizationRequest, Sendable {
     
     public var authority: String { authorization.host }
     public var path: String { "/api/v2/filters/\(filterID)" }
-    public let method: RequestMethod = .delete
+    public let method: HTTPRequest.Method = .delete
 }
 
 public struct DeleteV2FilterResponse: Codable, Sendable {}

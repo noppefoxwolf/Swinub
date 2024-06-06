@@ -2,7 +2,7 @@ import Foundation
 import HTTPTypes
 
 // https://docs.joinmastodon.org/methods/search/#v2
-public struct GetV2Search: AuthorizationRequest, Sendable {
+public struct GetV2Search: AuthorizationEndpointRequest, Sendable {
     public typealias Response = Search
 
     public init(authorization: Authorization, q: String) {
@@ -18,7 +18,7 @@ public struct GetV2Search: AuthorizationRequest, Sendable {
     public var resolve: Bool = false
     
     public var authority: String { authorization.host }
-    public let method: RequestMethod = .get
+    public let method: HTTPRequest.Method = .get
     public var path: String { "/api/v2/search" }
     public var parameters: [String : (any RequestParameterValue)?] {
         [

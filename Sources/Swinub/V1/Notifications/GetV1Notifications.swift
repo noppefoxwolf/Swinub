@@ -2,7 +2,7 @@ import Foundation
 import HTTPTypes
 
 // https://docs.joinmastodon.org/methods/notifications/#get
-public struct GetV1Notifications: AuthorizationRequest, Sendable {
+public struct GetV1Notifications: AuthorizationEndpointRequest, Sendable {
     public typealias Response = [Notification]
 
     public init(authorization: Authorization) {
@@ -14,7 +14,7 @@ public struct GetV1Notifications: AuthorizationRequest, Sendable {
     public var limit: Int = 30
     public var types: [String]?
     public var authority: String { authorization.host }
-    public let method: RequestMethod = .get
+    public let method: HTTPRequest.Method = .get
     public var path: String { "/api/v1/notifications" }
     public var parameters: [String : (any RequestParameterValue)?] {
         [

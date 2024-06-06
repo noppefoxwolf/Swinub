@@ -2,7 +2,7 @@ import Foundation
 import HTTPTypes
 
 // https://docs.joinmastodon.org/methods/media/#v2
-public struct PostV2Media: AuthorizationRequest, Sendable {
+public struct PostV2Media: AuthorizationEndpointRequest, Sendable {
     public typealias Response = MediaAttachment
 
     public init(
@@ -19,7 +19,7 @@ public struct PostV2Media: AuthorizationRequest, Sendable {
     
     public var authority: String { authorization.host }
     public var path: String { "/api/v2/media" }
-    public let method: RequestMethod = .post
+    public let method: HTTPRequest.Method = .post
     public var parameters: [String : (any RequestParameterValue)?] {
         [
             "file": media,

@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct PostOAuthToken: EndpointRequest, Sendable {
+public struct PostOAuthToken: HTTPEndpointRequest, Sendable {
     public typealias Response = OAuthToken
 
     public init(
@@ -29,7 +29,7 @@ public struct PostOAuthToken: EndpointRequest, Sendable {
     
     public var authority: String { host }
     public var path: String { "/oauth/token" }
-    public let method: RequestMethod = .post
+    public let method: HTTPRequest.Method = .post
     public var parameters: [String : (any RequestParameterValue)?] {
         [
             "grant_type": "authorization_code",

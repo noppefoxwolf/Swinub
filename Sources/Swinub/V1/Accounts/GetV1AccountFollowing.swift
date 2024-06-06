@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV1AccountFollowing: AuthorizationRequest, Sendable {
+public struct GetV1AccountFollowing: AuthorizationEndpointRequest, Sendable {
     public typealias Response = [Account]
 
     public init(accountID: Account.ID, authorization: Authorization) {
@@ -10,7 +10,7 @@ public struct GetV1AccountFollowing: AuthorizationRequest, Sendable {
     }
     public let accountID: Account.ID
     public let authorization: Authorization
-    public let method: RequestMethod = .get
+    public let method: HTTPRequest.Method = .get
     public var path: String { "/api/v1/accounts/\(accountID)/following" }
     public var authority: String { authorization.host }
     public var parameters: [String : (any RequestParameterValue)?] {

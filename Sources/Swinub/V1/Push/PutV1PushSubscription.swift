@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct PutV1PushSubscription: AuthorizationRequest, Sendable {
+public struct PutV1PushSubscription: AuthorizationEndpointRequest, Sendable {
     public typealias Response = WebPushSubscription
 
     public init(
@@ -12,7 +12,7 @@ public struct PutV1PushSubscription: AuthorizationRequest, Sendable {
     public var authorization: Authorization
     public var configuration: SubscriptionConfiguration = .init()
     public var authority: String { authorization.host }
-    public let method: RequestMethod = .put
+    public let method: HTTPRequest.Method = .put
     public var path: String { "/api/v1/push/subscription" }
     public var parameters: [String : (any RequestParameterValue)?] {
         [

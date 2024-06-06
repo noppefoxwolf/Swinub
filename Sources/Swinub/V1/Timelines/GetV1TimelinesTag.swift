@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV1TimelinesTag: AuthorizationRequest, Sendable {
+public struct GetV1TimelinesTag: AuthorizationEndpointRequest, Sendable {
     public typealias Response = [Status]
 
     public init(authorization: Authorization, hashtag: String) {
@@ -14,7 +14,7 @@ public struct GetV1TimelinesTag: AuthorizationRequest, Sendable {
     public var prevCursor: PrevCursor? = nil
     public var limit: Int = 20
     let hashtag: String
-    public let method: RequestMethod = .get
+    public let method: HTTPRequest.Method = .get
 
     public var authority: String { authorization.host }
     public var path: String { "/api/v1/timelines/tag/\(hashtag)" }

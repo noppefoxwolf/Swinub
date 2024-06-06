@@ -7,15 +7,6 @@ struct RequestFailedToMakeComponentsError: LocalizedError {
 }
 
 extension EndpointRequest {
-    public var scheme: String {
-        switch method {
-        case .http:
-            "https"
-        case .webSocket:
-            "wss"
-        }
-    }
-    
     public var url: URL {
         get throws {
             let relativeToURL = URL(string: "\(scheme)://\(authority)")
@@ -25,23 +16,20 @@ extension EndpointRequest {
         }
     }
     
-    public var parameters: [String: (any RequestParameterValue)?] { [:] }
-    
     public func decode(_ data: Data) throws -> Response {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         decoder.dateDecodingStrategy = .millisecondsISO8601
         return try decoder.decode(Response.self, from: data)
     }
-    
-    public func makeURLRequest() throws -> URLRequest {
-        try makeURLRequest(
-            method: method,
-            url: url,
-            authorization: nil,
-            parameters: parameters
-        )
+}
+
+extension HTTPEndpointRequest {
+    public var scheme: String {
+        "https"
     }
+    
+    public var parameters: [String: (any RequestParameterValue)?] { [:] }
     
     func makeRequestURL(
         method: HTTPRequest.Method,
@@ -109,52 +97,22 @@ extension EndpointRequest {
         }
         return (httpRequest, httpBody)
     }
-    
-    func makeURLRequest(
-        method: RequestMethod,
-        url: URL,
-        authorization: Authorization?,
-        parameters: [String: (any RequestParameterValue)?]
-    ) throws -> URLRequest {
-        switch method {
-        case .http(let method):
-            let (httpRequest, httpBody) = try makeHTTPRequest(
-                method: method,
-                url: url,
-                authorization: authorization,
-                parameters: parameters
-            )
-            guard var request = URLRequest(httpRequest: httpRequest) else {
-                throw GeneralError(errorDescription: "Can not make URLRequest.")
-            }
-            // workaround: HTTPRequest not support httpBody
-            request.httpBody = httpBody
-            return request
-        case .webSocket:
-            var url = url
-            let queryItems = try parameters.compactMapValues({ $0 }).compactMap({
-                try URLQueryItem(name: $0.key, value: $0.value.parameterValue)
-            })
-            url.append(queryItems: queryItems)
-            var urlRequset = URLRequest(url: url)
-            if let authorization {
-                urlRequset.addValue(
-                    authorization.oauthToken,
-                    forHTTPHeaderField: HTTPField.Name.authorization.rawName
-                )
-                urlRequset.addValue(
-                    authorization.userAgent,
-                    forHTTPHeaderField: HTTPField.Name.userAgent.rawName
-                )
-            }
-            return urlRequset
-        }
+}
+
+extension HTTPEndpointRequest {
+    public func makeHTTPRequest() throws -> (HTTPRequest, Data) {
+        try makeHTTPRequest(
+            method: method,
+            url: url,
+            authorization: nil,
+            parameters: parameters
+        )
     }
 }
 
-extension AuthorizationRequest {
-    public func makeURLRequest() throws -> URLRequest {
-        try makeURLRequest(
+extension AuthorizationEndpointRequest {
+    public func makeHTTPRequest() throws -> (HTTPRequest, Data) {
+        try makeHTTPRequest(
             method: method,
             url: url,
             authorization: authorization,
@@ -163,9 +121,9 @@ extension AuthorizationRequest {
     }
 }
 
-extension OptionalAuthorizationRequest {
-    public func makeURLRequest() throws -> URLRequest {
-        try makeURLRequest(
+extension OptionalAuthorizationHTTPEndpointRequest {
+    public func makeHTTPRequest() throws -> (HTTPRequest, Data) {
+        try makeHTTPRequest(
             method: method,
             url: url,
             authorization: authorization,

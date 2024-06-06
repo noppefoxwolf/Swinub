@@ -18,7 +18,7 @@ public struct Application: Codable, Identifiable, Sendable {
     public let vapidKey: String
 }
 
-public struct PostV1Apps: EndpointRequest, Sendable {
+public struct PostV1Apps: HTTPEndpointRequest, Sendable {
     public typealias Response = Application
 
     public init(
@@ -41,7 +41,7 @@ public struct PostV1Apps: EndpointRequest, Sendable {
     var scopes: [Scope]
     public var authority: String { host }
     public var path: String { "/api/v1/apps" }
-    public let method: RequestMethod = .post
+    public let method: HTTPRequest.Method = .post
     public var parameters: [String : (any RequestParameterValue)?] {
         [
             "client_name": clientName,

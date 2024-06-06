@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV1AccountStatuses: AuthorizationRequest, Sendable {
+public struct GetV1AccountStatuses: AuthorizationEndpointRequest, Sendable {
     public typealias Response = [Status]
 
     public init(accountID: Account.ID, authorization: Authorization) {
@@ -18,7 +18,7 @@ public struct GetV1AccountStatuses: AuthorizationRequest, Sendable {
     public var onlyMedia: Bool = false
     
     public var path: String { "/api/v1/accounts/\(accountID)/statuses" }
-    public let method: RequestMethod = .get
+    public let method: HTTPRequest.Method = .get
     public var authority: String { authorization.host }
     public var parameters: [String : (any RequestParameterValue)?] {
         [

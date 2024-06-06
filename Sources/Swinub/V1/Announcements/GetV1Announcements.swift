@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV1Announcements: AuthorizationRequest, Sendable {
+public struct GetV1Announcements: AuthorizationEndpointRequest, Sendable {
     public typealias Response = [Announcement]
 
     public init(authorization: Authorization) {
@@ -12,5 +12,5 @@ public struct GetV1Announcements: AuthorizationRequest, Sendable {
     public let host: String
     public var authority: String { authorization.host }
     public var path: String { "/api/v1/announcements" }
-    public let method: RequestMethod = .get
+    public let method: HTTPRequest.Method = .get
 }

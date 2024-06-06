@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct DeleteV1StatusesEmojiUnreactions: AuthorizationRequest, Sendable {
+public struct DeleteV1StatusesEmojiUnreactions: AuthorizationEndpointRequest, Sendable {
     public typealias Response = Status
 
     public struct Emoji: Sendable {
@@ -31,7 +31,7 @@ public struct DeleteV1StatusesEmojiUnreactions: AuthorizationRequest, Sendable {
     public let statusID: Status.ID
     public let emoji: Emoji
     public var authority: String { authorization.host }
-    public let method: RequestMethod = .delete
+    public let method: HTTPRequest.Method = .delete
     public var path: String {
         let emoji =
             emoji.parameterValue.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""

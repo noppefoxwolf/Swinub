@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV1AccountsRelationships: AuthorizationRequest, Sendable {
+public struct GetV1AccountsRelationships: AuthorizationEndpointRequest, Sendable {
     public typealias Response = [Relationship]
 
     public init(ids: [Account.ID], authorization: Authorization) {
@@ -13,7 +13,7 @@ public struct GetV1AccountsRelationships: AuthorizationRequest, Sendable {
     public var byAccountID: Account.ID { authorization.accountID }
     public let authorization: Authorization
     public var path: String { "/api/v1/accounts/relationships" }
-    public let method: RequestMethod = .get
+    public let method: HTTPRequest.Method = .get
     public var authority: String { authorization.host }
     public var parameters: [String : (any RequestParameterValue)?] {
         ["id": accountIDs.map(\.rawValue).joined(separator: ",")]

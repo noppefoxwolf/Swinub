@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct PostV1AccountsUnfollow: AuthorizationRequest, Sendable {
+public struct PostV1AccountsUnfollow: AuthorizationEndpointRequest, Sendable {
     public typealias Response = Relationship
 
     public init(id: Account.ID, authorization: Authorization) {
@@ -14,5 +14,5 @@ public struct PostV1AccountsUnfollow: AuthorizationRequest, Sendable {
     public var authorization: Authorization
     public var authority: String { authorization.host }
     public var path: String { "/api/v1/accounts/\(accountID)/unfollow" }
-    public let method: RequestMethod = .post
+    public let method: HTTPRequest.Method = .post
 }

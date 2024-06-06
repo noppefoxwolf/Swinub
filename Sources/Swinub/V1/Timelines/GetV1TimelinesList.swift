@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV1TimelinesList: AuthorizationRequest, Sendable {
+public struct GetV1TimelinesList: AuthorizationEndpointRequest, Sendable {
     public typealias Response = [Status]
 
     public init(authorization: Authorization, listID: String) {
@@ -17,7 +17,7 @@ public struct GetV1TimelinesList: AuthorizationRequest, Sendable {
 
     public var authority: String { authorization.host }
     public var path: String { "/api/v1/timelines/list/\(listID)" }
-    public let method: RequestMethod = .get
+    public let method: HTTPRequest.Method = .get
     public var parameters: [String : (any RequestParameterValue)?] {
         [
             "since_id": sinceID?.rawValue,

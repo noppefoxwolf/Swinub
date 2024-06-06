@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV1Mutes: AuthorizationRequest, Sendable {
+public struct GetV1Mutes: AuthorizationEndpointRequest, Sendable {
     public typealias Response = [Account]
 
     public init(authorization: Authorization) {
@@ -10,7 +10,7 @@ public struct GetV1Mutes: AuthorizationRequest, Sendable {
     public let authorization: Authorization
     public var limit: Int = 40
     public var authority: String { authorization.host }
-    public let method: RequestMethod = .get
+    public let method: HTTPRequest.Method = .get
     public var path: String { "/api/v1/mutes" }
     public var parameters: [String : (any RequestParameterValue)?] {
         [

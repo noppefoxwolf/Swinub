@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV1AccountFavourites: AuthorizationRequest, Sendable {
+public struct GetV1AccountFavourites: AuthorizationEndpointRequest, Sendable {
     public typealias Response = [Status]
 
     public init(authorization: Authorization) {
@@ -13,7 +13,7 @@ public struct GetV1AccountFavourites: AuthorizationRequest, Sendable {
     public var prevCursor: PrevCursor? = nil
     public var limit: Int = 20
 
-    public let method: RequestMethod = .get
+    public let method: HTTPRequest.Method = .get
     public var path: String { "/api/v1/favourites" }
     public var authority: String { authorization.host }
     public var parameters: [String : (any RequestParameterValue)?] {

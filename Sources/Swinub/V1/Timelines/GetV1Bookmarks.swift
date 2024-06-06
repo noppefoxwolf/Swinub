@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV1Bookmarks: AuthorizationRequest, Sendable {
+public struct GetV1Bookmarks: AuthorizationEndpointRequest, Sendable {
     public typealias Response = [Status]
 
     public init(authorization: Authorization) {
@@ -15,7 +15,7 @@ public struct GetV1Bookmarks: AuthorizationRequest, Sendable {
 
     public var authority: String { authorization.host }
     public let path = "/api/v1/bookmarks"
-    public let method: RequestMethod = .get
+    public let method: HTTPRequest.Method = .get
     public var parameters: [String : (any RequestParameterValue)?] {
         [
             "since_id": sinceID?.rawValue,

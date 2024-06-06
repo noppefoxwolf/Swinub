@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV1Media: AuthorizationRequest, Sendable {
+public struct GetV1Media: AuthorizationEndpointRequest, Sendable {
     public typealias Response = MediaAttachment
 
     public init(authorization: Authorization, id: MediaAttachment.ID) {
@@ -12,6 +12,6 @@ public struct GetV1Media: AuthorizationRequest, Sendable {
     public let authorization: Authorization
     let mediaAttachmentID: MediaAttachment.ID
     public var authority: String { authorization.host }
-    public let method: RequestMethod = .get
+    public let method: HTTPRequest.Method = .get
     public var path: String { "/api/v1/media/\(mediaAttachmentID.rawValue)" }
 }

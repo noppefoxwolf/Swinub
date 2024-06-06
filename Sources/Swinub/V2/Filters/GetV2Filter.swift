@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct GetV2Filter: AuthorizationRequest, Sendable {
+public struct GetV2Filter: AuthorizationEndpointRequest, Sendable {
     public typealias Response = Filter
 
     public init(authorization: Authorization, filterID: String) {
@@ -13,5 +13,5 @@ public struct GetV2Filter: AuthorizationRequest, Sendable {
     
     public var authority: String { authorization.host }
     public var path: String { "/api/v2/filters/\(filterID)" }
-    public let method: RequestMethod = .get
+    public let method: HTTPRequest.Method = .get
 }

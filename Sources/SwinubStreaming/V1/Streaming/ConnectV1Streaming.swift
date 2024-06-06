@@ -1,16 +1,13 @@
 import Swinub
 import HTTPTypes
 
-public struct ConnectV1Streaming: OptionalAuthorizationRequest {
-    
-    
+public struct ConnectV1Streaming: OptionalAuthorizationStreamingRequest {
     public typealias Response = Message
     
     let stream: StreamQuery
     let host: String
     public var authorization: Authorization?
     public var authority: String { authorization?.host ?? host }
-    public var method: RequestMethod = .webSocket
     public let path: String = "/api/v1/streaming"
     
     public var parameters: [String : (any RequestParameterValue)?] {

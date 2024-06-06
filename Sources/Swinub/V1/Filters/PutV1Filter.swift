@@ -1,7 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public struct PutV1Filter: AuthorizationRequest, Sendable {
+public struct PutV1Filter: AuthorizationEndpointRequest, Sendable {
     public typealias Response = FilterV1
 
     public init(
@@ -30,7 +30,7 @@ public struct PutV1Filter: AuthorizationRequest, Sendable {
     let expiresIn: Int?
     public var authority: String { authorization.host }
     public var path: String { "/api/v1/filters/\(filterID)" }
-    public let method: RequestMethod = .put
+    public let method: HTTPRequest.Method = .put
     public var parameters: [String : (any RequestParameterValue)?] {
         [
             "phrase": phrase,

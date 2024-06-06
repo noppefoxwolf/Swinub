@@ -2,7 +2,7 @@ import Foundation
 import HTTPTypes
 
 // https://docs.joinmastodon.org/methods/timelines/#see-also
-public struct GetV1TimelinesPublic: AuthorizationRequest, Sendable {
+public struct GetV1TimelinesPublic: AuthorizationEndpointRequest, Sendable {
     public typealias Response = [Status]
 
     public struct Parameters: Sendable {
@@ -43,7 +43,7 @@ public struct GetV1TimelinesPublic: AuthorizationRequest, Sendable {
 
     public var authority: String { authorization.host }
     public let path = "/api/v1/timelines/public"
-    public let method: RequestMethod = .get
+    public let method: HTTPRequest.Method = .get
     public var parameters: [String : (any RequestParameterValue)?] {
         [
             "local": _parameters.local,

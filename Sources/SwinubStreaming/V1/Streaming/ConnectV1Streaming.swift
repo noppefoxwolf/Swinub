@@ -1,7 +1,7 @@
 import Swinub
 import HTTPTypes
 
-public struct ConnectV1Streaming: OptionalAuthorizationStreamingRequest {
+public struct ConnectV1Streaming: OptionalAuthorizationStreamingEndpointRequest {
     public typealias Response = Message
     
     let stream: StreamQuery

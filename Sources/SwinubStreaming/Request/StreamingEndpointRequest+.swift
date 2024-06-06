@@ -38,7 +38,7 @@ extension StreamingEndpointRequest {
     }
 }
 
-extension OptionalAuthorizationStreamingRequest {
+extension OptionalAuthorizationStreamingEndpointRequest {
     public func makeURLRequest() throws -> URLRequest {
         try makeURLRequest(
             url: url,

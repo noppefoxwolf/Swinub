@@ -5,7 +5,7 @@ public protocol StreamingEndpointRequest: EndpointRequest {
     func makeURLRequest() throws -> URLRequest
 }
 
-public protocol OptionalAuthorizationStreamingRequest: StreamingEndpointRequest {
+public protocol OptionalAuthorizationStreamingEndpointRequest: StreamingEndpointRequest {
     var authorization: Authorization? { get }
 }
 

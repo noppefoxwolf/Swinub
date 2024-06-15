@@ -1,7 +1,7 @@
 import Foundation
 
-extension URLSessionWebSocketTask.CloseCode: CustomStringConvertible {
-    public var description: String {
+extension URLSessionWebSocketTask.CloseCode {
+    public var string: String {
         switch self {
         case .invalid:
             return "invalid"
@@ -30,7 +30,7 @@ extension URLSessionWebSocketTask.CloseCode: CustomStringConvertible {
         case .tlsHandshakeFailure:
             return "tlsHandshakeFailure"
         @unknown default:
-            return "Default"
+            return "Unknown default"
         }
     }
 }

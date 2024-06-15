@@ -1,7 +1,7 @@
 import Foundation
 
-extension URLSessionTask.State: CustomStringConvertible {
-    public var description: String {
+extension URLSessionTask.State {
+    public var string: String {
         switch self {
         case .running:
             return "Running"
@@ -12,7 +12,7 @@ extension URLSessionTask.State: CustomStringConvertible {
         case .completed:
             return "Completed"
         @unknown default:
-            return "Default"
+            return "Unknown default"
         }
     }
 }

@@ -15,6 +15,7 @@ public struct PostV1Statuses: HTTPEndpointRequest, Sendable {
         public var spoilerText: String? = nil
         public var pollOptions: [String]? = nil
         public var pollExpiresIn: Int? = nil
+        public var language: Locale.Language? = nil
     }
 
     public init(parameters: Parameters, authorization: Authorization) {
@@ -36,6 +37,7 @@ public struct PostV1Statuses: HTTPEndpointRequest, Sendable {
             "sensitive": _parameters.sensitive,
             "spoiler_text": _parameters.spoilerText,
             "poll": pollParameters,
+            "language": _parameters.language?.languageCode?.identifier
         ]
     }
 

@@ -25,6 +25,6 @@ public struct PostV1StatusesReact: HTTPEndpointRequest, Sendable {
     public var path: String {
         let name = emoji.name
             .addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
-        return "/v1/statuses/\(statusID)/unreact/\(name)"
+        return "/v1/statuses/\(statusID)/react/\(name)"
     }
 }

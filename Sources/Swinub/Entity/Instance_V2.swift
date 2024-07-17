@@ -44,6 +44,8 @@ public struct InstanceConfiguration: Codable, Sendable {
     public let polls: InstancePollsConfiguration
     // fedibird拡張
     public let search: InstanceSearchConfiguration?
+    // firefish拡張
+    public let reactions: InstanceReactionsConfiguration?
 }
 
 public struct InstanceStatusesConfiguration: Codable, Sendable {
@@ -70,4 +72,10 @@ public struct InstancePollsConfiguration: Codable, Sendable {
 public struct InstanceSearchConfiguration: Codable, Sendable {
     // fedibird拡張ではあるが、同じキーがあるとは限らないので念の為optionalにしている
     public let supportedPrefix: [String]?
+}
+
+public struct InstanceReactionsConfiguration: Codable, Sendable {
+    // firefish拡張ではあるが、同じキーがあるとは限らないので念の為optionalにしている
+    public let maxReactions: Int?
+    public let defaultReaction: String?
 }

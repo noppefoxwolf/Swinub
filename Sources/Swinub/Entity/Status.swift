@@ -39,8 +39,11 @@ public struct Status: Codable, Identifiable, Sendable {
 
     public let filtered: [FilterResult]?
 
-    // fedibird extensions
+    // fedibird, kmy.blue extensions
     public let emojiReactions: [EmojiReaction]?
+    
+    // Firefish extensions
+    public let reactions: [Reaction]?
     
     public struct ID: Equatable, Hashable, Sendable, Codable, CustomStringConvertible {
         public let rawValue: String
@@ -127,4 +130,13 @@ extension Status {
             }
         }
     }
+}
+
+// firefishの拡張
+public struct Reaction: Sendable, Codable {
+    public let count: Int
+    public let me: Bool
+    public let name: String
+    public let url: URL?
+    public let staticURL: URL?
 }

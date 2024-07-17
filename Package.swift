@@ -14,7 +14,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-async-algorithms", from: "1.0.0"),
-        .package(url: "https://github.com/apple/swift-http-types", from: "1.1.0"),
+        .package(url: "https://github.com/apple/swift-http-types", from: "1.3.0"),
     ],
     targets: [
         .target(

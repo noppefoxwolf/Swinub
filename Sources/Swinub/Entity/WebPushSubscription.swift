@@ -8,7 +8,7 @@ public struct WebPushSubscription: Codable, Sendable {
         public let emojiReaction: Bool?
     }
 
-    public let id: Int
+    public let id: String
     public let endpoint: String
     public let alerts: Alerts?
     public let serverKey: String

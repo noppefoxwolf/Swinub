@@ -11,6 +11,8 @@ public struct PostV1StatusesReact: HTTPEndpointRequest, Sendable {
         }
 
         public let name: String
+        
+        var parameterValue: String { ":\(name):" }
     }
     public init(id: Status.ID, emoji: Emoji, authorization: Authorization) {
         self.authorization = authorization
@@ -23,7 +25,7 @@ public struct PostV1StatusesReact: HTTPEndpointRequest, Sendable {
     public var authority: String { authorization.host }
     public let method: HTTPRequest.Method = .post
     public var path: String {
-        let name = emoji.name
+        let name = emoji.parameterValue
             .addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
         return "/api/v1/statuses/\(statusID)/react/\(name)"
     }

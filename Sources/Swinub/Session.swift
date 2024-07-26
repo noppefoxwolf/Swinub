@@ -17,7 +17,7 @@ extension URLSession: Session {
         
         let (responseData, httpResponse): (Data, HTTPResponse)
         switch request.method {
-        case .post:
+        case .post, .put:
             (responseData, httpResponse) = try await self.upload(for: httpRequest, from: data)
         default:
             (responseData, httpResponse) = try await self.data(for: httpRequest)

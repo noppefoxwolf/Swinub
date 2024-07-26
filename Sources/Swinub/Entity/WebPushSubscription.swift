@@ -24,6 +24,21 @@ public struct WebPushSubscription: Codable, Sendable {
                 throw error
             }
         }
+        
+        enum CodingKeys: CodingKey {
+            case int
+            case string
+        }
+        
+        public func encode(to encoder: any Encoder) throws {
+            var container = encoder.singleValueContainer()
+            switch self {
+            case .int(let value):
+                try container.encode(value)
+            case .string(let value):
+                try container.encode(value)
+            }
+        }
     }
 
     public let id: ID

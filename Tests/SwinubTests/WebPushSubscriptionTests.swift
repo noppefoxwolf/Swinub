@@ -1,4 +1,4 @@
-import Swinub
+@testable import Swinub
 import XCTest
 
 class WebPushSubscriptionTests: XCTestCase {
@@ -31,5 +31,34 @@ class WebPushSubscriptionTests: XCTestCase {
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         _ = try decoder.decode(WebPushSubscription.self, from: data)
     }
+    
+    func testEncodeStringID() async throws {
+        let subscription = WebPushSubscription(
+            id: .string("id"),
+            endpoint: "",
+            alerts: nil,
+            serverKey: ""
+        )
+        let encoder = JSONEncoder()
+        encoder.keyEncodingStrategy = .convertToSnakeCase
+        encoder.outputFormatting = .sortedKeys
+        let data = try encoder.encode(subscription)
+        let json = String(data: data, encoding: .utf8)!
+        XCTAssertEqual(json, #"{"endpoint":"","id":"id","server_key":""}"#)
+    }
+    
+    func testEncodeIntID() async throws {
+        let subscription = WebPushSubscription(
+            id: .int(100),
+            endpoint: "",
+            alerts: nil,
+            serverKey: ""
+        )
+        let encoder = JSONEncoder()
+        encoder.keyEncodingStrategy = .convertToSnakeCase
+        encoder.outputFormatting = .sortedKeys
+        let data = try encoder.encode(subscription)
+        let json = String(data: data, encoding: .utf8)!
+        XCTAssertEqual(json, #"{"endpoint":"","id":100,"server_key":""}"#)
+    }
 }
-

@@ -58,7 +58,10 @@ public struct InstanceMediaAttachmentsConfiguration: Codable, Sendable {
     public let imageSizeLimit: Int
     public let imageMatrixLimit: Int
     public let videoSizeLimit: Int
-    public let videoFrameRateLimit: Int
+    // IceShrinp系ではvideoFrameRateLimitの代わりにvideoFrameLimitが採用されているケースがある
+    // https://rindo.garden/api/v1/instance
+    public let videoFrameLimit: Int?
+    public let videoFrameRateLimit: Int?
     public let videoMatrixLimit: Int
 }
 

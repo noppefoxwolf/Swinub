@@ -3,7 +3,7 @@ import HTTPTypes
 
 public struct GetV1CustomEmojis: HTTPEndpointRequest, Sendable {
     public typealias Response = [CustomEmoji]
-    public typealias AuthorizationType = Never
+    public typealias AuthorizationType = Authorization?
     
     public init(host: String) {
         self.host = host

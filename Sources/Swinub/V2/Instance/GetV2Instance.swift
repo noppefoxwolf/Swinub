@@ -3,7 +3,7 @@ import HTTPTypes
 
 public struct GetV2Instance: HTTPEndpointRequest, Sendable {
     public typealias Response = Instance
-    public typealias AuthorizationType = Never
+    public typealias AuthorizationType = Authorization?
 
     public init(host: String) {
         self.host = host

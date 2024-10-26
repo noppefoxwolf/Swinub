@@ -29,13 +29,17 @@ extension URLSession: Session {
                 let response = try request.decode(responseData)
                 return (response, httpResponse)
             default:
-                if httpResponse.headerFields[.contentType] == "text/html" {
+                switch httpResponse.headerFields[.contentType] {
+                case "text/html":
                     let errorDescription = String(
                         localized: "Service Unavailable",
                         bundle: .module
                     )
                     throw GeneralError(errorDescription: errorDescription)
-                } else {
+                case "text/plain; charset=utf-8":
+                    let errorDescription = String(data: responseData, encoding: .utf8)
+                    throw GeneralError(errorDescription: errorDescription)
+                default:
                     let decoder = JSONDecoder()
                     decoder.keyDecodingStrategy = .convertFromSnakeCase
                     decoder.dateDecodingStrategy = .millisecondsISO8601

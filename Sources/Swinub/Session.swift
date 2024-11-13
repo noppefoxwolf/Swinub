@@ -30,13 +30,13 @@ extension URLSession: Session {
                 return (response, httpResponse)
             default:
                 switch httpResponse.headerFields[.contentType] {
-                case "text/html":
+                case let .some(contentType) where contentType.contains("text/html"):
                     let errorDescription = String(
                         localized: "Service Unavailable",
                         bundle: .module
                     )
                     throw GeneralError(errorDescription: errorDescription)
-                case "text/plain; charset=utf-8":
+                case let .some(contentType) where contentType.contains("text/plain"):
                     let errorDescription = String(data: responseData, encoding: .utf8)
                     throw GeneralError(errorDescription: errorDescription)
                 default:

@@ -1,7 +1,9 @@
 import Swinub
-import XCTest
+import Testing
 
-class SwinubServerResponseTests: XCTestCase {
+@Suite 
+
+struct SwinubServerResponseTests {
     func xtestConfiguration() async throws {
         // Popular mastodon hosts.
         let hosts = [

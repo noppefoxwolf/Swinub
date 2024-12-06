@@ -1,9 +1,11 @@
-import XCTest
+import Testing
 import HTTPTypes
 @testable import Swinub
+import Foundation
 
-class RequestTests: XCTestCase {
-    func testConvertURL() async throws {
+@Suite
+struct RequestTests {
+    @Test func convertURL() async throws {
         struct MockRequest: HTTPEndpointRequest, Sendable {
             struct Response: Codable {}
             
@@ -17,14 +19,14 @@ class RequestTests: XCTestCase {
         _ = try MockRequest().url
     }
     
-    func testURLComponentIssue() async throws {
+    @Test func uRLComponentIssue() async throws {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
         urlComponents.host = "pokemon.mastportal.info/"
         if #available(iOS 17, macOS 14, *) {
-            XCTAssertNil(urlComponents.url)
+            #expect(urlComponents.url == nil)
         } else {
-            XCTAssertEqual(urlComponents.url, URL(string: "https:")!)
+            #expect(urlComponents.url == URL(string: "https:")!)
         }
     }
 }

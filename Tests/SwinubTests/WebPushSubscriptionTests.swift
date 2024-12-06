@@ -1,8 +1,10 @@
 @testable import Swinub
-import XCTest
+import Testing
+import Foundation
 
-class WebPushSubscriptionTests: XCTestCase {
-    func testDecodeStringID() async throws {
+@Suite 
+struct WebPushSubscriptionTests {
+    @Test func decodeStringID() async throws {
         let json = """
         {
             "id": "your_id_here",
@@ -17,7 +19,7 @@ class WebPushSubscriptionTests: XCTestCase {
         _ = try decoder.decode(WebPushSubscription.self, from: data)
     }
     
-    func testDecodeIntID() async throws {
+    @Test func decodeIntID() async throws {
         let json = """
         {
             "id": 999,
@@ -32,7 +34,7 @@ class WebPushSubscriptionTests: XCTestCase {
         _ = try decoder.decode(WebPushSubscription.self, from: data)
     }
     
-    func testEncodeStringID() async throws {
+    @Test func encodeStringID() async throws {
         let subscription = WebPushSubscription(
             id: .string("id"),
             endpoint: "",
@@ -44,10 +46,10 @@ class WebPushSubscriptionTests: XCTestCase {
         encoder.outputFormatting = .sortedKeys
         let data = try encoder.encode(subscription)
         let json = String(data: data, encoding: .utf8)!
-        XCTAssertEqual(json, #"{"endpoint":"","id":"id","server_key":""}"#)
+        #expect(json == #"{"endpoint":"","id":"id","server_key":""}"#)
     }
     
-    func testEncodeIntID() async throws {
+    @Test func encodeIntID() async throws {
         let subscription = WebPushSubscription(
             id: .int(100),
             endpoint: "",
@@ -59,10 +61,10 @@ class WebPushSubscriptionTests: XCTestCase {
         encoder.outputFormatting = .sortedKeys
         let data = try encoder.encode(subscription)
         let json = String(data: data, encoding: .utf8)!
-        XCTAssertEqual(json, #"{"endpoint":"","id":100,"server_key":""}"#)
+        #expect(json == #"{"endpoint":"","id":100,"server_key":""}"#)
     }
     
-    func testDecode() async throws {
+    @Test func decode() async throws {
         let json = """
         {
           "id": 6452081,

@@ -1,7 +1,9 @@
-import XCTest
+import Testing
+import Foundation
 
-class FedibirdPropertyTests: XCTestCase {
-    func test1() throws {
+@Suite
+struct FedibirdPropertyTests {
+    @Test func _1() throws {
         let server1Json = """
             {"id" : "1"}
             """
@@ -13,17 +15,17 @@ class FedibirdPropertyTests: XCTestCase {
             """
         let decoder = JSONDecoder()
         let decoded1 = try decoder.decode(JSON.self, from: Data(server1Json.utf8))
-        XCTAssertEqual(decoded1.id, "1")
-        XCTAssertNil(decoded1.extra)
+        #expect(decoded1.id == "1")
+        #expect(decoded1.extra == nil)
         let decoded2 = try decoder.decode(JSON.self, from: Data(server2Json.utf8))
-        XCTAssertEqual(decoded2.id, "1")
-        XCTAssertNotNil(decoded2.extra)
+        #expect(decoded2.id == "1")
+        #expect(decoded2.extra != nil)
         let decoded3 = try decoder.decode(JSON.self, from: Data(server3Json.utf8))
-        XCTAssertEqual(decoded3.id, "1")
-        XCTAssertNil(decoded3.extra)
+        #expect(decoded3.id == "1")
+        #expect(decoded3.extra == nil)
     }
 
-    func test2() throws {
+    @Test func _2() throws {
 
         let json = """
             {
@@ -37,10 +39,10 @@ class FedibirdPropertyTests: XCTestCase {
             let capabilities: [Capability]?
         }
         let object = try JSONDecoder().decode(Object.self, from: Data(json.utf8))
-        XCTAssertEqual(object.capabilities!.count, 1)
+        #expect(object.capabilities!.count == 1)
     }
 
-    func test3() throws {
+    @Test func _3() throws {
 
         let json = """
             {
@@ -50,7 +52,7 @@ class FedibirdPropertyTests: XCTestCase {
             let capabilities: [Capability]?
         }
         let object = try JSONDecoder().decode(Object.self, from: Data(json.utf8))
-        XCTAssertNil(object.capabilities)
+        #expect(object.capabilities == nil)
     }
 }
 

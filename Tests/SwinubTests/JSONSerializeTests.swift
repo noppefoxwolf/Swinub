@@ -1,8 +1,10 @@
 import Swinub
-import XCTest
+import Testing
+import Foundation
 
-class JSONSerializeTests: XCTestCase {
-    func testSerialize() throws {
+@Suite
+struct JSONSerializeTests {
+    @Test func serialize() throws {
         //        let parameters: [String : String] = [
         //            "v" : "[1,2,3,4]"
         //        ]
@@ -19,6 +21,6 @@ class JSONSerializeTests: XCTestCase {
             let v: [Int]
         }
         let json2 = try JSONDecoder().decode(JsonObject.self, from: httpBody)
-        XCTAssertEqual(json2.v, [1, 2, 3, 4])
+        #expect(json2.v == [1, 2, 3, 4])
     }
 }

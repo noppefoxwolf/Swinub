@@ -1,7 +1,9 @@
-import XCTest
+import Testing
 
-class UnknownCaseEnumTests: XCTestCase {
-    func testCodable() async throws {
+@Suite 
+
+struct UnknownCaseEnumTests {
+    @Test func codable() async throws {
         enum Mode: String, Codable {
             case fit
             case fill

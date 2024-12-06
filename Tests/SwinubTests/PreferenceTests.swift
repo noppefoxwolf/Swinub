@@ -1,18 +1,20 @@
 import Swinub
-import XCTest
+import Testing
+import Foundation
 
-class PreferenceTests: XCTestCase {
-    func testNilKey() async throws {
+@Suite
+struct PreferenceTests {
+    @Test func nilKey() async throws {
         let json = """
             {
                 
             }
             """
         let object = try JSONDecoder().decode(Preference.self, from: Data(json.utf8))
-        XCTAssertNil(object.postingDefaultVisibility)
+        #expect(object.postingDefaultVisibility == nil)
     }
 
-    func testKey() async throws {
+    @Test func key() async throws {
         let json = """
             {
                 "posting:default:visibility" : "Hello",
@@ -20,6 +22,6 @@ class PreferenceTests: XCTestCase {
             }
             """
         let object = try JSONDecoder().decode(Preference.self, from: Data(json.utf8))
-        XCTAssertEqual(object.postingDefaultVisibility, .init(rawValue: "Hello"))
+        #expect(object.postingDefaultVisibility == .init(rawValue: "Hello"))
     }
 }

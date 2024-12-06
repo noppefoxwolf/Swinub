@@ -1,8 +1,10 @@
 import Swinub
-import XCTest
+import Testing
+import Foundation
 
-class JSONDecoderTests: XCTestCase {
-    func testURLDecode() async throws {
+@Suite
+struct JSONDecoderTests {
+    @Test func uRLDecode() async throws {
         if #available(iOS 17.0, *) {
             // URL(string:) always returns non-nil.
         } else {
@@ -16,13 +18,13 @@ class JSONDecoderTests: XCTestCase {
                 }
                 """
             let url = URL(string: urlString)
-            XCTAssertNil(url)
+            #expect(url == nil)
             let object = try JSONDecoder().decode(Object.self, from: Data(json.utf8))
-            XCTAssertNil(object.url)
+            #expect(object.url == nil)
         }
     }
 
-    func testEmojiReactionDecode() async throws {
+    @Test func emojiReactionDecode() async throws {
         let json = """
             {
                     "emojiReaction": [
@@ -42,6 +44,6 @@ class JSONDecoderTests: XCTestCase {
             let emojiReaction: [EmojiReaction]?
         }
         let object = try JSONDecoder().decode(Object.self, from: Data(json.utf8))
-        XCTAssertEqual(object.emojiReaction?.count, nil)
+        #expect(object.emojiReaction?.count == nil)
     }
 }

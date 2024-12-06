@@ -1,23 +1,22 @@
-import XCTest
+import Testing
 
-class EmojiReactionTests: XCTestCase {
-    func testEmojiEncode() {
+@Suite 
+
+struct EmojiReactionTests {
+    @Test func emojiEncode() {
         let emoji = "😆"
-        XCTAssertEqual(
-            emoji.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!,
-            "%F0%9F%98%86"
+        #expect(
+            emoji.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)! == "%F0%9F%98%86"
         )
         let a = "a"
-        XCTAssertEqual(a.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!, "a")
+        #expect(a.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)! == "a")
         let shortcode = "nightfox_dawn"
-        XCTAssertEqual(
-            shortcode.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!,
-            "nightfox_dawn"
+        #expect(
+            shortcode.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)! == "nightfox_dawn"
         )
         let domain = "nightfox_dawn@fedibird.com"
-        XCTAssertEqual(
-            domain.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!,
-            "nightfox_dawn@fedibird.com"
+        #expect(
+            domain.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)! == "nightfox_dawn@fedibird.com"
         )
     }
 }

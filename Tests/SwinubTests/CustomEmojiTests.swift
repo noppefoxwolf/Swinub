@@ -1,8 +1,10 @@
 import Swinub
-import XCTest
+import Testing
+import Foundation
 
-class CustomEmojiTests: XCTestCase {
-    func testFedibirdJSON() async throws {
+@Suite 
+struct CustomEmojiTests {
+    @Test func fedibirdJSON() async throws {
         // aliasesが無い場合でも[String]にはマッピングされないので、[String]?で持つ
         let json = """
             {

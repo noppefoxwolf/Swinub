@@ -1,8 +1,10 @@
 import Swinub
-import XCTest
+import Testing
+import Foundation
 
-class RequestParameterValueTests: XCTestCase {
-    func testRequestParameterValue() throws {
+@Suite
+struct RequestParameterValueTests {
+    @Test func requestParameterValue() throws {
         let params: [String: any RequestParameterValue] = [
             "a": 0,
             "b": Optional<Int>.none,
@@ -15,10 +17,10 @@ class RequestParameterValueTests: XCTestCase {
             ],
         ]
         .compactMapValues({ $0 })
-        XCTAssertEqual(params.count, 4)
+        #expect(params.count == 4)
     }
 
-    func testQueryItem() throws {
+    @Test func queryItem() throws {
         let item = try URLQueryItem(name: "name", value: ["key": "value"].parameterValue)
         print(item.value as Any)
     }

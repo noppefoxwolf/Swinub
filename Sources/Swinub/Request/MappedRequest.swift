@@ -2,6 +2,9 @@ import Foundation
 import HTTPTypes
 
 public struct MapHTTPEndpointRequest<Response: Codable & Sendable, Base: HTTPEndpointRequest>: HTTPEndpointRequest {
+    public typealias Response = Response
+    public typealias Base = Base
+    
     public var base: Base
     let transform: @Sendable (Base.Response) throws -> Response
     

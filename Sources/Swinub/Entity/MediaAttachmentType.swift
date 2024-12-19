@@ -15,9 +15,9 @@ public struct MediaAttachmentType: Codable, Sendable, Equatable {
         try container.encode(rawValue)
     }
     
-    static var unknown: Self { .init(rawValue: "unknown") }
-    static var image: Self { .init(rawValue: "image") }
-    static var gifv: Self { .init(rawValue: "gifv") }
-    static var video: Self { .init(rawValue: "video") }
-    static var audio: Self { .init(rawValue: "audio") }
+    public static var unknown: Self { .init(rawValue: "unknown") }
+    public static var image: Self { .init(rawValue: "image") }
+    public static var gifv: Self { .init(rawValue: "gifv") }
+    public static var video: Self { .init(rawValue: "video") }
+    public static var audio: Self { .init(rawValue: "audio") }
 }

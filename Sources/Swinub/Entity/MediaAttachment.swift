@@ -3,13 +3,27 @@ import Foundation
 public struct MediaAttachment: Codable, Identifiable, Sendable {
     public let id: ID
     public let type: MediaAttachmentType
-
+    
     public var url: URL?
     public var previewUrl: URL?
     public let remoteUrl: URL?
-    //    public let meta: String
     public let description: String?
     public let blurhash: String?
+    public let meta: Meta
+    
+    public struct Meta: Codable, Sendable {
+        
+        public let original: MetaItem?
+        public let small: MetaItem?
+        public let tiny: MetaItem?
+        
+        public struct MetaItem: Codable, Sendable {
+            public let width: Int?
+            public let height: Int?
+            public let size: String?
+            public let aspect: Double?
+        }
+    }
     
     public struct ID: Equatable, Hashable, Sendable, Codable, CustomStringConvertible {
         public let rawValue: String
@@ -31,10 +45,3 @@ public struct MediaAttachment: Codable, Identifiable, Sendable {
     }
 }
 
-public enum MediaAttachmentType: String, Codable, Sendable {
-    case unknown
-    case image
-    case gifv
-    case video
-    case audio
-}

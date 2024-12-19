@@ -16,11 +16,3 @@ public struct PreviewCard: Codable, Sendable {
     public let embedUrl: String
     public let blurhash: String?
 }
-
-public enum PreviewCardType: String, Codable, Sendable {
-    case link
-    case photo
-    case video
-    // TODO: 下のタイプもサポートする
-    //    case rich
-}

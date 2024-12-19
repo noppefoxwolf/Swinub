@@ -1,16 +1,6 @@
-import Foundation
-
-public struct Poll: Codable, Identifiable, Sendable {
+public struct FilterStatus: Codable, Hashable, Sendable {
     public let id: ID
-    public let expiresAt: Date?
-    public let expired: Bool
-    public let multiple: Bool
-    public let votesCount: Int
-    public let votersCount: Int?
-    public let options: [PollOption]
-    public let emojis: [CustomEmoji]
-    public let voted: Bool?
-    public let ownVotes: [Int]?
+    public let statusId: Status.ID
     
     public struct ID: Equatable, Hashable, Sendable, Codable, CustomStringConvertible {
         public let rawValue: String
@@ -31,4 +21,3 @@ public struct Poll: Codable, Identifiable, Sendable {
         }
     }
 }
-

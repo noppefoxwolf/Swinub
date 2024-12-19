@@ -60,6 +60,8 @@ public struct Message: Decodable, Sendable {
             event = .statusUpdate(status)
         case .encryptedMessage:
             event = .encryptedMessage
+        default:
+            event = .unknown(eventType.rawValue)
         }
     }
 }

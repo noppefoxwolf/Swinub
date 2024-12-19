@@ -9,7 +9,8 @@ public struct MediaAttachment: Codable, Identifiable, Sendable {
     public let remoteUrl: URL?
     public let description: String?
     public let blurhash: String?
-    public let meta: Meta
+    // fedibirdのmisskeyの投稿などはmetaがnullになることがある
+    public let meta: Meta?
     
     public struct Meta: Codable, Sendable {
         

@@ -1,4 +1,4 @@
-@preconcurrency import AuthenticationServices
+import AuthenticationServices
 
 extension ASWebAuthenticationSession {
     @MainActor
@@ -24,8 +24,13 @@ extension ASWebAuthenticationSession {
             #if !DEBUG
             session.prefersEphemeralWebBrowserSession = true
             #endif
-            continuation.onTermination = { @Sendable _ in
+            let cancel = { @MainActor in
                 session.cancel()
+            }
+            continuation.onTermination = { @Sendable _ in
+                Task {
+                    await cancel()
+                }
             }
             session.presentationContextProvider = presentationContextProvider
             session.start()

@@ -31,8 +31,8 @@ struct MediaAttachmentTests {
         """
         
         let decoded = try JSONDecoder().decode(MediaAttachment.self, from: Data(json.utf8))
-        #expect(decoded.meta.original != nil)
-        #expect(decoded.meta.original!.aspect == nil)
-        #expect(decoded.meta.small == nil)
+        #expect(decoded.meta?.original != nil)
+        #expect(decoded.meta?.original!.aspect == nil)
+        #expect(decoded.meta?.small == nil)
     }
 }

@@ -1,23 +1,7 @@
 import Foundation
 import HTTPTypes
 
-public enum Scope: String, CaseIterable, Sendable {
-    case read
-    case write
-    case follow
-    case push
-}
-
-public struct Application: Codable, Identifiable, Sendable {
-    public let id: String
-    public let name: String
-    public let website: String?
-    public let redirectUri: String
-    public let clientId: String
-    public let clientSecret: String
-    public let vapidKey: String
-}
-
+// https://docs.joinmastodon.org/methods/apps/
 public struct PostV1Apps: HTTPEndpointRequest, Sendable {
     public typealias Response = Application
 
@@ -25,8 +9,8 @@ public struct PostV1Apps: HTTPEndpointRequest, Sendable {
         host: String,
         clientName: String,
         redirectURI: String,
-        website: String?,
-        scopes: [Scope]
+        website: String? = nil,
+        scopes: [Scope] = [.read]
     ) {
         self.host = host
         self.clientName = clientName

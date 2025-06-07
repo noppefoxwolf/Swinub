@@ -38,7 +38,7 @@ public struct WebAuthenticationSessionDataFactory {
             // The ISO 639-1 two-letter language code to use while rendering the authorization form.
             URLQueryItem(
                 name: "lang",
-                value: locale.language.languageCode?.identifier ?? "en-US"
+                value: locale.identifier
             ),
         ]
         let url = urlComponents.url

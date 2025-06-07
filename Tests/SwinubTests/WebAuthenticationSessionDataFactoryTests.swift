@@ -11,9 +11,14 @@ struct WebAuthenticationSessionDataFactoryTests {
             redirectUri: "",
             scopes: []
         )
-        let url = try factory.makeURL(locale: .init(identifier: "ja-JP"))
+        let url = try factory.makeURL(
+            locale: Locale(
+                languageCode: .japanese,
+                languageRegion: .japan
+            )
+        )
         let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
         let lang = try #require(components?.queryItems?.first(where: { $0.name == "lang" })?.value)
-        #expect(lang == "ja-JP")
+        #expect(lang == "ja_JP")
     }
 }

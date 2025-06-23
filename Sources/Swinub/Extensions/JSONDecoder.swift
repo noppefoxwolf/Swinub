@@ -3,24 +3,19 @@ import Foundation
 extension JSONDecoder.DateDecodingStrategy {
     public static var millisecondsISO8601: Self {
         .custom { decoder -> Date in
-            let valueContainer = try decoder.singleValueContainer()
-            let value = try valueContainer.decode(String.self)
-            if let regex = try? NSRegularExpression(pattern: "\\.\\d+", options: []) {
-                let result = regex.stringByReplacingMatches(
-                    in: value,
-                    options: [],
-                    range: NSRange(location: 0, length: value.count),
-                    withTemplate: ""
+            let iso8601Formatter = ISO8601DateFormatter()
+            iso8601Formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            
+            let container = try decoder.singleValueContainer()
+            let value = try container.decode(String.self)
+            
+            guard let date = iso8601Formatter.date(from: value) else {
+                throw DecodingError.dataCorruptedError(
+                    in: container,
+                    debugDescription: "Cannot decode date string \(value)"
                 )
-                if let date = ISO8601DateFormatter().date(from: result) {
-                    return date
-                }
             }
-            let context = DecodingError.Context(
-                codingPath: valueContainer.codingPath,
-                debugDescription: "Invalid date"
-            )
-            throw DecodingError.dataCorrupted(context)
+            return date
         }
     }
 }

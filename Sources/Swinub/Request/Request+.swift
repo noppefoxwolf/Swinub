@@ -70,36 +70,31 @@ extension HTTPEndpointRequest {
             httpRequest.headerFields[.authorization] = "Bearer \(authorization.oauthToken)"
             httpRequest.headerFields[.userAgent] = authorization.userAgent
         }
-        var httpBody = Data()
-        let isMultipartEmpty = parameters.compactMapValues({ $0?.multipartContentType }).isEmpty
-        if [.post, .patch, .put].contains(method) && isMultipartEmpty {
-            httpBody = try JSONSerialization.data(
+        
+        let httpBody = try makeHTTPBody(method: method, parameters: parameters, httpRequest: &httpRequest)
+        return (httpRequest, httpBody)
+    }
+    
+    private func makeHTTPBody(
+        method: HTTPRequest.Method,
+        parameters: [String: (any RequestParameterValue)?],
+        httpRequest: inout HTTPRequest
+    ) throws -> Data {
+        let multipartBuilder = MultipartBuilder()
+        
+        if [.post, .patch, .put].contains(method) && !multipartBuilder.isMultipartRequired(parameters: parameters) {
+            let data = try JSONSerialization.data(
                 withJSONObject: parameters.compactMapValues({ $0 }),
                 options: []
             )
             httpRequest.headerFields[.contentType] = "application/json; charset=utf-8"
-        } else if [.post, .patch].contains(method) && !isMultipartEmpty {
-            // iOSシミュレータだと送れないことがある
-            /*
-             Task <C95152FC-AFE0-4E62-BF69-1BF22B42A85B>.<1> finished with error [40] Error Domain=NSPOSIXErrorDomain Code=40 "Message too long" UserInfo={_NSURLErrorFailingURLSessionTaskErrorKey=LocalDataTask <C95152FC-AFE0-4E62-BF69-1BF22B42A85B>.<1>, _kCFStreamErrorDomainKey=1, NSErrorPeerAddressKey=<CFData 0x600001ef2d50 [0x1043381d0]>{length = 16, capacity = 16, bytes = 0x100201bbac4399830000000000000000}, _kCFStreamErrorCodeKey=40, _NSURLErrorRelatedURLSessionTaskErrorKey=(
-                 "LocalDataTask <C95152FC-AFE0-4E62-BF69-1BF22B42A85B>.<1>"
-             )}
-             */
-            // https://github.com/mastodon/mastodon-ios/blob/85ad331a5e3a67e59ccc065d5df13497c71bce49/MastodonSDK/Sources/MastodonSDK/API/Mastodon%2BAPI%2BAccount%2BCredentials.swift#L208
-            let boundary = "__boundary__"
-            for parameter in parameters.compactMapValues({ $0 }) {
-                try httpBody.append(
-                    .multipart(
-                        boundary: boundary,
-                        key: parameter.key,
-                        value: parameter.value
-                    )
-                )
-            }
-            httpBody.append(Data.multipartEnd(boundary: boundary))
-            httpRequest.headerFields[.contentType] = #"multipart/form-data; charset=utf-8; boundary="\#(boundary)""#
+            return data
+        } else if [.post, .patch].contains(method) && multipartBuilder.isMultipartRequired(parameters: parameters) {
+            httpRequest.headerFields[.contentType] = multipartBuilder.contentType
+            return try multipartBuilder.build(parameters: parameters)
         }
-        return (httpRequest, httpBody)
+        
+        return Data()
     }
 }
 

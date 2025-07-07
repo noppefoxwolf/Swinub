@@ -1,6 +1,15 @@
 {
-  "originHash" : "121df0179024554871b508e46e18a8509a849076f1f8595156a59ebf166902ad",
+  "originHash" : "3946c21fa370d4ca5ef43c031fad637f5012d4d08457829d0c7308a18cfe5840",
   "pins" : [
+    {
+      "identity" : "coretransferablebackport",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/noppefoxwolf/CoreTransferableBackport",
+      "state" : {
+        "revision" : "0d89bd520fd92db65552a5e214805155de5f5674",
+        "version" : "0.0.3"
+      }
+    },
     {
       "identity" : "swift-async-algorithms",
       "kind" : "remoteSourceControl",

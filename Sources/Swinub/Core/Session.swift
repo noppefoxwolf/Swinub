@@ -13,7 +13,7 @@ extension URLSession: Session {
     public func response<T: HTTPEndpointRequest>(
         for request: T
     ) async throws -> (response: T.Response, httpResponse: HTTPResponse) {
-        let (httpRequest, data) = try request.makeHTTPRequest()
+        let (httpRequest, data) = try await request.makeHTTPRequest()
         
         let (responseData, httpResponse): (Data, HTTPResponse)
         switch request.method {

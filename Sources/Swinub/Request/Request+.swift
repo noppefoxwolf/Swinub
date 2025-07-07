@@ -46,7 +46,7 @@ extension HTTPEndpointRequest {
         url: URL,
         authorization: Authorization?,
         parameters: [String: (any RequestParameterValue)?]
-    ) throws -> (HTTPRequest, Data) {
+    ) async throws -> (HTTPRequest, Data) {
         let requestURL = try makeRequestURL(url: url)
         var httpRequest = HTTPRequest(method: method, url: requestURL)
         httpRequest.headerFields[.accept] = "application/json"
@@ -55,7 +55,7 @@ extension HTTPEndpointRequest {
             httpRequest.headerFields[.userAgent] = authorization.userAgent
         }
         
-        let httpBody = try makeHTTPBody(method: method, parameters: parameters, httpRequest: &httpRequest)
+        let httpBody = try await makeHTTPBody(method: method, parameters: parameters, httpRequest: &httpRequest)
         return (httpRequest, httpBody)
     }
     
@@ -63,7 +63,7 @@ extension HTTPEndpointRequest {
         method: HTTPRequest.Method,
         parameters: [String: (any RequestParameterValue)?],
         httpRequest: inout HTTPRequest
-    ) throws -> Data {
+    ) async throws -> Data {
         let multipartBuilder = MultipartBuilder()
         
         if [.post, .patch, .put].contains(method) && !multipartBuilder.isMultipartRequired(parameters: parameters) {
@@ -75,7 +75,7 @@ extension HTTPEndpointRequest {
             return data
         } else if [.post, .patch].contains(method) && multipartBuilder.isMultipartRequired(parameters: parameters) {
             httpRequest.headerFields[.contentType] = multipartBuilder.contentType
-            return try multipartBuilder.build(parameters: parameters)
+            return try await multipartBuilder.build([])
         }
         
         return Data()
@@ -83,8 +83,8 @@ extension HTTPEndpointRequest {
 }
 
 extension HTTPEndpointRequest {
-    public func makeHTTPRequest() throws -> (HTTPRequest, Data) {
-        try makeHTTPRequest(
+    public func makeHTTPRequest() async throws -> (HTTPRequest, Data) {
+        try await makeHTTPRequest(
             method: method,
             url: url,
             authorization: nil,
@@ -94,8 +94,8 @@ extension HTTPEndpointRequest {
 }
 
 extension HTTPEndpointRequest where AuthorizationType == Authorization {
-    public func makeHTTPRequest() throws -> (HTTPRequest, Data) {
-        try makeHTTPRequest(
+    public func makeHTTPRequest() async throws -> (HTTPRequest, Data) {
+        try await makeHTTPRequest(
             method: method,
             url: url,
             authorization: authorization,
@@ -105,8 +105,8 @@ extension HTTPEndpointRequest where AuthorizationType == Authorization {
 }
 
 extension HTTPEndpointRequest where AuthorizationType == Authorization? {
-    public func makeHTTPRequest() throws -> (HTTPRequest, Data) {
-        try makeHTTPRequest(
+    public func makeHTTPRequest() async throws -> (HTTPRequest, Data) {
+        try await makeHTTPRequest(
             method: method,
             url: url,
             authorization: authorization,

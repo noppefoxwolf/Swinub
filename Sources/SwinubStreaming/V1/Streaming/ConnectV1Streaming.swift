@@ -1,5 +1,6 @@
 import Swinub
 import HTTPTypes
+import Foundation
 
 public struct ConnectV1Streaming: StreamingEndpointRequest {
     public typealias Response = Message
@@ -9,6 +10,8 @@ public struct ConnectV1Streaming: StreamingEndpointRequest {
     public var authorization: Authorization?
     public var authority: String { authorization?.host ?? host }
     public let path: String = "/api/v1/streaming"
+    
+    public var queryItems: [URLQueryItem] { [] }
     
     public var parameters: [String : (any RequestParameterValue)?] {
         var parameters = [

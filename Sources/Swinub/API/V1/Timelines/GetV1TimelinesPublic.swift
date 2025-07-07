@@ -44,16 +44,30 @@ public struct GetV1TimelinesPublic: HTTPEndpointRequest, Sendable {
     public var authority: String { authorization.host }
     public let path = "/api/v1/timelines/public"
     public let method: HTTPRequest.Method = .get
-    public var parameters: [String : (any RequestParameterValue)?] {
-        [
-            "local": _parameters.local,
-            "remote": _parameters.remote,
-            "domain": _parameters.domain,
-            "only_media": _parameters.onlyMedia,
-            "limit": limit,
-            "since_id": sinceID?.rawValue,
-            "max_id": nextCursor?.maxID,
-            "min_id": prevCursor?.minID,
-        ]
+    public var queryItems: [URLQueryItem] {
+        var items: [URLQueryItem] = []
+        if _parameters.local {
+            items.append(URLQueryItem(name: "local", value: "true"))
+        }
+        if _parameters.remote {
+            items.append(URLQueryItem(name: "remote", value: "true"))
+        }
+        if let domain = _parameters.domain {
+            items.append(URLQueryItem(name: "domain", value: domain))
+        }
+        if _parameters.onlyMedia {
+            items.append(URLQueryItem(name: "only_media", value: "true"))
+        }
+        items.append(URLQueryItem(name: "limit", value: String(limit)))
+        if let sinceID = sinceID?.rawValue {
+            items.append(URLQueryItem(name: "since_id", value: sinceID))
+        }
+        if let maxID = nextCursor?.maxID {
+            items.append(URLQueryItem(name: "max_id", value: maxID))
+        }
+        if let minID = prevCursor?.minID {
+            items.append(URLQueryItem(name: "min_id", value: minID))
+        }
+        return items
     }
 }

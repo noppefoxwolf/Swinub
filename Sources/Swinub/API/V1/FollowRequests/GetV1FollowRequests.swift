@@ -21,11 +21,17 @@ public struct GetV1FollowRequests: HTTPEndpointRequest, Sendable {
     public let sinceID: String?
     public let limit: Int?
     
-    public var parameters: [String : (any RequestParameterValue)?] {
-        [
-            "max_id": maxID,
-            "since_id": sinceID,
-            "limit": limit
-        ]
+    public var queryItems: [URLQueryItem] {
+        var items: [URLQueryItem] = []
+        if let maxID = maxID {
+            items.append(URLQueryItem(name: "max_id", value: maxID))
+        }
+        if let sinceID = sinceID {
+            items.append(URLQueryItem(name: "since_id", value: sinceID))
+        }
+        if let limit = limit {
+            items.append(URLQueryItem(name: "limit", value: String(limit)))
+        }
+        return items
     }
 }

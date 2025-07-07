@@ -20,15 +20,24 @@ public struct GetV2Search: HTTPEndpointRequest, Sendable {
     public var authority: String { authorization.host }
     public let method: HTTPRequest.Method = .get
     public var path: String { "/api/v2/search" }
-    public var parameters: [String : (any RequestParameterValue)?] {
-        [
-            "q": q,
-            "type": "statuses",
-            "since_id": sinceID?.rawValue,
-            "max_id": nextCursor?.maxID,
-            "min_id": prevCursor?.minID,
-            "limit": limit,
-            "resolve": resolve,
+    public var queryItems: [URLQueryItem] {
+        var items: [URLQueryItem] = [
+            URLQueryItem(name: "q", value: q),
+            URLQueryItem(name: "type", value: "statuses"),
+            URLQueryItem(name: "limit", value: String(limit))
         ]
+        if let sinceID = sinceID?.rawValue {
+            items.append(URLQueryItem(name: "since_id", value: sinceID))
+        }
+        if let maxID = nextCursor?.maxID {
+            items.append(URLQueryItem(name: "max_id", value: maxID))
+        }
+        if let minID = prevCursor?.minID {
+            items.append(URLQueryItem(name: "min_id", value: minID))
+        }
+        if resolve {
+            items.append(URLQueryItem(name: "resolve", value: "true"))
+        }
+        return items
     }
 }

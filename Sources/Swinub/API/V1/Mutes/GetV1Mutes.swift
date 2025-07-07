@@ -12,11 +12,9 @@ public struct GetV1Mutes: HTTPEndpointRequest, Sendable {
     public var authority: String { authorization.host }
     public let method: HTTPRequest.Method = .get
     public var path: String { "/api/v1/mutes" }
-    public var parameters: [String : (any RequestParameterValue)?] {
+    public var queryItems: [URLQueryItem] {
         [
-            //                "max_id" : 0, //Internal parameter.
-            //                "since_id" : 0, // Internal parameter.
-            "limit": limit
+            URLQueryItem(name: "limit", value: String(limit))
         ]
     }
 }

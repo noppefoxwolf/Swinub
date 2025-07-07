@@ -16,12 +16,12 @@ public struct GetV1AccountFavourites: HTTPEndpointRequest, Sendable {
     public let method: HTTPRequest.Method = .get
     public var path: String { "/api/v1/favourites" }
     public var authority: String { authorization.host }
-    public var parameters: [String : (any RequestParameterValue)?] {
+    public var queryItems: [URLQueryItem] {
         [
-            "since_id": sinceID?.rawValue,
-            "max_id": nextCursor?.maxID,
-            "min_id": prevCursor?.minID,
-            "limit": limit,
+            URLQueryItem(name: "since_id", value: sinceID?.rawValue),
+            URLQueryItem(name: "max_id", value: nextCursor?.maxID),
+            URLQueryItem(name: "min_id", value: prevCursor?.minID),
+            URLQueryItem(name: "limit", value: "\(limit)"),
         ]
     }
 }

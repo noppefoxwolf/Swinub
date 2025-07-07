@@ -19,6 +19,8 @@ public protocol EndpointRequest: Sendable {
     
     var authorization: AuthorizationType { get }
     
+    var queryItems: [URLQueryItem] { get }
+    
     var parameters: [String: (any RequestParameterValue)?] { get }
     
     func decode(_ data: Data) throws -> Response

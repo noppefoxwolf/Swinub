@@ -33,24 +33,12 @@ extension HTTPEndpointRequest {
         "https"
     }
     
+    public var queryItems: [URLQueryItem] { [] }
+    
     public var parameters: [String: (any RequestParameterValue)?] { [:] }
     
-    func makeRequestURL(
-        method: HTTPRequest.Method,
-        url: URL,
-        parameters: [String: (any RequestParameterValue)?]
-    ) throws -> URL {
-        var url = url
-        if [.get].contains(method) {
-            let queryItems =
-            try parameters
-                .compactMapValues({ $0 })
-                .map({ (key, value) in
-                    try URLQueryItem(name: key, value: value.parameterValue)
-                })
-            url.append(queryItems: queryItems)
-        }
-        return url
+    func makeRequestURL(url: URL) throws -> URL {
+        url.appending(queryItems: queryItems)
     }
     
     func makeHTTPRequest(
@@ -59,11 +47,7 @@ extension HTTPEndpointRequest {
         authorization: Authorization?,
         parameters: [String: (any RequestParameterValue)?]
     ) throws -> (HTTPRequest, Data) {
-        let requestURL = try makeRequestURL(
-            method: method,
-            url: url,
-            parameters: parameters
-        )
+        let requestURL = try makeRequestURL(url: url)
         var httpRequest = HTTPRequest(method: method, url: requestURL)
         httpRequest.headerFields[.accept] = "application/json"
         if let authorization {

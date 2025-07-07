@@ -16,12 +16,19 @@ public struct GetV1Notifications: HTTPEndpointRequest, Sendable {
     public var authority: String { authorization.host }
     public let method: HTTPRequest.Method = .get
     public var path: String { "/api/v1/notifications" }
-    public var parameters: [String : (any RequestParameterValue)?] {
-        [
-            "min_id": minID?.rawValue,
-            "max_id": maxID?.rawValue,
-            "limit": limit,
-            "types[]": types?.joined(separator: ","),
+    public var queryItems: [URLQueryItem] {
+        var items: [URLQueryItem] = [
+            URLQueryItem(name: "limit", value: String(limit))
         ]
+        if let minID = minID?.rawValue {
+            items.append(URLQueryItem(name: "min_id", value: minID))
+        }
+        if let maxID = maxID?.rawValue {
+            items.append(URLQueryItem(name: "max_id", value: maxID))
+        }
+        if let types = types {
+            items.append(URLQueryItem(name: "types[]", value: types.joined(separator: ",")))
+        }
+        return items
     }
 }

@@ -15,7 +15,9 @@ public struct GetV1AccountsRelationships: HTTPEndpointRequest, Sendable {
     public var path: String { "/api/v1/accounts/relationships" }
     public let method: HTTPRequest.Method = .get
     public var authority: String { authorization.host }
-    public var parameters: [String : (any RequestParameterValue)?] {
-        ["id": accountIDs.map(\.rawValue).joined(separator: ",")]
+    public var queryItems: [URLQueryItem] {
+        [
+            URLQueryItem(name: "id", value: accountIDs.map(\.rawValue).joined(separator: ","))
+        ]
     }
 }

@@ -16,12 +16,18 @@ public struct GetV1Bookmarks: HTTPEndpointRequest, Sendable {
     public var authority: String { authorization.host }
     public let path = "/api/v1/bookmarks"
     public let method: HTTPRequest.Method = .get
-    public var parameters: [String : (any RequestParameterValue)?] {
-        [
-            "since_id": sinceID?.rawValue,
-            "max_id": nextCursor?.maxID,
-            "min_id": prevCursor?.minID,
-            "limit": limit,
-        ]
+    public var queryItems: [URLQueryItem] {
+        var items: [URLQueryItem] = []
+        if let sinceID = sinceID?.rawValue {
+            items.append(URLQueryItem(name: "since_id", value: sinceID))
+        }
+        if let maxID = nextCursor?.maxID {
+            items.append(URLQueryItem(name: "max_id", value: maxID))
+        }
+        if let minID = prevCursor?.minID {
+            items.append(URLQueryItem(name: "min_id", value: minID))
+        }
+        items.append(URLQueryItem(name: "limit", value: String(limit)))
+        return items
     }
 }

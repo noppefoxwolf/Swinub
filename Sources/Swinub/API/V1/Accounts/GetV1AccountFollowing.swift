@@ -13,9 +13,9 @@ public struct GetV1AccountFollowing: HTTPEndpointRequest, Sendable {
     public let method: HTTPRequest.Method = .get
     public var path: String { "/api/v1/accounts/\(accountID)/following" }
     public var authority: String { authorization.host }
-    public var parameters: [String : (any RequestParameterValue)?] {
+    public var queryItems: [URLQueryItem] {
         [
-            "limit": 40
+            URLQueryItem(name: "limit", value: "40")
         ]
     }
 }

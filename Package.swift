@@ -1,4 +1,4 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.1
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -46,18 +46,8 @@ let package = Package(
 )
 
 let swiftSettings: [SwiftSetting] = [
-    .enableExperimentalFeature("BareSlashRegexLiterals"),
-    .enableExperimentalFeature("ConciseMagicFile"),
     .enableExperimentalFeature("ExistentialAny"),
-    .enableExperimentalFeature("ForwardTrailingClosures"),
-    .enableExperimentalFeature("ImplicitOpenExistentials"),
     .enableExperimentalFeature("StrictConcurrency"),
-
-    .enableExperimentalFeature("ImportObjcForwardDeclarations"),
-    .enableExperimentalFeature("DisableOutwardActorInference"),
-    .enableExperimentalFeature("DeprecateApplicationMain"),
-    .enableExperimentalFeature("IsolatedDefaultValues"),
-    .enableExperimentalFeature("GlobalConcurrency"),
 ]
 
 package.targets.forEach { target in

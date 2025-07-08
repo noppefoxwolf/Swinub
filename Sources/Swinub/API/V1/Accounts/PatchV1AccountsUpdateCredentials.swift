@@ -12,8 +12,8 @@ public struct PatchV1AccountsUpdateCredentials: HTTPEndpointRequest, Sendable {
     public let authorization: Authorization
 
     public var displayName: String? = nil
-    public var avatar: (any Transferable)? = nil
-    public var header: (any Transferable)? = nil
+    public var avatar: (any Transferable & Sendable)? = nil
+    public var header: (any Transferable & Sendable)? = nil
 
     public var authority: String { authorization.host }
     public var path: String { "/api/v1/accounts/update_credentials" }

@@ -2,9 +2,9 @@ import CoreTransferable
 
 public struct MultipartFormItem: Sendable {
     public let name: String
-    public let value: (any Transferable)?
+    public let value: (any Transferable & Sendable)?
     
-    init(name: String, value: (any Transferable)?) {
+    init(name: String, value: (any Transferable & Sendable)?) {
         self.name = name
         self.value = value
     }

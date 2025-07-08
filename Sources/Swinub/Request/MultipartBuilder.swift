@@ -26,7 +26,7 @@ struct MultipartBuilder {
         return data
     }
     
-    func multipartBoundaryData<T: Transferable>(key: String, _ transferable: T) async throws -> Data {
+    func multipartBoundaryData<T: Transferable & Sendable>(key: String, _ transferable: T) async throws -> Data {
         let filename = transferable.compatible.suggestedFilename
         let contentType = transferable.compatible.exportedContentTypes().first
         let data = try await transferable.compatible.exported(as: contentType ?? .utf8PlainText)

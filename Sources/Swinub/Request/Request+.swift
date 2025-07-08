@@ -1,4 +1,5 @@
 import HTTPTypes
+import CoreTransferable
 import HTTPTypesFoundation
 import Foundation
 
@@ -35,19 +36,19 @@ extension HTTPEndpointRequest {
     
     public var queryItems: [URLQueryItem] { [] }
     
-    public var parameters: [String: (any RequestParameterValue)?] { [:] }
+    public var multipartFormData: [String : any Transferable] { [:] }
     
-    func makeRequestURL(url: URL) throws -> URL {
-        url.appending(queryItems: queryItems)
-    }
+    public var parameters: [String: any RequestParameterValue] { [:] }
     
     func makeHTTPRequest(
         method: HTTPRequest.Method,
         url: URL,
         authorization: Authorization?,
-        parameters: [String: (any RequestParameterValue)?]
+        queryItems: [URLQueryItem],
+        parameters: [String: any RequestParameterValue],
+        multipartFormData: [String : any Transferable]
     ) async throws -> (HTTPRequest, Data) {
-        let requestURL = try makeRequestURL(url: url)
+        let requestURL = url.appending(queryItems: queryItems)
         var httpRequest = HTTPRequest(method: method, url: requestURL)
         httpRequest.headerFields[.accept] = "application/json"
         if let authorization {
@@ -55,30 +56,31 @@ extension HTTPEndpointRequest {
             httpRequest.headerFields[.userAgent] = authorization.userAgent
         }
         
-        let httpBody = try await makeHTTPBody(method: method, parameters: parameters, httpRequest: &httpRequest)
+        let httpBody = try await makeHTTPBody(
+            parameters: parameters,
+            multipartFormData: multipartFormData,
+            httpRequest: &httpRequest
+        )
         return (httpRequest, httpBody)
     }
     
     private func makeHTTPBody(
-        method: HTTPRequest.Method,
-        parameters: [String: (any RequestParameterValue)?],
+        parameters: [String: any RequestParameterValue],
+        multipartFormData: [String : any Transferable],
         httpRequest: inout HTTPRequest
     ) async throws -> Data {
-        let multipartBuilder = MultipartBuilder()
-        
-        if [.post, .patch, .put].contains(method) && !multipartBuilder.isMultipartRequired(parameters: parameters) {
+        if multipartFormData.isEmpty {
             let data = try JSONSerialization.data(
                 withJSONObject: parameters.compactMapValues({ $0 }),
                 options: []
             )
             httpRequest.headerFields[.contentType] = "application/json; charset=utf-8"
             return data
-        } else if [.post, .patch].contains(method) && multipartBuilder.isMultipartRequired(parameters: parameters) {
+        } else {
+            let multipartBuilder = MultipartBuilder()
             httpRequest.headerFields[.contentType] = multipartBuilder.contentType
-            return try await multipartBuilder.build([])
+            return try await multipartBuilder.build(multipartFormData)
         }
-        
-        return Data()
     }
 }
 
@@ -88,7 +90,9 @@ extension HTTPEndpointRequest {
             method: method,
             url: url,
             authorization: nil,
-            parameters: parameters
+            queryItems: queryItems,
+            parameters: parameters,
+            multipartFormData: multipartFormData
         )
     }
 }
@@ -99,7 +103,9 @@ extension HTTPEndpointRequest where AuthorizationType == Authorization {
             method: method,
             url: url,
             authorization: authorization,
-            parameters: parameters
+            queryItems: queryItems,
+            parameters: parameters,
+            multipartFormData: multipartFormData
         )
     }
 }
@@ -110,7 +116,9 @@ extension HTTPEndpointRequest where AuthorizationType == Authorization? {
             method: method,
             url: url,
             authorization: authorization,
-            parameters: parameters
+            queryItems: queryItems,
+            parameters: parameters,
+            multipartFormData: multipartFormData
         )
     }
 }

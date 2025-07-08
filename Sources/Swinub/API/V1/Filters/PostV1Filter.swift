@@ -28,13 +28,13 @@ public struct PostV1Filter: HTTPEndpointRequest, Sendable {
     public var authority: String { authorization.host }
     public let method: HTTPRequest.Method = .post
     public var path: String { "/api/v1/filters" }
-    public var parameters: [String : (any RequestParameterValue)?] {
+    public var parameters: [String : any RequestParameterValue] {
         [
             "phrase": phrase,
             "context": context.map(\.rawValue) as [any RequestParameterValue],
             "irreversible": irreversible,
             "wholeWord": wholeWord,
             "expires_in": expiresIn.map(String.init),
-        ]
+        ].compactMapValues({ $0 })
     }
 }

@@ -14,7 +14,7 @@ public struct PutV1PushSubscription: HTTPEndpointRequest, Sendable {
     public var authority: String { authorization.host }
     public let method: HTTPRequest.Method = .put
     public var path: String { "/api/v1/push/subscription" }
-    public var parameters: [String : (any RequestParameterValue)?] {
+    public var parameters: [String : any RequestParameterValue] {
         [
             "data": [
                 "policy": configuration.policy.rawValue,

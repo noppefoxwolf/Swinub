@@ -1,4 +1,5 @@
 import HTTPTypes
+import CoreTransferable
 import Foundation
 
 public protocol EndpointRequest: Sendable {
@@ -21,7 +22,9 @@ public protocol EndpointRequest: Sendable {
     
     var queryItems: [URLQueryItem] { get }
     
-    var parameters: [String: (any RequestParameterValue)?] { get }
+    var multipartFormData: [String : any Transferable] { get }
+    
+    var parameters: [String: any RequestParameterValue] { get }
     
     func decode(_ data: Data) throws -> Response
 }

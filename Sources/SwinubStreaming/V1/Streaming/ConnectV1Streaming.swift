@@ -1,6 +1,7 @@
 import Swinub
 import HTTPTypes
 import Foundation
+import CoreTransferable
 
 public struct ConnectV1Streaming: StreamingEndpointRequest {
     public typealias Response = Message
@@ -13,15 +14,17 @@ public struct ConnectV1Streaming: StreamingEndpointRequest {
     
     public var queryItems: [URLQueryItem] { [] }
     
-    public var parameters: [String : (any RequestParameterValue)?] {
-        var parameters = [
+    public var multipartFormData: [String : any Transferable] { [:] }
+    
+    public var parameters: [String : any RequestParameterValue] {
+        var parameters: [String : (any RequestParameterValue)?] = [
             "access_token" : authorization?.oauthToken,
             "stream" : stream.stream.rawValue,
         ]
         if let name = stream.queryItem?.name, let value = stream.queryItem?.value {
             parameters[name] = value
         }
-        return parameters
+        return parameters.compactMapValues({ $0 })
     }
     
     public init(stream: StreamQuery, host: String) {

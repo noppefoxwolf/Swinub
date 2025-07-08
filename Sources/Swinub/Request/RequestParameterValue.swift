@@ -1,23 +1,7 @@
 import Foundation
 
-public protocol UploadMedia {
-    var parameterValue: String { get }
-    var multipartValue: Data { get }
-    var multipartFilename: String? { get }
-    var multipartContentType: String? { get }
-}
-
 public protocol RequestParameterValue {
     var parameterValue: String { get throws }
-    var multipartValue: Data { get throws }
-    var multipartContentType: String? { get }
-    var multipartFilename: String? { get }
-}
-
-public extension RequestParameterValue {
-    var multipartValue: Data { get throws { try Data(parameterValue.utf8) } }
-    var multipartContentType: String? { nil }
-    var multipartFilename: String? { nil }
 }
 
 extension Int: RequestParameterValue {

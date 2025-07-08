@@ -27,8 +27,8 @@ public struct PostV1Statuses: HTTPEndpointRequest, Sendable {
     public var authority: String { authorization.host }
     public let method: HTTPRequest.Method = .post
     public var path: String { "/api/v1/statuses" }
-    public var parameters: [String : (any RequestParameterValue)?] {
-        [
+    public var parameters: [String : any RequestParameterValue] {
+        let parameters: [String : (any RequestParameterValue)?] = [
             "status": _parameters.status,
             "visibility": _parameters.visibility?.rawValue,
             "in_reply_to_id": _parameters.inReplyToId?.rawValue,
@@ -39,6 +39,7 @@ public struct PostV1Statuses: HTTPEndpointRequest, Sendable {
             "poll": pollParameters,
             "language": _parameters.language?.languageCode?.identifier
         ]
+        return parameters.compactMapValues({ $0 })
     }
 
     var pollParameters: [String: Any]? {

@@ -1,4 +1,5 @@
 import Foundation
+import CoreTransferable
 import HTTPTypes
 
 // https://docs.joinmastodon.org/methods/accounts/#update_credentials
@@ -11,17 +12,18 @@ public struct PatchV1AccountsUpdateCredentials: HTTPEndpointRequest, Sendable {
     public let authorization: Authorization
 
     public var displayName: String? = nil
-    public var avatar: Jpeg? = nil
-    public var header: Jpeg? = nil
+    public var avatar: (any Transferable)? = nil
+    public var header: (any Transferable)? = nil
 
     public var authority: String { authorization.host }
     public var path: String { "/api/v1/accounts/update_credentials" }
     public let method: HTTPRequest.Method = .patch
-    public var parameters: [String : (any RequestParameterValue)?] {
+    
+    public var multipartFormData: [String : any Transferable] {
         [
             "display_name": displayName,
             "avatar": avatar,
             "header": header,
-        ]
+        ].compactMapValues({ $0 })
     }
 }

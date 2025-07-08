@@ -30,7 +30,7 @@ public struct PostOAuthToken: HTTPEndpointRequest, Sendable {
     public var authority: String { host }
     public var path: String { "/oauth/token" }
     public let method: HTTPRequest.Method = .post
-    public var parameters: [String : (any RequestParameterValue)?] {
+    public var parameters: [String : any RequestParameterValue] {
         [
             "grant_type": "authorization_code",
             "client_id": clientId,

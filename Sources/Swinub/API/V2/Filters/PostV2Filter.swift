@@ -29,8 +29,8 @@ public struct PostV2Filter: HTTPEndpointRequest, Sendable {
     public var authority: String { authorization.host }
     public var path: String { "/api/v2/filters" }
     public let method: HTTPRequest.Method = .post
-    public var parameters: [String : (any RequestParameterValue)?] {
-        [
+    public var parameters: [String : any RequestParameterValue] {
+        let paramters: [String : (any RequestParameterValue)?] = [
             "title": title,
             "context": context.map(\.rawValue) as [any RequestParameterValue],
             "filter_action": filterAction.rawValue,
@@ -41,6 +41,7 @@ public struct PostV2Filter: HTTPEndpointRequest, Sendable {
                     "whole_word": keywordsAttribute.wholeWord,
                 ] as [String: Any]
             }),
-        ] as [String: (any RequestParameterValue)?]
+        ]
+        return paramters.compactMapValues({ $0 })
     }
 }

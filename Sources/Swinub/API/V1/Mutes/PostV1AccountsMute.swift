@@ -17,10 +17,10 @@ public struct PostV1AccountsMute: HTTPEndpointRequest, Sendable {
     public var authority: String { authorization.host }
     public let method: HTTPRequest.Method = .post
     public var path: String { "/api/v1/accounts/\(accountID)/mute" }
-    public var parameters: [String : any RequestParameterValue] {
-        [
+    public var body: EndpointRequestBody? {
+        .json([
             "notifications": notifications,
             "duration": duration,
-        ]
+        ])
     }
 }

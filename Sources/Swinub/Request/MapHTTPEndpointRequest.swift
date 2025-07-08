@@ -19,7 +19,7 @@ public struct MapHTTPEndpointRequest<Response: Codable & Sendable, Base: HTTPEnd
     public var authority: String { base.authority }
     public var path: String { base.path }
     public var url: URL { get throws { try base.url } }
-    public var parameters: [String: (any RequestParameterValue)?] { base.parameters }
+    public var body: EndpointRequestBody? { base.body }
     public func makeHTTPRequest() async throws -> (HTTPRequest, Data) { try await base.makeHTTPRequest() }
     public func decode(_ data: Data) throws -> Response {
         let response = try base.decode(data)

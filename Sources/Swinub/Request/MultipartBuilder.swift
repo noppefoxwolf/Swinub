@@ -9,15 +9,17 @@ struct MultipartBuilder {
         self.boundary = boundary
     }
     
-    func build(_ parameters: [String : any Transferable & Sendable]) async throws -> Data {
+    func build(_ items: [MultipartFormItem]) async throws -> Data {
         var data = Data()
         
-        for parameter in parameters {
-            let partData = try await multipartBoundaryData(
-                key: parameter.key,
-                parameter.value
-            )
-            data.append(partData)
+        for item in items {
+            if let value = item.value {
+                let partData = try await multipartBoundaryData(
+                    key: item.name,
+                    value
+                )
+                data.append(partData)
+            }
         }
         
         data.append(Data.multipartEnd(boundary: boundary))

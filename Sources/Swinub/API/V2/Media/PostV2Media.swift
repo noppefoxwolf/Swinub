@@ -22,10 +22,10 @@ public struct PostV2Media: HTTPEndpointRequest, Sendable {
     public var path: String { "/api/v2/media" }
     public let method: HTTPRequest.Method = .post
     
-    public var multipartFormData: [String : any Transferable] {
+    public var multipartFormItems: [MultipartFormItem] {
         [
-            "file": .some(media),
-            "description": description
-        ].compactMapValues({ $0 })
+            MultipartFormItem(name: "file", value: media),
+            MultipartFormItem(name: "description", value: description),
+        ]
     }
 }

@@ -27,19 +27,18 @@ public struct PostV1Statuses: HTTPEndpointRequest, Sendable {
     public var authority: String { authorization.host }
     public let method: HTTPRequest.Method = .post
     public var path: String { "/api/v1/statuses" }
-    public var parameters: [String : any RequestParameterValue] {
-        let parameters: [String : (any RequestParameterValue)?] = [
+    public var body: EndpointRequestBody? {
+        .json([
             "status": _parameters.status,
             "visibility": _parameters.visibility?.rawValue,
             "in_reply_to_id": _parameters.inReplyToId?.rawValue,
             // JSONの場合はmedia_ids、multipartの場合はmedia_ids[]をキーにする
-            "media_ids": _parameters.mediaIDs?.map(\.rawValue) as [any RequestParameterValue]?,
+            "media_ids": _parameters.mediaIDs?.map(\.rawValue),
             "sensitive": _parameters.sensitive,
             "spoiler_text": _parameters.spoilerText,
             "poll": pollParameters,
             "language": _parameters.language?.languageCode?.identifier
-        ]
-        return parameters.compactMapValues({ $0 })
+        ])
     }
 
     var pollParameters: [String: Any]? {

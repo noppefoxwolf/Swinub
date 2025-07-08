@@ -17,10 +17,10 @@ public struct PostV1StatusesTranslate: HTTPEndpointRequest, Sendable {
     public var authority: String { authorization.host }
     public let method: HTTPRequest.Method = .post
     public var path: String { "/api/v1/statuses/\(statusID)/translate" }
-    public var parameters: [String : any RequestParameterValue] {
-        [
+    public var body: EndpointRequestBody? {
+        .json([
             "lang": lang
-        ].compactMapValues({ $0 })
+        ])
     }
 }
 

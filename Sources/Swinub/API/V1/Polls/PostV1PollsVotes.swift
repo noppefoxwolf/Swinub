@@ -15,9 +15,9 @@ public struct PostV1PollsVotes: HTTPEndpointRequest, Sendable {
     public var authority: String { authorization.host }
     public let method: HTTPRequest.Method = .post
     public var path: String { "/api/v1/polls/\(pollID)/votes" }
-    public var parameters: [String : any RequestParameterValue] {
-        [
-            "choices": choices as [any RequestParameterValue]
-        ]
+    public var body: EndpointRequestBody? {
+        .json([
+            "choices": choices
+        ])
     }
 }

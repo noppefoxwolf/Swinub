@@ -22,9 +22,12 @@ public protocol EndpointRequest: Sendable {
     
     var queryItems: [URLQueryItem] { get }
     
-    var multipartFormData: [String : any Transferable] { get }
-    
-    var parameters: [String: any RequestParameterValue] { get }
+    var body: EndpointRequestBody? { get }
     
     func decode(_ data: Data) throws -> Response
+}
+
+public enum EndpointRequestBody: @unchecked Sendable {
+    case json(Any)
+    case multipart([MultipartFormItem])
 }

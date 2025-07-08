@@ -19,7 +19,7 @@ public struct Status: Codable, Identifiable, Sendable {
     public let language: String?
     public let reblog: Indirect<Status>?
     // fedibird
-    public let quote: Indirect<Status>?
+    public let quote: Quote?
     public let poll: Poll?
     public let card: PreviewCard?
     public let mediaAttachments: [MediaAttachment]

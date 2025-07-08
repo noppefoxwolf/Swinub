@@ -34,7 +34,7 @@ public struct PostV2Filter: HTTPEndpointRequest, Sendable {
             "title": title,
             "context": context.map(\.rawValue),
             "filter_action": filterAction.rawValue,
-            "expires_in": expiresIn.map(String.init),
+            "expires_in": expiresIn.map(String.init) as Any,
             "keywords_attributes": keywordsAttributes.map({ keywordsAttribute in
                 [
                     "keyword": keywordsAttribute.keyword,

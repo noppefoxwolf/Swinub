@@ -34,7 +34,7 @@ public struct PostV1Filter: HTTPEndpointRequest, Sendable {
             "context": context.map(\.rawValue),
             "irreversible": irreversible,
             "wholeWord": wholeWord,
-            "expires_in": expiresIn.map(String.init),
+            "expires_in": expiresIn.map(String.init) as Any,
         ])
     }
 }

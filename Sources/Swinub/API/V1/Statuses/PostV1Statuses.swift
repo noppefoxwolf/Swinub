@@ -30,14 +30,14 @@ public struct PostV1Statuses: HTTPEndpointRequest, Sendable {
     public var body: EndpointRequestBody? {
         .json([
             "status": _parameters.status,
-            "visibility": _parameters.visibility?.rawValue,
-            "in_reply_to_id": _parameters.inReplyToId?.rawValue,
+            "visibility": _parameters.visibility?.rawValue as Any,
+            "in_reply_to_id": _parameters.inReplyToId?.rawValue as Any,
             // JSONの場合はmedia_ids、multipartの場合はmedia_ids[]をキーにする
-            "media_ids": _parameters.mediaIDs?.map(\.rawValue),
+            "media_ids": _parameters.mediaIDs?.map(\.rawValue) as Any,
             "sensitive": _parameters.sensitive,
-            "spoiler_text": _parameters.spoilerText,
-            "poll": pollParameters,
-            "language": _parameters.language?.languageCode?.identifier
+            "spoiler_text": _parameters.spoilerText as Any,
+            "poll": pollParameters as Any,
+            "language": _parameters.language?.languageCode?.identifier as Any
         ])
     }
 

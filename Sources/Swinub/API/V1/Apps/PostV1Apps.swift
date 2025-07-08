@@ -30,7 +30,7 @@ public struct PostV1Apps: HTTPEndpointRequest, Sendable {
         .json([
             "client_name": clientName,
             "redirect_uris": redirectURI,
-            "website": website,
+            "website": website as Any,
             "scopes": scopes.map(\.rawValue).joined(separator: " "),
         ])
     }

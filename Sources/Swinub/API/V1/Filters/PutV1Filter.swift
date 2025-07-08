@@ -37,7 +37,7 @@ public struct PutV1Filter: HTTPEndpointRequest, Sendable {
             "context": context.map(\.rawValue).joined(separator: ","),
             "irreversible": "\(irreversible)",
             "wholeWord": "\(wholeWord)",
-            "expires_in": expiresIn.map(String.init),
+            "expires_in": expiresIn.map(String.init) as Any,
         ])
     }
 }

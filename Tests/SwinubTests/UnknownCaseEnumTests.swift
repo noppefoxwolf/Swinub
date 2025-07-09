@@ -1,6 +1,6 @@
 import Testing
 
-@Suite 
+@Suite
 
 struct UnknownCaseEnumTests {
     @Test func codable() async throws {

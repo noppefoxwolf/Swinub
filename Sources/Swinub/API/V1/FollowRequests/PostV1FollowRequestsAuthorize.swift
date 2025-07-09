@@ -3,12 +3,12 @@ import HTTPTypes
 
 public struct PostV1FollowRequestsAuthorize: HTTPEndpointRequest, Sendable {
     public typealias Response = Relationship
-    
+
     public init(accountID: Account.ID, authorization: Authorization) {
         self.accountID = accountID
         self.authorization = authorization
     }
-    
+
     public let accountID: Account.ID
     public var byAccountID: Account.ID { authorization.accountID }
     public var authorization: Authorization

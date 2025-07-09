@@ -25,7 +25,7 @@ public struct PostV2Filter: HTTPEndpointRequest, Sendable {
     let filterAction: FilterAction
     let expiresIn: Int?
     let keywordsAttributes: [KeywordsAttribute]
-    
+
     public var authority: String { authorization.host }
     public var path: String { "/api/v2/filters" }
     public let method: HTTPRequest.Method = .post

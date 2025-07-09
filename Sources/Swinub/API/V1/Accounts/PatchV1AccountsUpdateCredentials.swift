@@ -1,5 +1,5 @@
-import Foundation
 import CoreTransferable
+import Foundation
 import HTTPTypes
 
 // https://docs.joinmastodon.org/methods/accounts/#update_credentials
@@ -18,7 +18,7 @@ public struct PatchV1AccountsUpdateCredentials: HTTPEndpointRequest, Sendable {
     public var authority: String { authorization.host }
     public var path: String { "/api/v1/accounts/update_credentials" }
     public let method: HTTPRequest.Method = .patch
-    
+
     public var body: EndpointRequestBody? {
         .multipart([
             MultipartFormItem(name: "display_name", value: displayName),

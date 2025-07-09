@@ -10,7 +10,7 @@ public struct PostV1PushSubscription: HTTPEndpointRequest, Sendable {
         p256dh: Data,
         authKey: Data,
         authorization: Authorization,
-        urlBuilder: (URL) -> URL // { $0.appending(path: extra) } 
+        urlBuilder: (URL) -> URL  // { $0.appending(path: extra) }
     ) {
         self.authorization = authorization
 

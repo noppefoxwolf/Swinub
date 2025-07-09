@@ -1,5 +1,5 @@
-import Swinub
 import Foundation
+import Swinub
 
 public struct Message: Decodable, Sendable {
     public let stream: [Stream]
@@ -65,4 +65,3 @@ public struct Message: Decodable, Sendable {
         }
     }
 }
-

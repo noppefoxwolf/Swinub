@@ -1,5 +1,5 @@
-import Swinub
 import Foundation
+import Swinub
 
 public protocol StreamingEndpointRequest: EndpointRequest {
     func makeURLRequest() throws -> URLRequest

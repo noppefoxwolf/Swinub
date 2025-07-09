@@ -63,17 +63,19 @@ public struct ResponseHeaderLinkDecoder {
         guard let text else {
             return (prev: nil, next: nil)
         }
-        
+
         for match in text.matches(of: regex) {
             let url = match[urlReference]
-            let components = url.map {
-                URLComponents(
-                    url: $0,
-                    resolvingAgainstBaseURL: false
-                )
-            }.flatMap({ $0 })
+            let components =
+                url.map {
+                    URLComponents(
+                        url: $0,
+                        resolvingAgainstBaseURL: false
+                    )
+                }
+                .flatMap({ $0 })
             let rel = match[relReference]
-            
+
             guard let components, let rel else { continue }
             switch rel {
             case .next:

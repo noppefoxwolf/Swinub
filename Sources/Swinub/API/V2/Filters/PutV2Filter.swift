@@ -28,7 +28,7 @@ public struct PutV2Filter: HTTPEndpointRequest, Sendable {
     let irreversible: Bool
     let wholeWord: Bool
     let expiresIn: Int?
-    
+
     public var authority: String { authorization.host }
     public var path: String { "/api/v2/filters/\(filterID)" }
     public let method: HTTPRequest.Method = .put

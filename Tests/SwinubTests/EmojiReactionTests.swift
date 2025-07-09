@@ -1,6 +1,6 @@
 import Testing
 
-@Suite 
+@Suite
 
 struct EmojiReactionTests {
     @Test func emojiEncode() {
@@ -12,11 +12,13 @@ struct EmojiReactionTests {
         #expect(a.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)! == "a")
         let shortcode = "nightfox_dawn"
         #expect(
-            shortcode.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)! == "nightfox_dawn"
+            shortcode.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
+                == "nightfox_dawn"
         )
         let domain = "nightfox_dawn@fedibird.com"
         #expect(
-            domain.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)! == "nightfox_dawn@fedibird.com"
+            domain.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
+                == "nightfox_dawn@fedibird.com"
         )
     }
 }

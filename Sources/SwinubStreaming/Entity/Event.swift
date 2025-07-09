@@ -3,21 +3,21 @@ import Swinub
 // https://docs.joinmastodon.org/methods/streaming/#events
 struct EventType: Codable, Sendable, Equatable {
     let rawValue: String
-    
+
     init(rawValue: String) {
         self.rawValue = rawValue
     }
-    
+
     init(from decoder: any Decoder) throws {
         let container = try decoder.singleValueContainer()
         self.rawValue = try container.decode(String.self)
     }
-    
+
     func encode(to encoder: any Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(rawValue)
     }
-    
+
     static var update: Self { Self.init(rawValue: "update") }
     static var delete: Self { Self.init(rawValue: "delete") }
     static var notification: Self { Self.init(rawValue: "notification") }

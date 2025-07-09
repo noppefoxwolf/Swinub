@@ -16,7 +16,7 @@ public struct PostV2FiltersKeywords: HTTPEndpointRequest, Sendable {
     public let authorization: Authorization
     let filterID: String
     let keywordsAttribute: KeywordsAttribute
-    
+
     public var authority: String { authorization.host }
     public var path: String { "/api/v2/filters/\(filterID)/keywords" }
     public let method: HTTPRequest.Method = .post

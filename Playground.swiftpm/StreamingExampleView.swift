@@ -1,14 +1,14 @@
+import SwiftUI
 import Swinub
 import SwinubStreaming
-import SwiftUI
 
 struct StreamingExampleView: View {
     @State
     var webSocketTask: WebSocketTask<SwinubStreaming.Message>
-    
+
     @State
     var statuses: [Swinub.Status] = []
-    
+
     @MainActor
     init() {
         let request = ConnectV1Streaming(
@@ -17,7 +17,7 @@ struct StreamingExampleView: View {
         )
         webSocketTask = try! SwinubDefaults.streamingSession.webSocketTask(for: request)
     }
-    
+
     var body: some View {
         NavigationView(content: {
             List {

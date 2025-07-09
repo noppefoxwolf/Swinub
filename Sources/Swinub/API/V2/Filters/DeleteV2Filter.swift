@@ -13,7 +13,7 @@ public struct DeleteV2Filter: HTTPEndpointRequest, Sendable {
     }
     public let authorization: Authorization
     public var filterID: String
-    
+
     public var authority: String { authorization.host }
     public var path: String { "/api/v2/filters/\(filterID)" }
     public let method: HTTPRequest.Method = .delete

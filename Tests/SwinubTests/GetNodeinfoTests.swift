@@ -1,6 +1,6 @@
+import Foundation
 import Swinub
 import Testing
-import Foundation
 
 @Suite
 struct GetNodeinfoTests {
@@ -20,21 +20,21 @@ struct GetNodeinfoTests {
 
 func isRunningInCI() -> Bool {
     let environment = ProcessInfo.processInfo.environment
-    
+
     let ciEnvironments = [
         "GITHUB_ACTIONS",
         "TRAVIS",
         "CIRCLECI",
         "GITLAB_CI",
         "JENKINS_HOME",
-        "APPVEYOR"
+        "APPVEYOR",
     ]
-    
+
     for ciEnv in ciEnvironments {
         if environment[ciEnv] != nil {
             return true
         }
     }
-    
+
     return false
 }

@@ -26,7 +26,7 @@ public struct PostOAuthToken: HTTPEndpointRequest, Sendable {
     var redirectUri: String
     var code: String
     var scopes: [Scope]
-    
+
     public var authority: String { host }
     public var path: String { "/oauth/token" }
     public let method: HTTPRequest.Method = .post
@@ -40,7 +40,7 @@ public struct PostOAuthToken: HTTPEndpointRequest, Sendable {
             "scope": scopes.map(\.rawValue).joined(separator: " "),
         ])
     }
-    
+
     public func decode(_ data: Data) throws -> OAuthToken {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase

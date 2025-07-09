@@ -17,4 +17,3 @@ struct App: SwiftUI.App {
         }
     }
 }
-

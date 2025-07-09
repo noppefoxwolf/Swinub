@@ -16,7 +16,7 @@ public struct GetV1AccountStatuses: HTTPEndpointRequest, Sendable {
     public var limit: Int = 20
     public var pinned: Bool = false
     public var onlyMedia: Bool = false
-    
+
     public var path: String { "/api/v1/accounts/\(accountID)/statuses" }
     public let method: HTTPRequest.Method = .get
     public var authority: String { authorization.host }

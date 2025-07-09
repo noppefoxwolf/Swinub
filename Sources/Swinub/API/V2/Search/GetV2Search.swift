@@ -16,7 +16,7 @@ public struct GetV2Search: HTTPEndpointRequest, Sendable {
     public var prevCursor: PrevCursor? = nil
     public var limit: Int = 20
     public var resolve: Bool = false
-    
+
     public var authority: String { authorization.host }
     public let method: HTTPRequest.Method = .get
     public var path: String { "/api/v2/search" }
@@ -24,7 +24,7 @@ public struct GetV2Search: HTTPEndpointRequest, Sendable {
         var items: [URLQueryItem] = [
             URLQueryItem(name: "q", value: q),
             URLQueryItem(name: "type", value: "statuses"),
-            URLQueryItem(name: "limit", value: String(limit))
+            URLQueryItem(name: "limit", value: String(limit)),
         ]
         if let sinceID = sinceID?.rawValue {
             items.append(URLQueryItem(name: "since_id", value: sinceID))

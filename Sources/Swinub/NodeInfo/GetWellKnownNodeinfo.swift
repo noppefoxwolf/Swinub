@@ -12,7 +12,7 @@ public struct GetWellKnownNodeinfo: HTTPEndpointRequest, Sendable {
     public init(host: String) {
         authority = host
     }
-    
+
     public var path: String { "/.well-known/nodeinfo" }
     public let method: HTTPRequest.Method = .get
     public let authority: String

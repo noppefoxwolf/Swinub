@@ -1,7 +1,7 @@
 import Swinub
 import Testing
 
-@Suite 
+@Suite
 
 struct SwinubServerResponseTests {
     func xtestConfiguration() async throws {
@@ -27,7 +27,7 @@ struct SwinubServerResponseTests {
             "mozilla.social",
             "social.vivaldi.net",
         ]
-        
+
         try await withThrowingTaskGroup(of: GetV1Instance.Response.self) { taskGroup in
             for host in hosts {
                 taskGroup.addTask {
@@ -36,9 +36,8 @@ struct SwinubServerResponseTests {
                     return response.response
                 }
             }
-            
+
             try await taskGroup.waitForAll()
         }
     }
 }
-

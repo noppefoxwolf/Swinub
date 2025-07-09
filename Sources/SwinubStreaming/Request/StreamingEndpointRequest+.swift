@@ -1,6 +1,6 @@
 import Foundation
-import Swinub
 import HTTPTypes
+import Swinub
 
 extension StreamingEndpointRequest {
     public func makeURLRequest(

@@ -1,7 +1,7 @@
-import HTTPTypes
 import CoreTransferable
-import HTTPTypesFoundation
 import Foundation
+import HTTPTypes
+import HTTPTypesFoundation
 
 struct RequestFailedToMakeComponentsError: LocalizedError {
     var errorDescription: String? { "Request failed to make url components." }
@@ -12,11 +12,15 @@ extension EndpointRequest {
         get throws {
             let relativeToURL = URL(string: "\(scheme)://\(authority)")
             let url = relativeToURL.map({ URL(string: path, relativeTo: $0) }).flatMap({ $0 })
-            guard let url else { throw GeneralError(errorDescription: "Can not convert URL from \(scheme)://\(authority)") }
+            guard let url else {
+                throw GeneralError(
+                    errorDescription: "Can not convert URL from \(scheme)://\(authority)"
+                )
+            }
             return url
         }
     }
-    
+
     public func decode(_ data: Data) throws -> Response {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -33,11 +37,11 @@ extension HTTPEndpointRequest {
     public var scheme: String {
         "https"
     }
-    
+
     public var queryItems: [URLQueryItem] { [] }
-    
+
     public var body: EndpointRequestBody? { nil }
-    
+
     func makeHTTPRequest(
         method: HTTPRequest.Method,
         url: URL,
@@ -52,7 +56,7 @@ extension HTTPEndpointRequest {
             httpRequest.headerFields[.authorization] = "Bearer \(authorization.oauthToken)"
             httpRequest.headerFields[.userAgent] = authorization.userAgent
         }
-        
+
         switch body {
         case .none:
             return (httpRequest, Data())

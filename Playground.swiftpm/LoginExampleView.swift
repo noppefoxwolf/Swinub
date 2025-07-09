@@ -1,12 +1,12 @@
+import AuthenticationServices
 import SwiftUI
 import Swinub
-import AuthenticationServices
 
 struct LoginExampleView: View {
-    
+
     @Environment(\.webAuthenticationSession)
     var webAuthenticationSession
-    
+
     var body: some View {
         Button {
             Task {

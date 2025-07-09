@@ -1,9 +1,10 @@
+import Foundation
 import RegexBuilder
 import Testing
-import Foundation
+
 @testable import Swinub
 
-@Suite 
+@Suite
 struct HeaderLinkDecoderTests {
     @Test func decode() async throws {
         let linkHeader =

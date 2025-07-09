@@ -13,7 +13,7 @@ public struct GetV1TimelinesEmojiReactions: HTTPEndpointRequest, Sendable {
     public var nextCursor: NextCursor? = nil
     public var prevCursor: PrevCursor? = nil
     public var limit: Int = 20
-    
+
     public var authority: String { authorization.host }
     public var path: String { "/api/v1/emoji_reactions" }
     public let method: HTTPRequest.Method = .get

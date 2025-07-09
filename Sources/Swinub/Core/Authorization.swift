@@ -1,5 +1,10 @@
 public struct Authorization: Sendable {
-    public init(host: String, accountID: Account.ID, oauthToken: String, userAgent: String = "dev.noppe.Swinub") {
+    public init(
+        host: String,
+        accountID: Account.ID,
+        oauthToken: String,
+        userAgent: String = "dev.noppe.Swinub"
+    ) {
         self.host = host
         self.accountID = accountID
         self.oauthToken = oauthToken

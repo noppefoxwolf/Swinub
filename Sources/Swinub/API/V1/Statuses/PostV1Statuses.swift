@@ -37,7 +37,7 @@ public struct PostV1Statuses: HTTPEndpointRequest, Sendable {
             "sensitive": _parameters.sensitive,
             "spoiler_text": _parameters.spoilerText as Any,
             "poll": pollParameters as Any,
-            "language": _parameters.language?.languageCode?.identifier as Any
+            "language": _parameters.language?.languageCode?.identifier as Any,
         ])
     }
 

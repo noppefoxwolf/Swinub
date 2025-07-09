@@ -8,7 +8,7 @@ public struct GetV2Filters: HTTPEndpointRequest, Sendable {
         self.authorization = authorization
     }
     public let authorization: Authorization
-    
+
     public var authority: String { authorization.host }
     public var path: String { "/api/v2/filters" }
     public let method: HTTPRequest.Method = .get

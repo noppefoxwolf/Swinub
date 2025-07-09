@@ -1,7 +1,8 @@
-import Testing
-import HTTPTypes
-@testable import Swinub
 import Foundation
+import HTTPTypes
+import Testing
+
+@testable import Swinub
 
 @Suite
 struct FollowRequestsTests {}

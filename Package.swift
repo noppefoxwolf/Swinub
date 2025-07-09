@@ -10,12 +10,12 @@ let package = Package(
         .library(
             name: "Swinub",
             targets: ["Swinub", "SwinubStreaming"]
-        ),
+        )
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-async-algorithms", from: "1.0.4"),
         .package(url: "https://github.com/apple/swift-http-types", from: "1.4.0"),
-        .package(url: "https://github.com/noppefoxwolf/CoreTransferableBackport", from: "0.0.3"),
+        .package(url: "https://github.com/noppefoxwolf/CoreTransferableBackport", from: "0.0.4"),
     ],
     targets: [
         .target(

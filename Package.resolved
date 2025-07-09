@@ -1,13 +1,13 @@
 {
-  "originHash" : "3946c21fa370d4ca5ef43c031fad637f5012d4d08457829d0c7308a18cfe5840",
+  "originHash" : "86e3875030b1a85e79841278197bd1e5648d7529516a0488967cfa2e55d911b0",
   "pins" : [
     {
       "identity" : "coretransferablebackport",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/noppefoxwolf/CoreTransferableBackport",
       "state" : {
-        "revision" : "0d89bd520fd92db65552a5e214805155de5f5674",
-        "version" : "0.0.3"
+        "revision" : "fa75d4b76bc75d2f37c2d7277ccec4acd8c35930",
+        "version" : "0.0.4"
       }
     },
     {

@@ -27,13 +27,6 @@ struct MultipartBuilderTests {
         #expect(contentType == .jpeg)
         #expect(data.count == 4)
     }
-
-    @Test
-    @available(macOS 15.2, *)
-    func transferableString() async throws {
-        let string = TransferableString(rawValue: "")
-        let a = try await string.exported(as: .utf8PlainText)
-    }
 }
 
 struct Jpeg: Transferable, Sendable {

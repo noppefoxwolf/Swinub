@@ -8,18 +8,10 @@ public struct MultipartFormItem: Sendable {
         self.name = name
         self.value = value
     }
-}
-
-struct TransferableString: Transferable {
-    let rawValue: String
-
-    static var transferRepresentation: some TransferRepresentation {
-        DataRepresentation(exportedContentType: .utf8PlainText) {
-            if $0.rawValue.isEmpty {
-                Data()
-            } else {
-                Data($0.rawValue.utf8)
-            }
-        }
+    
+    init(name: String, value: String?) {
+        self.name = name
+        self.value = value?.isEmpty == true ? value : .none
     }
 }
+

@@ -8,10 +8,5 @@ public struct MultipartFormItem: Sendable {
         self.name = name
         self.value = value
     }
-    
-    init(name: String, value: String?) {
-        self.name = name
-        self.value = value?.isEmpty == true ? value : .none
-    }
 }
 

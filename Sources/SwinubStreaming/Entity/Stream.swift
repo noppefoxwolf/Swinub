@@ -30,7 +30,7 @@ public enum StreamQuery: Codable, Sendable {
     case userNotification
     case list(id: String)
     case direct
-    
+
     var stream: Stream {
         switch self {
         case .public: .public
@@ -47,7 +47,7 @@ public enum StreamQuery: Codable, Sendable {
         case .direct: .direct
         }
     }
-    
+
     var queryItem: URLQueryItem? {
         switch self {
         case .hashtag(let tag), .hashtagLocal(let tag):
@@ -59,4 +59,3 @@ public enum StreamQuery: Codable, Sendable {
         }
     }
 }
-

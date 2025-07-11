@@ -1,7 +1,7 @@
 import Foundation
-import os
 import HTTPTypes
 import HTTPTypesFoundation
+import os
 
 public protocol Session: Sendable {
     func response<T: HTTPEndpointRequest>(
@@ -13,8 +13,8 @@ extension URLSession: Session {
     public func response<T: HTTPEndpointRequest>(
         for request: T
     ) async throws -> (response: T.Response, httpResponse: HTTPResponse) {
-        let (httpRequest, data) = try request.makeHTTPRequest()
-        
+        let (httpRequest, data) = try await request.makeHTTPRequest()
+
         let (responseData, httpResponse): (Data, HTTPResponse)
         switch request.method {
         case .post, .put:
@@ -22,7 +22,7 @@ extension URLSession: Session {
         default:
             (responseData, httpResponse) = try await self.data(for: httpRequest)
         }
-        
+
         do {
             switch httpResponse.status.kind {
             case .successful:
@@ -51,5 +51,3 @@ extension URLSession: Session {
         }
     }
 }
-
-

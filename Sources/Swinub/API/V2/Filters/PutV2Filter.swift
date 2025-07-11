@@ -28,17 +28,17 @@ public struct PutV2Filter: HTTPEndpointRequest, Sendable {
     let irreversible: Bool
     let wholeWord: Bool
     let expiresIn: Int?
-    
+
     public var authority: String { authorization.host }
     public var path: String { "/api/v2/filters/\(filterID)" }
     public let method: HTTPRequest.Method = .put
-    public var parameters: [String : (any RequestParameterValue)?] {
-        [
+    public var body: EndpointRequestBody? {
+        .json([
             "phrase": phrase,
             "context": context.map(\.rawValue).joined(separator: ","),
             "irreversible": "\(irreversible)",
             "wholeWord": "\(wholeWord)",
-            "expires_in": expiresIn.map(String.init),
-        ]
+            "expires_in": expiresIn.map(String.init) as Any,
+        ])
     }
 }

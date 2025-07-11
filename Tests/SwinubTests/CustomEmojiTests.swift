@@ -1,8 +1,8 @@
+import Foundation
 import Swinub
 import Testing
-import Foundation
 
-@Suite 
+@Suite
 struct CustomEmojiTests {
     @Test func fedibirdJSON() async throws {
         // aliasesが無い場合でも[String]にはマッピングされないので、[String]?で持つ

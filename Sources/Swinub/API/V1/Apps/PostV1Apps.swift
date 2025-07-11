@@ -26,12 +26,12 @@ public struct PostV1Apps: HTTPEndpointRequest, Sendable {
     public var authority: String { host }
     public var path: String { "/api/v1/apps" }
     public let method: HTTPRequest.Method = .post
-    public var parameters: [String : (any RequestParameterValue)?] {
-        [
+    public var body: EndpointRequestBody? {
+        .json([
             "client_name": clientName,
             "redirect_uris": redirectURI,
-            "website": website,
+            "website": website as Any,
             "scopes": scopes.map(\.rawValue).joined(separator: " "),
-        ]
+        ])
     }
 }

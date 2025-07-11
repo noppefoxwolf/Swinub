@@ -1,17 +1,14 @@
 import Foundation
-import Swinub
 import HTTPTypes
+import Swinub
 
 extension StreamingEndpointRequest {
     public func makeURLRequest(
         url: URL,
         authorization: Authorization?,
-        parameters: [String: (any RequestParameterValue)?]
+        queryItems: [URLQueryItem]
     ) throws -> URLRequest {
         var url = url
-        let queryItems = try parameters.compactMapValues({ $0 }).compactMap({
-            try URLQueryItem(name: $0.key, value: $0.value.parameterValue)
-        })
         url.append(queryItems: queryItems)
         var urlRequset = URLRequest(url: url)
         if let authorization {
@@ -33,7 +30,7 @@ extension StreamingEndpointRequest {
         try makeURLRequest(
             url: url,
             authorization: nil,
-            parameters: parameters
+            queryItems: queryItems
         )
     }
 }
@@ -43,7 +40,7 @@ extension StreamingEndpointRequest where AuthorizationType == Authorization? {
         try makeURLRequest(
             url: url,
             authorization: authorization,
-            parameters: parameters
+            queryItems: queryItems
         )
     }
 }

@@ -5,16 +5,17 @@ import PackageDescription
 
 let package = Package(
     name: "Swinub",
-    platforms: [.iOS(.v16), .macOS(.v13)],
+    platforms: [.iOS(.v16), .macOS(.v15)],
     products: [
         .library(
             name: "Swinub",
             targets: ["Swinub", "SwinubStreaming"]
-        ),
+        )
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-async-algorithms", from: "1.0.4"),
         .package(url: "https://github.com/apple/swift-http-types", from: "1.4.0"),
+        .package(url: "https://github.com/noppefoxwolf/CoreTransferableBackport", from: "0.0.4"),
     ],
     targets: [
         .target(
@@ -23,6 +24,7 @@ let package = Package(
                 .product(name: "AsyncAlgorithms", package: "swift-async-algorithms"),
                 .product(name: "HTTPTypes", package: "swift-http-types"),
                 .product(name: "HTTPTypesFoundation", package: "swift-http-types"),
+                "CoreTransferableBackport",
             ],
             resources: [.copy("Resources/PrivacyInfo.xcprivacy")]
         ),

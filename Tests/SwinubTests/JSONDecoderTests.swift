@@ -1,6 +1,6 @@
+import Foundation
 import Swinub
 import Testing
-import Foundation
 
 @Suite
 struct JSONDecoderTests {

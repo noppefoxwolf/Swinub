@@ -2,7 +2,7 @@ import Foundation
 
 public struct StatusVisibility: Codable, Sendable, Equatable, Hashable {
     public let rawValue: String
-    
+
     public static let personal = StatusVisibility(rawValue: "personal")  // fedibird
     public static let `direct` = StatusVisibility(rawValue: "direct")
     public static let `private` = StatusVisibility(rawValue: "private")
@@ -23,10 +23,13 @@ public struct StatusVisibility: Codable, Sendable, Equatable, Hashable {
     public static var defaultCases: [Self] {
         [.direct, .private, .unlisted, .public]
     }
-    
+
     // 公開範囲の狭い順
     public static var allCases: [Self] {
-        [.personal, .direct, .private, .limited, .mutualFollowersOnly, .login, .unlisted, .publicUnlisted, .public]
+        [
+            .personal, .direct, .private, .limited, .mutualFollowersOnly, .login, .unlisted,
+            .publicUnlisted, .public,
+        ]
     }
 
     public var systemSymbolName: String {
@@ -57,12 +60,12 @@ public struct StatusVisibility: Codable, Sendable, Equatable, Hashable {
     public init(rawValue: String) {
         self.rawValue = rawValue
     }
-    
+
     public init(from decoder: any Decoder) throws {
         let container = try decoder.singleValueContainer()
         self.rawValue = try container.decode(String.self)
     }
-    
+
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(rawValue)

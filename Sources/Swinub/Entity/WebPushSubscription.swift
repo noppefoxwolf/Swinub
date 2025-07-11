@@ -7,11 +7,11 @@ public struct WebPushSubscription: Codable, Sendable {
         public let poll: Bool?
         public let emojiReaction: Bool?
     }
-    
+
     public enum ID: Codable, Sendable {
         case int(Int)
         case string(String)
-        
+
         public init(from decoder: any Decoder) throws {
             let container = try decoder.singleValueContainer()
             do {
@@ -24,12 +24,12 @@ public struct WebPushSubscription: Codable, Sendable {
                 throw error
             }
         }
-        
+
         enum CodingKeys: CodingKey {
             case int
             case string
         }
-        
+
         public func encode(to encoder: any Encoder) throws {
             var container = encoder.singleValueContainer()
             switch self {

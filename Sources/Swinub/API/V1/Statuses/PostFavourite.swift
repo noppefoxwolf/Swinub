@@ -14,4 +14,3 @@ public struct PostV1StatusesFavourite: HTTPEndpointRequest, Sendable {
     public let method: HTTPRequest.Method = .post
     public var path: String { "/api/v1/statuses/\(statusID)/favourite" }
 }
-

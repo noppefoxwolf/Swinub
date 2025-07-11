@@ -41,23 +41,23 @@ public struct Status: Codable, Identifiable, Sendable {
 
     // fedibird, kmy.blue extensions
     public let emojiReactions: [EmojiReaction]?
-    
+
     // Firefish extensions
     public let reactions: [Reaction]?
-    
+
     public struct ID: Equatable, Hashable, Sendable, Codable, CustomStringConvertible {
         public let rawValue: String
         public var description: String { rawValue }
-        
+
         public init(rawValue: String) {
             self.rawValue = rawValue
         }
-        
+
         public init(from decoder: any Decoder) throws {
             let container = try decoder.singleValueContainer()
             self.rawValue = try container.decode(String.self)
         }
-        
+
         public func encode(to encoder: any Encoder) throws {
             var container = encoder.singleValueContainer()
             try container.encode(rawValue)
@@ -119,11 +119,11 @@ extension Status {
         public let username: String
         public let url: URL?
         public let acct: String
-        
+
         public struct ID: Equatable, Hashable, Sendable, Codable, CustomStringConvertible {
             public let rawValue: String
             public var description: String { rawValue }
-            
+
             public init(from decoder: any Decoder) throws {
                 let container = try decoder.singleValueContainer()
                 self.rawValue = try container.decode(String.self)

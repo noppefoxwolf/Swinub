@@ -25,22 +25,22 @@ public struct PostV2Filter: HTTPEndpointRequest, Sendable {
     let filterAction: FilterAction
     let expiresIn: Int?
     let keywordsAttributes: [KeywordsAttribute]
-    
+
     public var authority: String { authorization.host }
     public var path: String { "/api/v2/filters" }
     public let method: HTTPRequest.Method = .post
-    public var parameters: [String : (any RequestParameterValue)?] {
-        [
+    public var body: EndpointRequestBody? {
+        .json([
             "title": title,
-            "context": context.map(\.rawValue) as [any RequestParameterValue],
+            "context": context.map(\.rawValue),
             "filter_action": filterAction.rawValue,
-            "expires_in": expiresIn.map(String.init),
+            "expires_in": expiresIn.map(String.init) as Any,
             "keywords_attributes": keywordsAttributes.map({ keywordsAttribute in
                 [
                     "keyword": keywordsAttribute.keyword,
                     "whole_word": keywordsAttribute.wholeWord,
                 ] as [String: Any]
             }),
-        ] as [String: (any RequestParameterValue)?]
+        ])
     }
 }

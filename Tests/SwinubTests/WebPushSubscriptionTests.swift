@@ -1,39 +1,40 @@
-@testable import Swinub
-import Testing
 import Foundation
+import Testing
 
-@Suite 
+@testable import Swinub
+
+@Suite
 struct WebPushSubscriptionTests {
     @Test func decodeStringID() async throws {
         let json = """
-        {
-            "id": "your_id_here",
-            "endpoint": "your_endpoint_here",
-            "alerts": null,
-            "serverKey": "your_server_key_here"
-        }
-        """
+            {
+                "id": "your_id_here",
+                "endpoint": "your_endpoint_here",
+                "alerts": null,
+                "serverKey": "your_server_key_here"
+            }
+            """
         let data = Data(json.utf8)
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         _ = try decoder.decode(WebPushSubscription.self, from: data)
     }
-    
+
     @Test func decodeIntID() async throws {
         let json = """
-        {
-            "id": 999,
-            "endpoint": "your_endpoint_here",
-            "alerts": null,
-            "serverKey": "your_server_key_here"
-        }
-        """
+            {
+                "id": 999,
+                "endpoint": "your_endpoint_here",
+                "alerts": null,
+                "serverKey": "your_server_key_here"
+            }
+            """
         let data = Data(json.utf8)
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         _ = try decoder.decode(WebPushSubscription.self, from: data)
     }
-    
+
     @Test func encodeStringID() async throws {
         let subscription = WebPushSubscription(
             id: .string("id"),
@@ -48,7 +49,7 @@ struct WebPushSubscriptionTests {
         let json = String(data: data, encoding: .utf8)!
         #expect(json == #"{"endpoint":"","id":"id","server_key":""}"#)
     }
-    
+
     @Test func encodeIntID() async throws {
         let subscription = WebPushSubscription(
             id: .int(100),
@@ -63,30 +64,30 @@ struct WebPushSubscriptionTests {
         let json = String(data: data, encoding: .utf8)!
         #expect(json == #"{"endpoint":"","id":100,"server_key":""}"#)
     }
-    
+
     @Test func decode() async throws {
         let json = """
-        {
-          "id": 6452081,
-          "endpoint": "https://example.com",
-          "alerts": {
-            "mention": false,
-            "reblog": false,
-            "follow": false,
-            "favourite": false,
-            "poll": false
-          },
-          "server_key": "xxx",
-          "policy": "all"
-        }
-        """
+            {
+              "id": 6452081,
+              "endpoint": "https://example.com",
+              "alerts": {
+                "mention": false,
+                "reblog": false,
+                "follow": false,
+                "favourite": false,
+                "poll": false
+              },
+              "server_key": "xxx",
+              "policy": "all"
+            }
+            """
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         let subscription = try decoder.decode(WebPushSubscription.self, from: Data(json.utf8))
         print(subscription)
         //XCTAssertNotNil(subscription.alerts?.follow)
     }
-    
+
     func xtestResponse() async throws {
         let authorization = Authorization(
             host: "mstdn.jp",
@@ -97,7 +98,7 @@ struct WebPushSubscriptionTests {
         let response = try await SwinubDefaults.session.response(for: request)
         print(response.response)
     }
-    
+
     func xtestResponse2() async throws {
         let authorization = Authorization(
             host: "mstdn.jp",
@@ -107,7 +108,14 @@ struct WebPushSubscriptionTests {
         var request = PutV1PushSubscription(authorization: authorization)
         request.configuration = .init(
             policy: .all,
-            alerts: .init(mention: true, reblog: true, follow: true, favourite: true, poll: true, emojiReaction: false)
+            alerts: .init(
+                mention: true,
+                reblog: true,
+                follow: true,
+                favourite: true,
+                poll: true,
+                emojiReaction: false
+            )
         )
         let response = try await SwinubDefaults.session.response(for: request)
         print(response.response)

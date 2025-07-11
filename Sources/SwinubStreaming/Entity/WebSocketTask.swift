@@ -4,8 +4,9 @@ import Swinub
 public final class WebSocketTask<Message: Decodable & Sendable>: Sendable {
     public let task: URLSessionWebSocketTask
     public let messages: AsyncThrowingStream<Message, any Error>
-    
-    init<RequestType: EndpointRequest>(_ task: URLSessionWebSocketTask, request: RequestType) where RequestType.Response == Message {
+
+    init<RequestType: EndpointRequest>(_ task: URLSessionWebSocketTask, request: RequestType)
+    where RequestType.Response == Message {
         self.task = task
         self.messages = AsyncThrowingStream<Message, any Error>(
             unfolding: {
@@ -25,11 +26,11 @@ public final class WebSocketTask<Message: Decodable & Sendable>: Sendable {
             }
         )
     }
-    
+
     public func resume() {
         task.resume()
     }
-    
+
     public func cancel() {
         task.cancel(with: .normalClosure, reason: nil)
     }

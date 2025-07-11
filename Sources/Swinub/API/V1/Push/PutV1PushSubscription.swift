@@ -14,8 +14,8 @@ public struct PutV1PushSubscription: HTTPEndpointRequest, Sendable {
     public var authority: String { authorization.host }
     public let method: HTTPRequest.Method = .put
     public var path: String { "/api/v1/push/subscription" }
-    public var parameters: [String : (any RequestParameterValue)?] {
-        [
+    public var body: EndpointRequestBody? {
+        .json([
             "data": [
                 "policy": configuration.policy.rawValue,
                 "alerts": [
@@ -27,6 +27,6 @@ public struct PutV1PushSubscription: HTTPEndpointRequest, Sendable {
                     "emoji_reaction": configuration.alerts.emojiReaction,
                 ],
             ]
-        ]
+        ])
     }
 }

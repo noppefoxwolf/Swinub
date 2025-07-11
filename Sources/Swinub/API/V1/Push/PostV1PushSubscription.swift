@@ -10,7 +10,7 @@ public struct PostV1PushSubscription: HTTPEndpointRequest, Sendable {
         p256dh: Data,
         authKey: Data,
         authorization: Authorization,
-        urlBuilder: (URL) -> URL // { $0.appending(path: extra) } 
+        urlBuilder: (URL) -> URL  // { $0.appending(path: extra) }
     ) {
         self.authorization = authorization
 
@@ -33,8 +33,8 @@ public struct PostV1PushSubscription: HTTPEndpointRequest, Sendable {
     public var authority: String { authorization.host }
     public let method: HTTPRequest.Method = .post
     public var path: String { "/api/v1/push/subscription" }
-    public var parameters: [String : (any RequestParameterValue)?] {
-        [
+    public var body: EndpointRequestBody? {
+        .json([
             "subscription": [
                 "endpoint": endpoint.absoluteString,
                 "keys": [
@@ -53,7 +53,7 @@ public struct PostV1PushSubscription: HTTPEndpointRequest, Sendable {
                     "emoji_reaction": emojiReaction,
                 ],
             ],
-        ]
+        ])
     }
 }
 

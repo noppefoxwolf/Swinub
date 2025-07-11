@@ -28,13 +28,13 @@ public struct PostV1Filter: HTTPEndpointRequest, Sendable {
     public var authority: String { authorization.host }
     public let method: HTTPRequest.Method = .post
     public var path: String { "/api/v1/filters" }
-    public var parameters: [String : (any RequestParameterValue)?] {
-        [
+    public var body: EndpointRequestBody? {
+        .json([
             "phrase": phrase,
-            "context": context.map(\.rawValue) as [any RequestParameterValue],
+            "context": context.map(\.rawValue),
             "irreversible": irreversible,
             "wholeWord": wholeWord,
-            "expires_in": expiresIn.map(String.init),
-        ]
+            "expires_in": expiresIn.map(String.init) as Any,
+        ])
     }
 }

@@ -9,7 +9,7 @@ public struct GetV1Trends: HTTPEndpointRequest, Sendable {
     }
 
     let host: String
-    
+
     public var authority: String { host }
     public let method: HTTPRequest.Method = .get
     public var path: String { "/api/v1/trends" }

@@ -1,7 +1,8 @@
+import Foundation
 import Testing
+
 @testable import Swinub
 @testable import SwinubStreaming
-import Foundation
 
 @Suite
 struct StatusTests {

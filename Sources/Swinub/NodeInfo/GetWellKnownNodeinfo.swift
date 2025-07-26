@@ -2,7 +2,7 @@ import Foundation
 import HTTPTypes
 
 public struct GetWellKnownNodeinfoResponse: Codable, Sendable {
-    public let links: [NodeinfoLink]
+    public let links: [NodeInfoLink]
 }
 
 public struct GetWellKnownNodeinfo: HTTPEndpointRequest, Sendable {

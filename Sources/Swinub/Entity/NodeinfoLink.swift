@@ -2,7 +2,7 @@
 
 public import Foundation
 
-public struct NodeinfoLink: Codable, Sendable {
+public struct NodeInfoLink: Codable, Sendable {
     public let rel: Relationship
     public let href: URL
 
@@ -27,7 +27,7 @@ public struct NodeinfoLink: Codable, Sendable {
         public static let v20 = Self(rawValue: "http://nodeinfo.diaspora.software/ns/schema/2.0")
         public static let v21 = Self(rawValue: "http://nodeinfo.diaspora.software/ns/schema/2.1")
 
-        public static func < (lhs: NodeinfoLink.Relationship, rhs: NodeinfoLink.Relationship)
+        public static func < (lhs: NodeInfoLink.Relationship, rhs: NodeInfoLink.Relationship)
             -> Bool
         {
             lhs.rawValue < rhs.rawValue

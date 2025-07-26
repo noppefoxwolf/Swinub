@@ -4,11 +4,11 @@ public struct GetNodeinfo: HTTPEndpointRequest, Sendable {
     public typealias Response = NodeInfo
     public typealias AuthorizationType = Never
 
-    public init(link: NodeinfoLink) {
+    public init(link: NodeInfoLink) {
         self.link = link
     }
 
-    let link: NodeinfoLink
+    let link: NodeInfoLink
 
     public var authority: String { link.href.host() ?? "" }
     public var path: String { link.href.path() }

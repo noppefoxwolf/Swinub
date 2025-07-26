@@ -65,46 +65,6 @@ public struct Status: Codable, Identifiable, Sendable {
     }
 }
 
-public struct EmojiReaction: Codable, Sendable {
-    public let name: String
-    public let count: Int
-    public let accountIds: [Account.ID]?
-    public let me: Bool
-
-    // ondemand resource emoji
-    public let url: URL?
-    public let staticUrl: URL?
-    public let domain: String?
-    public let width: Int?
-    public let height: Int?
-}
-
-public struct FilterResult: Codable, Sendable {
-    public let filter: Filter
-    public let keywordMatches: [String]?
-    public let statusMatches: [String]?
-}
-
-public struct StatusApplication: Codable, Sendable {
-    public let name: String
-    public let website: URL?
-}
-
-public struct CustomEmoji: Codable, Sendable {
-    public let shortcode: String
-
-    public let url: URL?
-
-    public let staticUrl: URL?
-
-    public let visibleInPicker: Bool
-    public let category: String?
-
-    // fedibird extensions
-    public let width: Int?
-    public let height: Int?
-    public let aliases: [String]?
-}
 
 extension Status {
     public struct Tag: Codable, Sendable {
@@ -132,11 +92,3 @@ extension Status {
     }
 }
 
-// firefishの拡張
-public struct Reaction: Sendable, Codable {
-    public let count: Int
-    public let me: Bool
-    public let name: String
-    public let url: URL?
-    public let staticURL: URL?
-}

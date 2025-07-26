@@ -4,15 +4,17 @@ import HTTPTypes
 public struct GetV1TrendsLinks: HTTPEndpointRequest, Sendable {
     public typealias Response = [TrendsLink]
 
-    public init(host: String, limit: Int? = nil, offset: Int? = nil) {
+    public init(host: String, limit: Int? = nil, offset: Int? = nil, lang: String? = nil) {
         self.host = host
         self.limit = limit
         self.offset = offset
+        self.lang = lang
     }
 
     let host: String
     let limit: Int?
     let offset: Int?
+    let lang: String?
 
     public var authority: String { host }
     public let method: HTTPRequest.Method = .get
@@ -27,6 +29,10 @@ public struct GetV1TrendsLinks: HTTPEndpointRequest, Sendable {
         
         if let offset = offset {
             items.append(URLQueryItem(name: "offset", value: String(offset)))
+        }
+        
+        if let lang = lang {
+            items.append(URLQueryItem(name: "lang", value: lang))
         }
         
         return items

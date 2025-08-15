@@ -5,8 +5,7 @@ extension ASWebAuthenticationSession {
     public static func authenticate(
         url: URL,
         callbackURLScheme: String,
-        presentationContextProvider: (any ASWebAuthenticationPresentationContextProviding)? = nil,
-        prefersEphemeralWebBrowserSession: Bool = false
+        presentationContextProvider: (any ASWebAuthenticationPresentationContextProviding)? = nil
     ) -> AsyncThrowingStream<URL, any Error> {
         AsyncThrowingStream<URL, any Error>(bufferingPolicy: .unbounded) { continuation in
             let session = ASWebAuthenticationSession(
@@ -22,7 +21,6 @@ extension ASWebAuthenticationSession {
                     }
                 }
             )
-            session.prefersEphemeralWebBrowserSession = prefersEphemeralWebBrowserSession
             let cancel = { @MainActor in
                 session.cancel()
             }

@@ -11,9 +11,9 @@ struct MultipartBuilderTests {
     @available(macOS 15.2, *)
     func stringExport() async throws {
         let value1 = "text"
-        #expect(value1.exportedContentTypes() == [.utf8PlainText])
-        #expect(value1.suggestedFilename == nil)
-        try await #expect(value1.exported(as: .utf8PlainText) == Data("text".utf8))
+        #expect(value1.backport.exportedContentTypes() == [.utf8PlainText])
+        #expect(value1.backport.suggestedFilename == nil)
+        try await #expect(value1.backport.exported(as: .utf8PlainText) == Data("text".utf8))
     }
 
     @Test

@@ -6,7 +6,7 @@ import Testing
 struct NNodeInfoRelationshipTests {
     @Test
     func sort() async throws {
-        let rels: [NodeinfoLink.Relationship] = [
+        let rels: [NodeInfoLink.Relationship] = [
             .v10,
             .v11,
             .v20,

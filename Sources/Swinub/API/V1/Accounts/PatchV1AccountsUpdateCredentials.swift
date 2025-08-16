@@ -4,7 +4,7 @@ import HTTPTypes
 
 // https://docs.joinmastodon.org/methods/accounts/#update_credentials
 public struct PatchV1AccountsUpdateCredentials: HTTPEndpointRequest, Sendable {
-    public typealias Response = Account
+    public typealias Response = VerifyCredentialAccount
     
     public init(authorization: Authorization) {
         self.authorization = authorization

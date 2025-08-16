@@ -2,7 +2,7 @@ import Foundation
 import HTTPTypes
 
 public struct GetV1AccountsVerifyCredentials: HTTPEndpointRequest, Sendable {
-    public typealias Response = Account
+    public typealias Response = VerifyCredentialAccount
 
     public init(authorization: Authorization) {
         self.authorization = authorization

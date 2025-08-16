@@ -43,7 +43,7 @@ public struct PatchV1AccountsUpdateCredentials: HTTPEndpointRequest, Sendable {
     public var body: EndpointRequestBody? {
         var items: [MultipartFormItem] = []
         
-        items.append(MultipartFormItem(name: "display_name", value: displayName!))
+        items.append(MultipartFormItem(name: "display_name", value: displayName))
         items.append(MultipartFormItem(name: "note", value: note))
         
         items.append(MultipartFormItem(name: "locked", value: locked?.stringValue))

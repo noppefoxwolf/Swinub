@@ -27,6 +27,7 @@ public struct PostV1PushSubscription: HTTPEndpointRequest, Sendable {
     public var mention: Bool = false
     public var reblog: Bool = false
     public var follow: Bool = false
+    public var followRequest: Bool = false
     public var favourite: Bool = false
     public var poll: Bool = false
     public var emojiReaction: Bool = false
@@ -48,6 +49,7 @@ public struct PostV1PushSubscription: HTTPEndpointRequest, Sendable {
                     "mention": mention,
                     "reblog": reblog,
                     "follow": follow,
+                    "follow_request": followRequest,
                     "favourite": favourite,
                     "poll": poll,
                     "emoji_reaction": emojiReaction,
@@ -78,6 +80,7 @@ public struct SubscriptionConfiguration: Sendable {
         public var mention: Bool = false
         public var reblog: Bool = false
         public var follow: Bool = false
+        public var followRequest: Bool = false
         public var favourite: Bool = false
         public var poll: Bool = false
         public var emojiReaction: Bool = false

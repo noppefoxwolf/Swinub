@@ -44,9 +44,9 @@ public struct VerifyCredentialAccount: Codable, Identifiable, Sendable {
     public struct Role: Codable, Sendable {
         public let id: String
         public let name: String
-        public let permissions: String
-        public let color: String
-        public let highlighted: Bool
+        public let permissions: String?
+        public let color: String?
+        public let highlighted: Bool?
     }
 }
 

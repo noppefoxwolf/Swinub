@@ -28,17 +28,28 @@ public struct PostV1Statuses: HTTPEndpointRequest, Sendable {
     public let method: HTTPRequest.Method = .post
     public var path: String { "/api/v1/statuses" }
     public var body: EndpointRequestBody? {
-        .json([
-            "status": _parameters.status,
-            "visibility": _parameters.visibility?.rawValue as Any,
-            "in_reply_to_id": _parameters.inReplyToId?.rawValue as Any,
-            // JSONの場合はmedia_ids、multipartの場合はmedia_ids[]をキーにする
-            "media_ids": _parameters.mediaIDs?.map(\.rawValue) as Any,
-            "sensitive": _parameters.sensitive,
-            "spoiler_text": _parameters.spoilerText as Any,
-            "poll": pollParameters as Any,
-            "language": _parameters.language?.languageCode?.identifier as Any,
-        ])
+        var body: [String: Any] = [:]
+        body["status"] = _parameters.status
+        if let value = _parameters.visibility?.rawValue {
+            body["visibility"] = value
+        }
+        if let value = _parameters.inReplyToId?.rawValue {
+            body["in_reply_to_id"] = value
+        }
+        if let value = _parameters.mediaIDs?.map(\.rawValue), !value.isEmpty {
+            body["media_ids"] = value
+        }
+        body["sensitive"] = _parameters.sensitive
+        if let value = _parameters.spoilerText {
+            body["spoiler_text"] = value
+        }
+        if let value = pollParameters {
+            body["poll"] = value
+        }
+        if let value = _parameters.language?.languageCode?.identifier {
+            body["language"] = value
+        }
+        return .json(body as Any)
     }
 
     var pollParameters: [String: Any]? {

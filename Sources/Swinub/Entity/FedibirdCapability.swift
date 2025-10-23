@@ -1,58 +1,58 @@
 // https://github.com/fedibird/mastodon/blob/main/app/serializers/rest/instance_serializer.rb#L107
 public enum FedibirdCapability: String, Sendable, Codable, Equatable {
-    case favouriteHashtag
-    case favouriteDomain
-    case favouriteList
-    case statusExpire
-    case followNoDelivery
-    case followHashtag
-    case subscribeAccount
-    case subscribeDomain
-    case subscribeKeyword
-    case timelineHomeVisibility
-    case timelineNoLocal
-    case timelineDomain
-    case timelineGroup
-    case timelineGroupDirectory
-    case visibilityMutual
-    case visibilityLimited
-    case visibilityPersonal
-    case emojiReaction
-    case misskeyBirthday
-    case misskeyLocation
-    case statusReference
-    case searchability
-    case statusCompactMode
-    case accountConversations
-    case enableWideEmoji
-    case enableWideEmojiReaction
-    case timelineBookmarkMediaOption
-    case timelineFavouriteMediaOption
-    case timelineEmojiReactionMediaOption
-    case timelinePersonalMediaOption
-    case bulkGetApiForAccounts
-    case bulkGetApiForStatuses
-    case sortedCustomEmojis
-    case orderedMediaAttachment
-    case followedMessage
+    case favouriteHashtag = "favourite_hashtag"
+    case favouriteDomain = "favourite_domain"
+    case favouriteList = "favourite_list"
+    case statusExpire = "status_expire"
+    case followNoDelivery = "follow_no_delivery"
+    case followHashtag = "follow_hashtag"
+    case subscribeAccount = "subscribe_account"
+    case subscribeDomain = "subscribe_domain"
+    case subscribeKeyword = "subscribe_keyword"
+    case timelineHomeVisibility = "timeline_home_visibility"
+    case timelineNoLocal = "timeline_no_local"
+    case timelineDomain = "timeline_domain"
+    case timelineGroup = "timeline_group"
+    case timelineGroupDirectory = "timeline_group_directory"
+    case visibilityMutual = "visibility_mutual"
+    case visibilityLimited = "visibility_limited"
+    case visibilityPersonal = "visibility_personal"
+    case emojiReaction = "emoji_reaction"
+    case misskeyBirthday = "misskey_birthday"
+    case misskeyLocation = "misskey_location"
+    case statusReference = "status_reference"
+    case searchability = "searchability"
+    case statusCompactMode = "status_compact_mode"
+    case accountConversations = "account_conversations"
+    case enableWideEmoji = "enable_wide_emoji"
+    case enableWideEmojiReaction = "enable_wide_emoji_reaction"
+    case timelineBookmarkMediaOption = "timeline_bookmark_media_option"
+    case timelineFavouriteMediaOption = "timeline_favourite_media_option"
+    case timelineEmojiReactionMediaOption = "timeline_emoji_reaction_media_option"
+    case timelinePersonalMediaOption = "timeline_personal_media_option"
+    case bulkGetApiForAccounts = "bulk_get_api_for_accounts"
+    case bulkGetApiForStatuses = "bulk_get_api_for_statuses"
+    case sortedCustomEmojis = "sorted_custom_emojis"
+    case orderedMediaAttachment = "ordered_media_attachment"
+    case followedMessage = "followed_message"
     
-    case fullTextSearch
+    case fullTextSearch = "full_text_search"
     
     // kmyblue extensions
     // https://github.com/kmycode/mastodon/blob/1900a9073b3c40d96fc44fdaf99abc47bfefd7dd/app/helpers/kmyblue_capabilities_helper.rb#L31
-    case kmyblueSearchability
-    case kmyblueMarkdown
-    case kmyblueReactionDeck
-    case kmyblueVisibilityLogin
-    case kmyblueLimitedScope
-    case kmyblueAntenna
-    case kmyblueBookmarkCategory
-    case kmyblueSearchabilityLimited
-    case kmyblueCircleHistory
-    case kmyblueListNotification
-    case kmyblueServerFeatures
-    case kmyblueFavouriteAntenna
-    case kmyblueVisibilityPublicUnlisted
-    case kmyblueSearchabilityPublicUnlisted
-    case kmyblueNoPublicVisibility
+    case kmyblueSearchability = "kmyblue_searchability"
+    case kmyblueMarkdown = "kmyblue_markdown"
+    case kmyblueReactionDeck = "kmyblue_reaction_deck"
+    case kmyblueVisibilityLogin = "kmyblue_visibility_login"
+    case kmyblueLimitedScope = "kmyblue_limited_scope"
+    case kmyblueAntenna = "kmyblue_antenna"
+    case kmyblueBookmarkCategory = "kmyblue_bookmark_category"
+    case kmyblueSearchabilityLimited = "kmyblue_searchability_limited"
+    case kmyblueCircleHistory = "kmyblue_circle_history"
+    case kmyblueListNotification = "kmyblue_list_notification"
+    case kmyblueServerFeatures = "kmyblue_server_features"
+    case kmyblueFavouriteAntenna = "kmyblue_favourite_antenna"
+    case kmyblueVisibilityPublicUnlisted = "kmyblue_visibility_public_unlisted"
+    case kmyblueSearchabilityPublicUnlisted = "kmyblue_searchability_public_unlisted"
+    case kmyblueNoPublicVisibility = "kmyblue_no_public_visibility"
 }

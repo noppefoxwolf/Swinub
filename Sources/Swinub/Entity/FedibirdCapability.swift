@@ -35,4 +35,24 @@ public enum FedibirdCapability: String, Sendable, Codable, Equatable {
     case sortedCustomEmojis
     case orderedMediaAttachment
     case followedMessage
+    
+    case fullTextSearch
+    
+    // kmyblue extensions
+    // https://github.com/kmycode/mastodon/blob/1900a9073b3c40d96fc44fdaf99abc47bfefd7dd/app/helpers/kmyblue_capabilities_helper.rb#L31
+    case kmyblueSearchability
+    case kmyblueMarkdown
+    case kmyblueReactionDeck
+    case kmyblueVisibilityLogin
+    case kmyblueLimitedScope
+    case kmyblueAntenna
+    case kmyblueBookmarkCategory
+    case kmyblueSearchabilityLimited
+    case kmyblueCircleHistory
+    case kmyblueListNotification
+    case kmyblueServerFeatures
+    case kmyblueFavouriteAntenna
+    case kmyblueVisibilityPublicUnlisted
+    case kmyblueSearchabilityPublicUnlisted
+    case kmyblueNoPublicVisibility
 }

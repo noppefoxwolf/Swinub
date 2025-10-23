@@ -19,9 +19,7 @@ public struct InstanceV1: Codable, Sendable {
     // https://docs.joinmastodon.org/entities/Instance/#configuration
     public let configuration: InstanceConfiguration?
 
-    // Fedibirdでのみ返る
-    // https://github.com/fedibird/mastodon/blob/main/app/serializers/rest/instance_serializer.rb#L107
-    public let fedibirdCapabilities: [String]?
+    public let fedibirdCapabilities: [NonFrozenEnum<FedibirdCapability>]?
 }
 
 extension InstanceV1 {

@@ -1,0 +1,38 @@
+// https://github.com/fedibird/mastodon/blob/main/app/serializers/rest/instance_serializer.rb#L107
+public enum FedibirdCapability: String, Sendable, Codable {
+    case favouriteHashtag
+    case favouriteDomain
+    case favouriteList
+    case statusExpire
+    case followNoDelivery
+    case followHashtag
+    case subscribeAccount
+    case subscribeDomain
+    case subscribeKeyword
+    case timelineHomeVisibility
+    case timelineNoLocal
+    case timelineDomain
+    case timelineGroup
+    case timelineGroupDirectory
+    case visibilityMutual
+    case visibilityLimited
+    case visibilityPersonal
+    case emojiReaction
+    case misskeyBirthday
+    case misskeyLocation
+    case statusReference
+    case searchability
+    case statusCompactMode
+    case accountConversations
+    case enableWideEmoji
+    case enableWideEmojiReaction
+    case timelineBookmarkMediaOption
+    case timelineFavouriteMediaOption
+    case timelineEmojiReactionMediaOption
+    case timelinePersonalMediaOption
+    case bulkGetApiForAccounts
+    case bulkGetApiForStatuses
+    case sortedCustomEmojis
+    case orderedMediaAttachment
+    case followedMessage
+}

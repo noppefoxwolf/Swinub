@@ -18,6 +18,7 @@ public struct Account: Codable, Identifiable, Sendable {
     public let statusesCount: Int
     public let followersCount: Int
     public let followingCount: Int
+    public let subscribingCount: Int?
 
     public let bot: Bool
     public let locked: Bool

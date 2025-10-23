@@ -1,6 +1,5 @@
-//https://docs.joinmastodon.org/entities/Relationship/
+// https://docs.joinmastodon.org/entities/Relationship/
 public struct Relationship: Codable, Identifiable, Sendable {
-    /// The account ID.
     public let id: ID
     public let following: Bool
     public let followedBy: Bool
@@ -8,6 +7,7 @@ public struct Relationship: Codable, Identifiable, Sendable {
     public let blockedBy: Bool
     public let muting: Bool
     public let requested: Bool
+    public let accountSubscribing: [String: AccountSubscription]?
 
     public struct ID: Equatable, Hashable, Sendable, Codable, CustomStringConvertible {
         public let rawValue: String
@@ -25,6 +25,16 @@ public struct Relationship: Codable, Identifiable, Sendable {
         public func encode(to encoder: any Encoder) throws {
             var container = encoder.singleValueContainer()
             try container.encode(rawValue)
+        }
+    }
+
+    public struct AccountSubscription: Codable, Sendable {
+        public let reblogs: Bool?
+        public let mediaOnly: Bool?
+
+        public init(reblogs: Bool? = nil, mediaOnly: Bool? = nil) {
+            self.reblogs = reblogs
+            self.mediaOnly = mediaOnly
         }
     }
 }

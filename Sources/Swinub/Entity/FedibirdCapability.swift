@@ -1,5 +1,5 @@
 // https://github.com/fedibird/mastodon/blob/main/app/serializers/rest/instance_serializer.rb#L107
-public enum FedibirdCapability: String, Sendable, Codable {
+public enum FedibirdCapability: String, Sendable, Codable, Equatable {
     case favouriteHashtag
     case favouriteDomain
     case favouriteList

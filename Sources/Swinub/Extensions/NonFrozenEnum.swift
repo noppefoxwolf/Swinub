@@ -27,3 +27,16 @@ extension NonFrozenEnum: Encodable where T: Encodable, T.RawValue: Encodable {
         }
     }
 }
+
+extension NonFrozenEnum: Equatable where T: Equatable, T.RawValue: Equatable {
+    public static func == (lhs: NonFrozenEnum, rhs: NonFrozenEnum) -> Bool {
+        switch (lhs, rhs) {
+        case (.value(let l), .value(let r)):
+            return l == r
+        case (.unknown(let l), .unknown(let r)):
+            return l == r
+        default:
+            return false
+        }
+    }
+}

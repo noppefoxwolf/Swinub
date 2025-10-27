@@ -68,13 +68,25 @@ public struct Stats: Codable, Sendable {
 
 // https://fedibird.com/api/v1/instance
 public struct InstanceConfiguration: Codable, Sendable {
+    public let accounts: InstanceAccountsConfiguration
     public let statuses: InstanceStatusesConfiguration
     public let mediaAttachments: InstanceMediaAttachmentsConfiguration
     public let polls: InstancePollsConfiguration
+    
+    /// api/v2/instance only
+    public let urls: InstanceURLsConfiguration?
     // fedibird拡張
     public let search: InstanceSearchConfiguration?
     // firefish拡張
     public let reactions: InstanceReactionsConfiguration?
+}
+
+public struct InstanceURLsConfiguration: Codable, Sendable {
+    public let streaming: String
+}
+
+public struct InstanceAccountsConfiguration: Codable, Sendable {
+    public let maxFeaturedTags: Int
 }
 
 public struct InstanceStatusesConfiguration: Codable, Sendable {

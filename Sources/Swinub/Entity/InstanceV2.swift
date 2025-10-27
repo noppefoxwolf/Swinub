@@ -8,6 +8,7 @@ public struct InstanceV2: Codable, Sendable {
     public let configuration: InstanceConfiguration
     public let contact: Contact
     public let registrations: Registrations
+    public let fedibirdCapabilities: [NonFrozenEnum<FedibirdCapability>]?
 }
 
 public struct Usage: Codable, Sendable {

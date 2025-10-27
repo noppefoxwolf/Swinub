@@ -1,10 +1,38 @@
-public struct Instance: Codable, Sendable {
+public struct InstanceV2: Codable, Sendable {
     public let domain: String
     public let title: String
     public let version: String
     public let description: String
+    public let thumbnail: Thumbnail
     public let rules: [Rule]
     public let configuration: InstanceConfiguration
+    public let contact: Contact
+    public let registrations: Registrations
+}
+
+public struct Usage: Codable, Sendable {
+    public struct Users: Codable, Sendable {
+        public let activeMonth: Bool
+    }
+    public let users: Users
+}
+
+public struct Registrations: Codable, Sendable {
+    public let enabled: Bool
+    public let approvalRequired: Bool
+    public let reasonRequired: Bool?
+    public let message: String?
+    public let url: String?
+}
+
+public struct Contact: Codable, Sendable {
+    public let email: String
+    public let account: Account
+}
+
+public struct Thumbnail: Codable, Sendable {
+    public let url: String
+    public let blurhash: String?
 }
 
 public struct Rule: Codable, Sendable {

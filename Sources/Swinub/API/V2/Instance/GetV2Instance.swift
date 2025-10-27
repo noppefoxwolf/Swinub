@@ -2,7 +2,7 @@ import Foundation
 import HTTPTypes
 
 public struct GetV2Instance: HTTPEndpointRequest, Sendable {
-    public typealias Response = Instance
+    public typealias Response = InstanceV2
     public typealias AuthorizationType = Authorization?
 
     public init(host: String) {

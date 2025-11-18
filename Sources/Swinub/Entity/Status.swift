@@ -10,6 +10,9 @@ public struct Status: Codable, Identifiable, Sendable {
     public let inReplyToId: Status.ID?
     public let inReplyToAccountId: Account.ID?
     public let visibility: StatusVisibility
+    
+    // API Version 7
+    public let quoteApproval: QuoteApproval?
 
     // kmy.blue
     // https://github.com/kmycode/mastodon/wiki/ローカル公開API#既存のオブジェクトに追加されたプロパティ

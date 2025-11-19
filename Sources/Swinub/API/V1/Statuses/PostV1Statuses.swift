@@ -16,6 +16,7 @@ public struct PostV1Statuses: HTTPEndpointRequest, Sendable {
         public var pollOptions: [String]? = nil
         public var pollExpiresIn: Int? = nil
         public var language: Locale.Language? = nil
+        public var quoteApprovalPolicy: QuoteApprovalPolicy? = nil
     }
 
     public init(parameters: Parameters, authorization: Authorization) {
@@ -48,6 +49,9 @@ public struct PostV1Statuses: HTTPEndpointRequest, Sendable {
         }
         if let value = _parameters.language?.languageCode?.identifier {
             body["language"] = value
+        }
+        if let value = _parameters.quoteApprovalPolicy {
+            body["quote_approval_policy"] = value.rawValue
         }
         return .json(body as Any)
     }

@@ -8,12 +8,14 @@ public struct InstanceV2: Codable, Sendable {
     public let configuration: InstanceConfiguration
     public let contact: Contact
     public let registrations: Registrations
-    public let apiVersions: APIVersions
+    // Added Mastodon 4.3
+    public let apiVersions: APIVersions?
     public let fedibirdCapabilities: [NonFrozenEnum<FedibirdCapability>]?
 }
 
 public struct APIVersions: Codable, Sendable {
-    public let mastodon: Int?
+    // Added Mastodon 4.3
+    public let mastodon: Int
 }
 
 public struct Usage: Codable, Sendable {

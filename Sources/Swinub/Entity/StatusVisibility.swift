@@ -3,21 +3,21 @@ import Foundation
 public struct StatusVisibility: Codable, Sendable, Equatable, Hashable {
     public let rawValue: String
 
-    public static let personal = StatusVisibility(rawValue: "personal")  // fedibird
-    public static let `direct` = StatusVisibility(rawValue: "direct")
-    public static let `private` = StatusVisibility(rawValue: "private")
-    public static let limited = StatusVisibility(rawValue: "limited")  // fedibird
-    public static let mutualFollowersOnly = StatusVisibility(rawValue: "mutual")  // fedibird
+    public static var personal: Self { .init(rawValue: "personal") }  // fedibird
+    public static var `direct`: Self { .init(rawValue: "direct") }
+    public static var `private`: Self { .init(rawValue: "private") }
+    public static var limited: Self { .init(rawValue: "limited") }  // fedibird
+    public static var mutualFollowersOnly: Self { .init(rawValue: "mutual") }  // fedibird
 
     // https://github.com/kmycode/mastodon/wiki/ログインユーザーのみ公開API
-    public static let login = StatusVisibility(rawValue: "login")  // kmy.blue
+    public static var login: Self { .init(rawValue: "login") }  // kmy.blue
 
-    public static let unlisted = StatusVisibility(rawValue: "unlisted")
+    public static var unlisted: Self { .init(rawValue: "unlisted") }
 
     // https://github.com/kmycode/mastodon/wiki/ローカル公開API
-    public static let publicUnlisted = StatusVisibility(rawValue: "public_unlisted")  // kmy.blue
+    public static var publicUnlisted: Self { .init(rawValue: "public_unlisted") }  // kmy.blue
 
-    public static let `public` = StatusVisibility(rawValue: "public")
+    public static var `public`: Self { .init(rawValue: "public") }
 
     // 標準のmastodonでサポートしている公開範囲
     public static var defaultCases: [Self] {
@@ -30,31 +30,6 @@ public struct StatusVisibility: Codable, Sendable, Equatable, Hashable {
             .personal, .direct, .private, .limited, .mutualFollowersOnly, .login, .unlisted,
             .publicUnlisted, .public,
         ]
-    }
-
-    public var systemSymbolName: String {
-        switch self {
-        case .public:
-            return "globe.asia.australia.fill"
-        case .unlisted:
-            return "lock.open.fill"
-        case .private:
-            return "lock.fill"
-        case .direct:
-            return "at"
-        case .mutualFollowersOnly:
-            return "arrow.left.arrow.right"
-        case .personal:
-            return "text.book.closed"
-        case .limited:
-            return "person.crop.circle"
-        case .login:
-            return "key"
-        case .publicUnlisted:
-            return "cloud"
-        default:
-            return "questionmark.bubble"
-        }
     }
 
     public init(rawValue: String) {

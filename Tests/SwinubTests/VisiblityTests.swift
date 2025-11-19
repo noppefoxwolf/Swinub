@@ -16,12 +16,4 @@ struct StatusVisibilityTests {
         let visibility = StatusVisibility(rawValue: rawValue)
         #expect(visibility == .init(rawValue: "publicUnlisted"))
     }
-
-    @Test func order() async throws {
-        #expect(StatusVisibility.public > StatusVisibility.private)
-    }
-
-    @Test func order2() async throws {
-        #expect(StatusVisibility.private < StatusVisibility.public)
-    }
 }

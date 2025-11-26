@@ -11,6 +11,7 @@ public struct QuoteApproval: Codable, Equatable, Sendable {
     
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        // kmyblueでは配列以外に文字列が来ることもあるので対応
         self.automatic = try container.decodeArrayOrValue(QuoteApprovalPolicy.self, forKey: .automatic)
         self.manual = try container.decodeArrayOrValue(QuoteApprovalPolicy.self, forKey: .manual)
         self.currentUser = try container.decode(QuoteApprovalEntitlement.self, forKey: .currentUser)

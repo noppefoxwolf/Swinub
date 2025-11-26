@@ -8,6 +8,13 @@ public struct QuoteApproval: Codable, Equatable, Sendable {
     public var manual: [QuoteApprovalPolicy]
     /// Describes how this status’ quote policy applies to the current user.
     public var currentUser: QuoteApprovalEntitlement
+    
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.automatic = try container.decodeArrayOrValue(QuoteApprovalPolicy.self, forKey: .automatic)
+        self.manual = try container.decodeArrayOrValue(QuoteApprovalPolicy.self, forKey: .manual)
+        self.currentUser = try container.decode(QuoteApprovalEntitlement.self, forKey: .currentUser)
+    }
 }
 
 // API Version 7

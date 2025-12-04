@@ -14,6 +14,7 @@ public struct GetV1TimelinesTag: HTTPEndpointRequest, Sendable {
     public var prevCursor: PrevCursor? = nil
     public var limit: Int = 20
     let hashtag: String
+    public var onlyMedia: Bool = false
     public let method: HTTPRequest.Method = .get
 
     public var authority: String { authorization.host }
@@ -30,6 +31,7 @@ public struct GetV1TimelinesTag: HTTPEndpointRequest, Sendable {
             items.append(URLQueryItem(name: "min_id", value: minID))
         }
         items.append(URLQueryItem(name: "limit", value: String(limit)))
+        items.append(URLQueryItem(name: "only_media", value: "\(onlyMedia)"))
         return items
     }
 }

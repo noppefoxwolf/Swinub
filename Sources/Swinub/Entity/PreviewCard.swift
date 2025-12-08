@@ -4,7 +4,7 @@ public struct PreviewCard: Codable, Sendable {
     public var url: URL?
     public let title: String
     public let description: String
-    public let type: String
+    public let type: PreviewCardType
     public let authorName: String
     public let authorUrl: String
     public let providerName: String

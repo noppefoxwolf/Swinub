@@ -19,6 +19,10 @@ public struct Account: Codable, Identifiable, Sendable {
     public let followersCount: Int
     public let followingCount: Int
     public let subscribingCount: Int?
+    
+    public let hideCollections: Bool?
+    // fedibirds
+    public let otherSettings: OtherSettings?
 
     public let bot: Bool
     public let locked: Bool
@@ -40,6 +44,10 @@ public struct Account: Codable, Identifiable, Sendable {
             var container = encoder.singleValueContainer()
             try container.encode(rawValue)
         }
+    }
+
+    public struct OtherSettings: Codable, Sendable {
+        public let hideNetwork: Bool?
     }
 }
 

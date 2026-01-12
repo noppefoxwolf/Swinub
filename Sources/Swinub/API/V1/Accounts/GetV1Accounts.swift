@@ -15,8 +15,8 @@ public struct GetV1Accounts: HTTPEndpointRequest, Sendable {
     public let method: HTTPRequest.Method = .get
     public var authority: String { authorization.host }
     public var queryItems: [URLQueryItem] {
-        [
-            URLQueryItem(name: "id[]", value: ids.map(\.rawValue).joined(separator: ","))
-        ]
+        ids.map { id in
+            URLQueryItem(name: "id[]", value: id.rawValue)
+        }
     }
 }

@@ -2,20 +2,21 @@ import Foundation
 import HTTPTypes
 
 // https://docs.joinmastodon.org/methods/search/#v2
-public struct GetV2Search: HTTPEndpointRequest, Sendable {
+public struct GetV2SearchHashtags: HTTPEndpointRequest, Sendable {
     public typealias Response = Search
 
     public init(authorization: Authorization, q: String) {
         self.authorization = authorization
         self.q = q
     }
+
     public var authorization: Authorization
     let q: String
-    public var sinceID: Status.ID? = nil
+    public var limit: Int = 20
+    public var offset: Int? = nil
+    public var excludeUnreviewed: Bool = false
     public var nextCursor: NextCursor? = nil
     public var prevCursor: PrevCursor? = nil
-    public var limit: Int = 20
-    public var resolve: Bool = false
 
     public var authority: String { authorization.host }
     public let method: HTTPRequest.Method = .get
@@ -23,21 +24,25 @@ public struct GetV2Search: HTTPEndpointRequest, Sendable {
     public var queryItems: [URLQueryItem] {
         var items: [URLQueryItem] = [
             URLQueryItem(name: "q", value: q),
-            URLQueryItem(name: "type", value: "statuses"),
+            URLQueryItem(name: "type", value: "hashtags"),
             URLQueryItem(name: "limit", value: String(limit)),
         ]
-        if let sinceID = sinceID?.rawValue {
-            items.append(URLQueryItem(name: "since_id", value: sinceID))
+
+        if let offset = offset {
+            items.append(URLQueryItem(name: "offset", value: String(offset)))
         }
+
+        if excludeUnreviewed {
+            items.append(URLQueryItem(name: "exclude_unreviewed", value: "true"))
+        }
+
         if let maxID = nextCursor?.maxID {
             items.append(URLQueryItem(name: "max_id", value: maxID))
         }
         if let minID = prevCursor?.minID {
             items.append(URLQueryItem(name: "min_id", value: minID))
         }
-        if resolve {
-            items.append(URLQueryItem(name: "resolve", value: "true"))
-        }
+
         return items
     }
 }

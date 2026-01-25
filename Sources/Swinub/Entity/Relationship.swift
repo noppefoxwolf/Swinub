@@ -2,6 +2,8 @@
 public struct Relationship: Codable, Identifiable, Sendable {
     public let id: ID
     public let following: Bool
+    public let showingReblogs: Bool
+    public let notifying: Bool
     public let followedBy: Bool
     public let blocking: Bool
     public let blockedBy: Bool

@@ -58,6 +58,7 @@ struct AccountSubscribeTests {
         {
           "id": "123",
           "following": false,
+          "showing_reblogs": false,
           "followed_by": true,
           "account_subscribing": {
             "-1": { "reblogs": true },

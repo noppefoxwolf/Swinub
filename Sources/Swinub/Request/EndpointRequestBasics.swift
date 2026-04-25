@@ -1,6 +1,5 @@
 import Foundation
 import HTTPTypes
-import HTTPTypesFoundation
 
 struct RequestFailedToMakeComponentsError: LocalizedError {
     var errorDescription: String? { "Request failed to make url components." }

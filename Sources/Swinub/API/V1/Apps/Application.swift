@@ -5,5 +5,5 @@ public struct Application: Codable, Identifiable, Sendable {
     public let redirectUri: String
     public let clientId: String
     public let clientSecret: String
-    public let vapidKey: String
+    public let vapidKey: String?
 }

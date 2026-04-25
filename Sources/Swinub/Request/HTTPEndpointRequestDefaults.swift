@@ -1,6 +1,5 @@
 import Foundation
 import HTTPTypes
-import HTTPTypesFoundation
 import CoreTransferable
 
 extension HTTPEndpointRequest {

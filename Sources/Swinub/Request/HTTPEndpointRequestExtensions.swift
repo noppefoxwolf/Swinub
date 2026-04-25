@@ -1,6 +1,5 @@
 import Foundation
 import HTTPTypes
-import HTTPTypesFoundation
 
 extension HTTPEndpointRequest {
     public func makeHTTPRequest() async throws -> (HTTPRequest, Data) {

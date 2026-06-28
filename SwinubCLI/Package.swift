@@ -14,6 +14,7 @@ let package = Package(
     dependencies: [
         .package(path: ".."),
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.5.0"),
+        .package(url: "https://github.com/hummingbird-project/hummingbird", from: "2.20.0"),
     ],
     targets: [
         .executableTarget(
@@ -22,6 +23,7 @@ let package = Package(
                 .product(name: "Swinub", package: "Swinub"),
                 .product(name: "SwinubAuthenticationServices", package: "Swinub"),
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "Hummingbird", package: "hummingbird"),
             ]
         )
     ]

@@ -1,7 +1,7 @@
 import Foundation
 import Testing
 
-@testable import Swinub
+@testable import SwinubAuthenticationServices
 
 @Suite("WebAuthenticationSessionDataFactoryTests")
 struct WebAuthenticationSessionDataFactoryTests {

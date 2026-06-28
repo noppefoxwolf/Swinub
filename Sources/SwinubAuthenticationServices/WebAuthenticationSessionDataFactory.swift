@@ -1,4 +1,5 @@
 import Foundation
+import Swinub
 
 public struct WebAuthenticationSessionDataFactory {
     let host: String
@@ -43,7 +44,7 @@ public struct WebAuthenticationSessionDataFactory {
         ]
         let url = urlComponents.url
         guard let url else {
-            throw GeneralError(errorDescription: "Can not make auth url.")
+            throw AuthenticationServicesError(errorDescription: "Can not make auth url.")
         }
         return url
     }
@@ -51,8 +52,12 @@ public struct WebAuthenticationSessionDataFactory {
     public func makeCallbackURLScheme() throws -> String {
         let redirectURI = URL(string: redirectUri)
         guard let callbackURLScheme = redirectURI?.scheme else {
-            throw GeneralError(errorDescription: "Can not make callback url.")
+            throw AuthenticationServicesError(errorDescription: "Can not make callback url.")
         }
         return callbackURLScheme
     }
+}
+
+private struct AuthenticationServicesError: LocalizedError, Sendable {
+    let errorDescription: String?
 }

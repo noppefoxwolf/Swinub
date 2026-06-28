@@ -6,7 +6,7 @@ import SwinubAuthenticationServices
 @main
 struct SwinubCLI: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
-        commandName: "SwinubCLI",
+        commandName: "swinub-cli",
         abstract: "Utilities for working with Swinub.",
         subcommands: [Auth.self]
     )

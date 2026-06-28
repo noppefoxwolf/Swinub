@@ -7,7 +7,7 @@ let package = Package(
     platforms: [.macOS(.v15)],
     products: [
         .executable(
-            name: "SwinubCLI",
+            name: "swinub-cli",
             targets: ["SwinubCLI"]
         )
     ],

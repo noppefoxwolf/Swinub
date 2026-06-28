@@ -7,6 +7,14 @@ import SwinubAuthenticationServices
 struct SwinubCLI: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "SwinubCLI",
+        abstract: "Utilities for working with Swinub.",
+        subcommands: [Auth.self]
+    )
+}
+
+struct Auth: AsyncParsableCommand {
+    static let configuration = CommandConfiguration(
+        commandName: "auth",
         abstract: "Authorize a Fediverse account and print an access token."
     )
 

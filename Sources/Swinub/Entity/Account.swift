@@ -24,7 +24,8 @@ public struct Account: Codable, Identifiable, Sendable {
     // fedibirds
     public let otherSettings: OtherSettings?
 
-    public let bot: Bool
+    // Sharkey instances such as ddoskey.com can return null for bot in notification accounts.
+    public let bot: Bool?
     public let locked: Bool
 
     public struct ID: Equatable, Hashable, Sendable, Codable, CustomStringConvertible {

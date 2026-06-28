@@ -41,6 +41,10 @@ let package = Package(
                 .product(
                     name: "Swinub",
                     package: "Swinub"
+                ),
+                .product(
+                    name: "SwinubAuthenticationServices",
+                    package: "Swinub"
                 )
             ],
 

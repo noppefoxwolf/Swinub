@@ -1,0 +1,33 @@
+{
+  "originHash" : "158163f93e89dd1c9c3db12937e5ae5eb3e790f9340aba323df379143fc5791e",
+  "pins" : [
+    {
+      "identity" : "coretransferablebackport",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/noppefoxwolf/CoreTransferableBackport",
+      "state" : {
+        "revision" : "fa75d4b76bc75d2f37c2d7277ccec4acd8c35930",
+        "version" : "0.0.4"
+      }
+    },
+    {
+      "identity" : "swift-argument-parser",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-argument-parser",
+      "state" : {
+        "revision" : "6a52f3251125d74daf04fcbd5e6f08a75d074382",
+        "version" : "1.8.2"
+      }
+    },
+    {
+      "identity" : "swift-http-types",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-http-types",
+      "state" : {
+        "revision" : "db774a277f60063a32d854f2980299caf06da041",
+        "version" : "1.6.0"
+      }
+    }
+  ],
+  "version" : 3
+}

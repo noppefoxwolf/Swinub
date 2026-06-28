@@ -1,6 +1,7 @@
 import AuthenticationServices
 import SwiftUI
 import Swinub
+import SwinubAuthenticationServices
 
 struct LoginExampleView: View {
 

@@ -10,6 +10,10 @@ let package = Package(
         .library(
             name: "Swinub",
             targets: ["Swinub", "SwinubStreaming"]
+        ),
+        .library(
+            name: "SwinubAuthenticationServices",
+            targets: ["SwinubAuthenticationServices"]
         )
     ],
     dependencies: [
@@ -30,6 +34,10 @@ let package = Package(
             name: "SwinubStreaming",
             dependencies: ["Swinub"]
         ),
+        .target(
+            name: "SwinubAuthenticationServices",
+            dependencies: ["Swinub"]
+        ),
         .testTarget(
             name: "SwinubStreamingTests",
             dependencies: ["SwinubStreaming"]
@@ -37,6 +45,10 @@ let package = Package(
         .testTarget(
             name: "SwinubTests",
             dependencies: ["Swinub"]
+        ),
+        .testTarget(
+            name: "SwinubAuthenticationServicesTests",
+            dependencies: ["SwinubAuthenticationServices"]
         ),
         .testTarget(
             name: "SwinubServerResponseTests",

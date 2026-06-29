@@ -5,6 +5,13 @@ import HTTPTypes
 public struct PostV1Statuses: HTTPEndpointRequest, Sendable {
     public typealias Response = Status
 
+    public enum QuoteReference: Sendable {
+        // fedibird extension
+        case fedibird(Status.ID)
+        // Mastodon 4.5+
+        case mastodon(Status.ID)
+    }
+
     public struct Parameters: Sendable {
         public init() {}
         public var status: String = ""
@@ -16,6 +23,7 @@ public struct PostV1Statuses: HTTPEndpointRequest, Sendable {
         public var pollOptions: [String]? = nil
         public var pollExpiresIn: Int? = nil
         public var language: Locale.Language? = nil
+        public var quote: QuoteReference? = nil
         public var quoteApprovalPolicy: QuoteApprovalPolicy? = nil
     }
 
@@ -49,6 +57,14 @@ public struct PostV1Statuses: HTTPEndpointRequest, Sendable {
         }
         if let value = _parameters.language?.languageCode?.identifier {
             body["language"] = value
+        }
+        if let quote = _parameters.quote {
+            switch quote {
+            case .fedibird(let id):
+                body["quote_id"] = id.rawValue
+            case .mastodon(let id):
+                body["quoted_status_id"] = id.rawValue
+            }
         }
         if let value = _parameters.quoteApprovalPolicy {
             body["quote_approval_policy"] = value.rawValue

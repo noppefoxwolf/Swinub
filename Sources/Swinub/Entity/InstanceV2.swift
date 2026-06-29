@@ -11,6 +11,8 @@ public struct InstanceV2: Codable, Sendable {
     // Added Mastodon 4.3
     public let apiVersions: APIVersions?
     public let fedibirdCapabilities: [NonFrozenEnum<FedibirdCapability>]?
+    // Fedibird quote_id support flag. Mastodon upstream uses quoted_status_id and apiVersions.
+    public let featureQuote: Bool?
 }
 
 public struct APIVersions: Codable, Sendable {

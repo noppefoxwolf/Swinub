@@ -20,6 +20,8 @@ public struct InstanceV1: Codable, Sendable {
     public let configuration: InstanceConfiguration?
 
     public let fedibirdCapabilities: [NonFrozenEnum<FedibirdCapability>]?
+    // Fedibird quote_id support flag. Mastodon upstream uses quoted_status_id and apiVersions.
+    public let featureQuote: Bool?
 }
 
 extension InstanceV1 {

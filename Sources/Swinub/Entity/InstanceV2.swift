@@ -35,7 +35,7 @@ public struct Registrations: Codable, Sendable {
 
 public struct Contact: Codable, Sendable {
     public let email: String
-    public let account: Account
+    public let account: Account?
 }
 
 public struct Thumbnail: Codable, Sendable {

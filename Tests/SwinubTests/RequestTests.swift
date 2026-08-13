@@ -20,6 +20,17 @@ struct RequestTests {
         _ = try MockRequest().url
     }
 
+    @Test func getStatusWithoutAuthorization() async throws {
+        let request = GetV1StatusesStatus(
+            id: .init(rawValue: "9vtl1yplcxxn3nuk"),
+            host: "ddoskey.com"
+        )
+
+        let (httpRequest, _) = try await request.makeHTTPRequest()
+
+        #expect(httpRequest.headerFields[.authorization] == nil)
+    }
+
     @Test func uRLComponentIssue() async throws {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"

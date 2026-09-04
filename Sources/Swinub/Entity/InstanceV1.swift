@@ -3,7 +3,7 @@ import Foundation
 public struct InstanceV1: Codable, Sendable {
     public let uri: String
     public let title: String
-    public let shortDescription: String
+    public let shortDescription: String?
     public let description: String
     public let version: String
     public let stats: Stats
@@ -22,6 +22,9 @@ public struct InstanceV1: Codable, Sendable {
     public let fedibirdCapabilities: [NonFrozenEnum<FedibirdCapability>]?
     // Fedibird quote_id support flag. Mastodon upstream uses quoted_status_id and apiVersions.
     public let featureQuote: Bool?
+    public let registrations: Bool?
+    public let approvalRequired: Bool?
+
 }
 
 extension InstanceV1 {

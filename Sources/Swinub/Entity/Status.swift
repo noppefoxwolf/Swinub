@@ -4,6 +4,7 @@ import Foundation
 public struct Status: Codable, Identifiable, Sendable {
     public let id: ID
     public let createdAt: Date
+    public let editedAt: Date?
     public let account: Account
     public let content: String
     public let url: URL?
@@ -94,4 +95,3 @@ extension Status {
         }
     }
 }
-

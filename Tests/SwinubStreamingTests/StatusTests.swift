@@ -62,6 +62,14 @@ struct StatusTests {
         decoder.dateDecodingStrategy = .millisecondsISO8601
         let status = try decoder.decode(Swinub.Status.self, from: Data(json.utf8))
         #expect(status.id.rawValue == "110064600195523314")
+        #expect(status.editedAt == nil)
+
+        let editedJSON = json.replacingOccurrences(
+            of: #""edited_at": null"#,
+            with: #""edited_at": "2023-03-22T03:00:00.000Z""#
+        )
+        let editedStatus = try decoder.decode(Swinub.Status.self, from: Data(editedJSON.utf8))
+        #expect(editedStatus.editedAt != nil)
     }
 
     @Test func stream() throws {

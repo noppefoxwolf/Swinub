@@ -10,7 +10,8 @@ public struct PostOAuthToken: HTTPEndpointRequest, Sendable {
         clientSecret: String,
         redirectUri: String,
         code: String,
-        scopes: [Scope]
+        scopes: [Scope],
+        codeVerifier: String? = nil
     ) {
         self.host = host
         self.clientId = clientId
@@ -18,6 +19,7 @@ public struct PostOAuthToken: HTTPEndpointRequest, Sendable {
         self.redirectUri = redirectUri
         self.code = code
         self.scopes = scopes
+        self.codeVerifier = codeVerifier
     }
 
     var host: String
@@ -26,19 +28,24 @@ public struct PostOAuthToken: HTTPEndpointRequest, Sendable {
     var redirectUri: String
     var code: String
     var scopes: [Scope]
+    var codeVerifier: String?
 
     public var authority: String { host }
     public var path: String { "/oauth/token" }
     public let method: HTTPRequest.Method = .post
     public var body: EndpointRequestBody? {
-        .json([
+        var parameters = [
             "grant_type": "authorization_code",
             "client_id": clientId,
             "client_secret": clientSecret,
             "redirect_uri": redirectUri,
             "code": code,
             "scope": scopes.map(\.rawValue).joined(separator: " "),
-        ])
+        ]
+        if let codeVerifier {
+            parameters["code_verifier"] = codeVerifier
+        }
+        return .json(parameters)
     }
 
     public func decode(_ data: Data) throws -> OAuthToken {

@@ -25,18 +25,21 @@ public struct OAuthOutOfBandAuthenticationService: Sendable {
             )
         ).response
 
+        let pkce = OAuthPKCE()
         let authorizationURL = try WebAuthenticationSessionDataFactory(
             host: host,
             clientId: application.clientId,
             redirectUri: Self.redirectURI,
-            scopes: scopes
+            scopes: scopes,
+            pkce: pkce
         ).makeURL(locale: locale)
 
         return OAuthOutOfBandAuthorizationRequest(
             host: host,
             application: application,
             authorizationURL: authorizationURL,
-            scopes: scopes
+            scopes: scopes,
+            pkce: pkce
         )
     }
 
@@ -51,7 +54,8 @@ public struct OAuthOutOfBandAuthenticationService: Sendable {
                 clientSecret: request.application.clientSecret,
                 redirectUri: Self.redirectURI,
                 code: code,
-                scopes: request.scopes
+                scopes: request.scopes,
+                codeVerifier: request.pkce.codeVerifier
             )
         ).response
     }
@@ -62,4 +66,5 @@ public struct OAuthOutOfBandAuthorizationRequest: Sendable {
     public let application: Application
     public let authorizationURL: URL
     public let scopes: [Scope]
+    fileprivate let pkce: OAuthPKCE
 }

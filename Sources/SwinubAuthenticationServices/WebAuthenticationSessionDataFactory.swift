@@ -6,12 +6,20 @@ public struct WebAuthenticationSessionDataFactory {
     let clientId: String
     let redirectUri: String
     let scopes: [Scope]
+    let pkce: OAuthPKCE?
 
-    public init(host: String, clientId: String, redirectUri: String, scopes: [Scope] = [.read]) {
+    public init(
+        host: String,
+        clientId: String,
+        redirectUri: String,
+        scopes: [Scope] = [.read],
+        pkce: OAuthPKCE? = nil
+    ) {
         self.host = host
         self.clientId = clientId
         self.redirectUri = redirectUri
         self.scopes = scopes
+        self.pkce = pkce
     }
 
     /// https://docs.joinmastodon.org/methods/oauth/#authorize
@@ -42,6 +50,12 @@ public struct WebAuthenticationSessionDataFactory {
                 value: locale.identifier
             ),
         ]
+        if let pkce {
+            urlComponents.queryItems?.append(contentsOf: [
+                URLQueryItem(name: "code_challenge", value: pkce.codeChallenge),
+                URLQueryItem(name: "code_challenge_method", value: "S256"),
+            ])
+        }
         let url = urlComponents.url
         guard let url else {
             throw AuthenticationServicesError(errorDescription: "Can not make auth url.")

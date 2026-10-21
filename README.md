@@ -20,6 +20,41 @@ let package = Package(
 )
 ```
 
+# PKCE
+
+`OAuthOutOfBandAuthenticationService` and both CLI authentication flows use PKCE
+with S256 automatically. Mastodon supports PKCE from version 4.3.
+
+For a custom authentication flow, create one `OAuthPKCE` per authorization attempt:
+
+```swift
+import SwinubAuthenticationServices
+
+let pkce = OAuthPKCE()
+let factory = WebAuthenticationSessionDataFactory(
+    host: host,
+    clientId: application.clientId,
+    redirectUri: redirectURI,
+    scopes: [.read],
+    pkce: pkce
+)
+let authorizationURL = try factory.makeURL()
+// Open authorizationURL and receive the authorization code.
+let request = PostOAuthToken(
+    host: host,
+    clientId: application.clientId,
+    clientSecret: application.clientSecret,
+    redirectUri: redirectURI,
+    code: code,
+    scopes: [.read],
+    codeVerifier: pkce.codeVerifier
+)
+```
+
+Keep the same verifier until token exchange. Do not log or include it in the
+browser URL. The low-level factory and token request preserve their existing
+behavior when PKCE arguments are omitted.
+
 # Apps Using
 
 <p float="left">

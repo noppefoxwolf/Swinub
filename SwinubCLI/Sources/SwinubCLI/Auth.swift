@@ -70,11 +70,13 @@ struct Auth: AsyncParsableCommand {
             )
         ).response
 
+        let pkce = OAuthPKCE()
         let authorizationURL = try WebAuthenticationSessionDataFactory(
             host: host,
             clientId: application.clientId,
             redirectUri: redirectURI,
-            scopes: scopes.scopes
+            scopes: scopes.scopes,
+            pkce: pkce
         ).makeURL()
         let callbackServer = try LocalOAuthCallbackServer(
             port: callbackPort,
@@ -98,7 +100,8 @@ struct Auth: AsyncParsableCommand {
                 clientSecret: application.clientSecret,
                 redirectUri: redirectURI,
                 code: code,
-                scopes: scopes.scopes
+                scopes: scopes.scopes,
+                codeVerifier: pkce.codeVerifier
             )
         ).response
         print(token.accessToken)

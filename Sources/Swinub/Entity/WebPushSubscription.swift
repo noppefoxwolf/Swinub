@@ -6,7 +6,10 @@ public struct WebPushSubscription: Codable, Sendable {
         public let reblog: Bool?
         public let mention: Bool?
         public let poll: Bool?
+        /// Fedibird extension for emoji reaction notifications.
         public let emojiReaction: Bool?
+        /// Fedibird extension for post reference notifications.
+        public let statusReference: Bool?
         public let status: Bool?
         public let update: Bool?
         public let quote: Bool?
@@ -27,6 +30,7 @@ public struct WebPushSubscription: Codable, Sendable {
             case favourite
             case poll
             case emojiReaction
+            case statusReference
             case status
             case update
             case quote

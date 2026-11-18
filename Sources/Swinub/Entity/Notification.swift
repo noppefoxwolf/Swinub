@@ -8,6 +8,13 @@ public struct Notification: Codable, Identifiable, Sendable {
     public let createdAt: Date
     public let account: Account
     public let status: Status?
+    public let groupKey: String?
+    public let filtered: Bool?
+    public let report: Report?
+    public let event: RelationshipSeveranceEvent?
+    public let moderationWarning: ModerationWarning?
+    public let collection: Collection?
+    public let fallback: Fallback?
 
     // fedibird
     public let emojiReaction: EmojiReaction?

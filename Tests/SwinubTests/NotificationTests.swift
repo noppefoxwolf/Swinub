@@ -92,6 +92,7 @@ struct NotificationTests {
         post.alerts.adminReport = false
         post.alerts.quotedUpdate = true
         post.alerts.addedToCollection = true
+        post.alerts.statusReference = true
 
         var put = PutV1PushSubscription(authorization: authorization)
         put.configuration.alerts = post.alerts
@@ -109,6 +110,7 @@ struct NotificationTests {
             #expect(alerts["admin.report"] == false)
             #expect(alerts["quoted_update"] == true)
             #expect(alerts["added_to_collection"] == true)
+            #expect(alerts["status_reference"] == true)
             #expect(alerts["collection_update"] == nil)
 
             let response = try put.decode(JSONSerialization.data(withJSONObject: [
@@ -118,6 +120,7 @@ struct NotificationTests {
             #expect(response.alerts?.adminReport == false)
             #expect(response.alerts?.quotedUpdate == true)
             #expect(response.alerts?.addedToCollection == true)
+            #expect(response.alerts?.statusReference == true)
         }
     }
 }

@@ -106,6 +106,7 @@ public struct SubscriptionConfiguration: Sendable {
         public var favourite: Bool = false
         public var poll: Bool = false
         public var emojiReaction: Bool = false
+        public var statusReference: Bool?
         public var status: Bool?
         public var update: Bool?
         public var quote: Bool?
@@ -127,6 +128,7 @@ public struct SubscriptionConfiguration: Sendable {
                 "favourite": favourite,
                 "poll": poll,
                 "emoji_reaction": emojiReaction,
+                "status_reference": statusReference,
                 "status": status,
                 "update": update,
                 "quote": quote,

@@ -56,13 +56,18 @@ struct NotificationTests {
                 ],
             ]),
             ("emoji_reaction", [:]),
+            ("custom_notification", [:]),
         ]
         let notifications = try request.decode(JSONSerialization.data(withJSONObject: payloads.map { type, details in
             let common: [String: Any] = ["id": type, "type": type, "account": account, "created_at": date]
             return common.merging(details) { _, detail in detail }
         }))
 
-        #expect(notifications.map(\.type) == payloads.map(\.0))
+        #expect(notifications.map(\.type.rawValue) == payloads.map(\.0))
+        #expect(notifications[0].type == .adminReport)
+        #expect(notifications[4].type == .emojiReaction)
+        let encodedKind = try JSONEncoder().encode(notifications[5].type)
+        #expect(String(decoding: encodedKind, as: UTF8.self) == #""custom_notification""#)
         #expect(notifications[0].report?.statusIds?.first?.rawValue == "27")
         #expect(notifications[1].event?.targetName == "example.org")
         #expect(notifications[2].moderationWarning?.appeal?.state == "pending")

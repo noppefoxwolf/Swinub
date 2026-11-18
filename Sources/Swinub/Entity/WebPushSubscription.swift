@@ -7,6 +7,38 @@ public struct WebPushSubscription: Codable, Sendable {
         public let mention: Bool?
         public let poll: Bool?
         public let emojiReaction: Bool?
+        public let status: Bool?
+        public let update: Bool?
+        public let quote: Bool?
+        public let quotedUpdate: Bool?
+        public let severedRelationships: Bool?
+        public let moderationWarning: Bool?
+        public let annualReport: Bool?
+        public let adminSignUp: Bool?
+        public let adminReport: Bool?
+        public let addedToCollection: Bool?
+        public let collectionUpdate: Bool?
+
+        enum CodingKeys: String, CodingKey {
+            case mention
+            case reblog
+            case follow
+            case followRequest
+            case favourite
+            case poll
+            case emojiReaction
+            case status
+            case update
+            case quote
+            case quotedUpdate
+            case severedRelationships
+            case moderationWarning
+            case annualReport
+            case adminSignUp = "admin.signUp"
+            case adminReport = "admin.report"
+            case addedToCollection
+            case collectionUpdate
+        }
     }
 
     public enum ID: Codable, Sendable {

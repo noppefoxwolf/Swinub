@@ -18,15 +18,7 @@ public struct PutV1PushSubscription: HTTPEndpointRequest, Sendable {
         .json([
             "data": [
                 "policy": configuration.policy.rawValue,
-                "alerts": [
-                    "mention": configuration.alerts.mention,
-                    "reblog": configuration.alerts.reblog,
-                    "follow": configuration.alerts.follow,
-                    "follow_request": configuration.alerts.followRequest,
-                    "favourite": configuration.alerts.favourite,
-                    "poll": configuration.alerts.poll,
-                    "emoji_reaction": configuration.alerts.emojiReaction,
-                ],
+                "alerts": configuration.alerts.parameters,
             ]
         ])
     }

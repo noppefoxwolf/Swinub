@@ -1,5 +1,6 @@
 import HTTPTypes
 
+// https://docs.joinmastodon.org/methods/statuses/#source
 public struct GetV1StatusesSource: HTTPEndpointRequest, Sendable {
     public typealias Response = StatusSource
 

@@ -2,7 +2,7 @@ import ArgumentParser
 import Foundation
 import Swinub
 
-struct SearchCommand: AsyncParsableCommand {
+struct Search: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "search",
         abstract: "Search statuses or hashtags."
@@ -14,7 +14,7 @@ struct SearchCommand: AsyncParsableCommand {
     @Option(help: "OAuth access token. Defaults to SWINUB_ACCESS_TOKEN.")
     var accessToken: String?
 
-    @Argument(help: "Search query.")
+    @Option(help: "Search query.")
     var query: String
 
     @Option(help: "Search type: statuses or hashtags.")

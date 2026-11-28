@@ -162,6 +162,9 @@ extension Auth {
             abstract: "Show authentication status and saved accounts."
         )
 
+        @Flag(help: "Display the auth token.")
+        var showToken = false
+
         mutating func run() async throws {
             let store = AuthStore()
             let accounts = try store.list()
@@ -177,26 +180,40 @@ extension Auth {
                 return
             }
 
-            var foundActive = false
-            for account in accounts {
-                let isActive = account.key == activeKey
-                if isActive {
-                    foundActive = true
-                    print("* \(account.displayHandle) (active)")
-                } else {
-                    print("  \(account.displayHandle)")
-                }
+            let groupedByHost = Dictionary(grouping: accounts, by: \.host)
+            let sortedHosts = groupedByHost.keys.sorted {
+                $0.localizedCaseInsensitiveCompare($1) == .orderedAscending
             }
 
-            if !foundActive {
-                print("")
-                print("No active account selected. Run 'swinub-cli auth switch' to select one.")
+            for (hostIndex, host) in sortedHosts.enumerated() {
+                if hostIndex > 0 {
+                    print("")
+                }
+                print(host)
+                for account in groupedByHost[host] ?? [] {
+                    let isActive = account.key == activeKey
+                    let tokenDisplay = showToken ? account.accessToken : maskToken(account.accessToken)
+                    print("  ✓ Logged in to \(account.host) account \(account.username) (keyring)")
+                    print("  - Active account: \(isActive)")
+                    print("  - Account ID: \(account.accountID)")
+                    print("  - Token: \(tokenDisplay)")
+                }
             }
 
             if hasEnvToken {
                 print("")
                 print("Note: SWINUB_ACCESS_TOKEN is set and overrides the active Keychain account.")
             }
+        }
+
+        private func maskToken(_ token: String) -> String {
+            let visiblePrefixCount = 4
+            guard token.count > visiblePrefixCount else {
+                return String(repeating: "*", count: token.count)
+            }
+            let prefix = token.prefix(visiblePrefixCount)
+            let masked = String(repeating: "*", count: token.count - visiblePrefixCount)
+            return "\(prefix)\(masked)"
         }
     }
 

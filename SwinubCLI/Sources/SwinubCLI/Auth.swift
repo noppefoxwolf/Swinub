@@ -7,7 +7,7 @@ struct Auth: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "auth",
         abstract: "Manage Fediverse authentication in Keychain.",
-        subcommands: [Login.self, Switch.self, Logout.self, Token.self]
+        subcommands: [Login.self, Status.self, Switch.self, Logout.self, Token.self]
     )
 }
 
@@ -156,6 +156,67 @@ extension Auth {
         }
     }
 
+    struct Status: AsyncParsableCommand {
+        static let configuration = CommandConfiguration(
+            commandName: "status",
+            abstract: "Show authentication status and saved accounts."
+        )
+
+        @Flag(help: "Display the auth token.")
+        var showToken = false
+
+        mutating func run() async throws {
+            let store = AuthStore()
+            let accounts = try store.list()
+            let activeKey = store.activeAccountKeyValue()
+            let envToken = ProcessInfo.processInfo.environment["SWINUB_ACCESS_TOKEN"]
+            let hasEnvToken = envToken.map { !$0.isEmpty } ?? false
+
+            if accounts.isEmpty {
+                print("Not logged in to any accounts. Run 'swinub-cli auth login' first.")
+                if hasEnvToken {
+                    print("Note: SWINUB_ACCESS_TOKEN is set in environment.")
+                }
+                return
+            }
+
+            let groupedByHost = Dictionary(grouping: accounts, by: \.host)
+            let sortedHosts = groupedByHost.keys.sorted {
+                $0.localizedCaseInsensitiveCompare($1) == .orderedAscending
+            }
+
+            for (hostIndex, host) in sortedHosts.enumerated() {
+                if hostIndex > 0 {
+                    print("")
+                }
+                print(host)
+                for account in groupedByHost[host] ?? [] {
+                    let isActive = account.key == activeKey
+                    let tokenDisplay = showToken ? account.accessToken : maskToken(account.accessToken)
+                    print("  ✓ Logged in to \(account.host) account \(account.username) (keyring)")
+                    print("  - Active account: \(isActive)")
+                    print("  - Account ID: \(account.accountID)")
+                    print("  - Token: \(tokenDisplay)")
+                }
+            }
+
+            if hasEnvToken {
+                print("")
+                print("Note: SWINUB_ACCESS_TOKEN is set and overrides the active Keychain account.")
+            }
+        }
+
+        private func maskToken(_ token: String) -> String {
+            let visiblePrefixCount = 4
+            guard token.count > visiblePrefixCount else {
+                return String(repeating: "*", count: token.count)
+            }
+            let prefix = token.prefix(visiblePrefixCount)
+            let masked = String(repeating: "*", count: token.count - visiblePrefixCount)
+            return "\(prefix)\(masked)"
+        }
+    }
+
     struct Switch: AsyncParsableCommand {
         static let configuration = CommandConfiguration(
             commandName: "switch",
@@ -173,32 +234,49 @@ extension Auth {
                 throw ValidationError("No saved accounts. Run 'swinub-cli auth login' first.")
             }
 
+            let activeKey = store.activeAccountKeyValue()
+
             if let account {
                 let normalized = normalizeAccountKey(account)
                 guard let matched = accounts.first(where: { $0.key.caseInsensitiveCompare(normalized) == .orderedSame }) else {
                     throw ValidationError("Account '\(account)' not found in Keychain.")
+                }
+                if matched.key == activeKey {
+                    print("Already using \(matched.displayHandle)")
+                    return
                 }
                 store.setActiveAccountKey(matched.key)
                 print("Switched active account to \(matched.displayHandle)")
                 return
             }
 
-            let activeKey = store.activeAccountKeyValue()
-            for (index, item) in accounts.enumerated() {
-                let marker = item.key == activeKey ? "*" : " "
-                print("\(marker) [\(index + 1)] \(item.displayHandle)")
+            let switchableAccounts = accounts.filter { $0.key != activeKey }
+            guard !switchableAccounts.isEmpty else {
+                if let current = accounts.first {
+                    print("Already using the only saved account: \(current.displayHandle)")
+                }
+                return
+            }
+
+            if let active = accounts.first(where: { $0.key == activeKey }) {
+                print("Active account: \(active.displayHandle)")
+                print("")
+            }
+
+            for (index, item) in switchableAccounts.enumerated() {
+                print("[\(index + 1)] \(item.displayHandle)")
             }
 
             print("")
             print("Select account number: ", terminator: "")
             guard let input = readLine()?.trimmingCharacters(in: .whitespacesAndNewlines),
                 let selection = Int(input),
-                (1...accounts.count).contains(selection)
+                (1...switchableAccounts.count).contains(selection)
             else {
                 throw ValidationError("Invalid selection.")
             }
 
-            let selected = accounts[selection - 1]
+            let selected = switchableAccounts[selection - 1]
             store.setActiveAccountKey(selected.key)
             print("Switched active account to \(selected.displayHandle)")
         }

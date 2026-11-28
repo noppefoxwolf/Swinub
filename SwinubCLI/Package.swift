@@ -1,4 +1,4 @@
-// swift-tools-version: 6.3
+// swift-tools-version: 6.4
 
 import PackageDescription
 
@@ -12,7 +12,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(path: ".."),
+        .package(name: "Swinub", path: ".."),
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.5.0"),
         .package(url: "https://github.com/hummingbird-project/hummingbird", from: "2.20.0"),
     ],

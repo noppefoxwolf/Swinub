@@ -107,7 +107,7 @@ struct AuthStore: Sendable {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
-            kSecReturnData as String: true,
+            kSecReturnAttributes as String: true,
             kSecMatchLimit as String: kSecMatchLimitAll,
         ]
 
@@ -120,20 +120,18 @@ struct AuthStore: Sendable {
             throw AuthStoreError.keychainError(status)
         }
 
-        let dataItems: [Data]
-        if let array = result as? [Data] {
-            dataItems = array
-        } else if let single = result as? Data {
-            dataItems = [single]
+        let attributeItems: [[String: Any]]
+        if let array = result as? [[String: Any]] {
+            attributeItems = array
+        } else if let single = result as? [String: Any] {
+            attributeItems = [single]
         } else {
             return []
         }
 
-        let decoder = JSONDecoder()
-        return try dataItems
-            .map { data in
-                try decodeStoredAuth(from: data, decoder: decoder)
-            }
+        let accountKeys = attributeItems.compactMap { $0[kSecAttrAccount as String] as? String }
+        return try accountKeys
+            .compactMap { try load(accountKey: $0) }
             .sorted { $0.key.localizedCaseInsensitiveCompare($1.key) == .orderedAscending }
     }
 

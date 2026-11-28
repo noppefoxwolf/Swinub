@@ -1,6 +1,5 @@
 import ArgumentParser
 import Foundation
-import Security
 import Swinub
 
 struct StoredAuth: Codable, Sendable, Equatable {
@@ -21,7 +20,6 @@ struct StoredAuth: Codable, Sendable, Equatable {
 enum AuthStoreError: LocalizedError {
     case encodingFailed
     case decodingFailed
-    case keychainError(OSStatus)
 
     var errorDescription: String? {
         switch self {
@@ -29,14 +27,6 @@ enum AuthStoreError: LocalizedError {
             return "Failed to encode credentials."
         case .decodingFailed:
             return "Failed to decode credentials from Keychain."
-        case .keychainError(let status):
-            if status == errSecInteractionNotAllowed {
-                return "Keychain error (\(status)): User interaction is not allowed. Your login keychain may be locked; run 'security unlock-keychain' and try again."
-            }
-            if let message = SecCopyErrorMessageString(status, nil) as String? {
-                return "Keychain error (\(status)): \(message)"
-            }
-            return "Keychain error (\(status))."
         }
     }
 }
@@ -46,14 +36,14 @@ struct AuthStore: Sendable {
     static let defaultDefaultsSuite = "dev.noppe.swinub-cli"
     private static let activeAccountKey = "activeAccount"
 
-    let service: String
+    let keychain: KeychainStore
     let defaultsSuite: String
 
     init(
         service: String = AuthStore.defaultService,
         defaultsSuite: String = AuthStore.defaultDefaultsSuite
     ) {
-        self.service = service
+        self.keychain = KeychainStore(service: service)
         self.defaultsSuite = defaultsSuite
     }
 
@@ -68,138 +58,36 @@ struct AuthStore: Sendable {
         } catch {
             throw AuthStoreError.encodingFailed
         }
-
-        let payload = data.base64EncodedString()
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/security")
-        process.arguments = [
-            "add-generic-password",
-            "-s", service,
-            "-a", auth.key,
-            "-w", payload,
-            "-U",
-            "-T", "",
-        ]
-
-        let stderrPipe = Pipe()
-        process.standardError = stderrPipe
-        process.standardOutput = FileHandle.nullDevice
-
-        try process.run()
-        process.waitUntilExit()
-
-        guard process.terminationStatus == 0 else {
-            let stderrData = stderrPipe.fileHandleForReading.readDataToEndOfFile()
-            let stderrText = String(data: stderrData, encoding: .utf8)?
-                .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-            if stderrText.contains("User interaction is not allowed") || stderrText.contains("-25308") {
-                throw AuthStoreError.keychainError(errSecInteractionNotAllowed)
-            }
-            throw ValidationError(
-                stderrText.isEmpty
-                    ? "Failed to save credentials to Keychain (exit \(process.terminationStatus))."
-                    : "Failed to save credentials to Keychain: \(stderrText)"
-            )
-        }
+        try keychain.set(data, forAccount: auth.key)
     }
 
     func list() throws -> [StoredAuth] {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: service,
-            kSecReturnAttributes as String: true,
-            kSecMatchLimit as String: kSecMatchLimitAll,
-        ]
-
-        var result: AnyObject?
-        let status = SecItemCopyMatching(query as CFDictionary, &result)
-        if status == errSecItemNotFound {
-            return []
-        }
-        guard status == errSecSuccess else {
-            throw AuthStoreError.keychainError(status)
-        }
-
-        let attributeItems: [[String: Any]]
-        if let array = result as? [[String: Any]] {
-            attributeItems = array
-        } else if let single = result as? [String: Any] {
-            attributeItems = [single]
-        } else {
-            return []
-        }
-
-        let accountKeys = attributeItems.compactMap { $0[kSecAttrAccount as String] as? String }
-        return try accountKeys
+        let accounts = try keychain.allAccounts()
+        return try accounts
             .compactMap { try load(accountKey: $0) }
             .sorted { $0.key.localizedCaseInsensitiveCompare($1.key) == .orderedAscending }
     }
 
     func load(accountKey: String) throws -> StoredAuth? {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: service,
-            kSecAttrAccount as String: accountKey,
-            kSecReturnData as String: true,
-            kSecMatchLimit as String: kSecMatchLimitOne,
-        ]
-
-        var result: AnyObject?
-        let status = SecItemCopyMatching(query as CFDictionary, &result)
-        if status == errSecItemNotFound {
+        guard let data = try keychain.data(forAccount: accountKey) else {
             return nil
         }
-        guard status == errSecSuccess else {
-            throw AuthStoreError.keychainError(status)
-        }
-        guard let data = result as? Data else {
+        do {
+            return try JSONDecoder().decode(StoredAuth.self, from: data)
+        } catch {
             throw AuthStoreError.decodingFailed
         }
-        return try decodeStoredAuth(from: data, decoder: JSONDecoder())
-    }
-
-    private func decodeStoredAuth(from data: Data, decoder: JSONDecoder) throws -> StoredAuth {
-        if let auth = try? decoder.decode(StoredAuth.self, from: data) {
-            return auth
-        }
-        if let base64String = String(data: data, encoding: .utf8)?
-            .trimmingCharacters(in: .whitespacesAndNewlines),
-            let decodedData = Data(base64Encoded: base64String),
-            let auth = try? decoder.decode(StoredAuth.self, from: decodedData)
-        {
-            return auth
-        }
-        throw AuthStoreError.decodingFailed
     }
 
     func delete(accountKey: String) throws {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: service,
-            kSecAttrAccount as String: accountKey,
-        ]
-
-        let status = SecItemDelete(query as CFDictionary)
-        guard status == errSecSuccess || status == errSecItemNotFound else {
-            throw AuthStoreError.keychainError(status)
-        }
-
+        try keychain.remove(account: accountKey)
         if activeAccountKeyValue() == accountKey {
             setActiveAccountKey(nil)
         }
     }
 
     func deleteAll() throws {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: service,
-        ]
-
-        let status = SecItemDelete(query as CFDictionary)
-        guard status == errSecSuccess || status == errSecItemNotFound else {
-            throw AuthStoreError.keychainError(status)
-        }
-
+        try keychain.removeAll()
         setActiveAccountKey(nil)
     }
 

@@ -20,6 +20,9 @@ struct Post: AsyncParsableCommand {
     @Option(help: "Status visibility.")
     var visibility: String?
 
+    @Option(help: "Schedule status for publication at an ISO 8601 datetime, for example 2026-12-01T12:00:00Z.")
+    var scheduledAt: String?
+
     @Flag(help: "Print raw JSON.")
     var json = false
 
@@ -31,6 +34,25 @@ struct Post: AsyncParsableCommand {
         var parameters = PostV1Statuses.Parameters()
         parameters.status = status
         parameters.visibility = visibility.map(StatusVisibility.init(rawValue:))
+
+        if let scheduledAt {
+            let date = try parseISO8601Date(scheduledAt)
+            let createdScheduledStatus = try await SwinubDefaults.session.response(
+                for: PostV1ScheduledStatus(
+                    parameters: parameters,
+                    scheduledAt: date,
+                    authorization: authorization
+                )
+            ).response
+
+            if json {
+                try printJSON(createdScheduledStatus)
+            } else {
+                print(createdScheduledStatus.id.rawValue)
+                print(createdScheduledStatus.scheduledAt)
+            }
+            return
+        }
 
         let createdStatus = try await SwinubDefaults.session.response(
             for: PostV1Statuses(parameters: parameters, authorization: authorization)
@@ -46,14 +68,14 @@ struct Post: AsyncParsableCommand {
         }
     }
 
-    private func printJSON(_ status: Status) throws {
+    private func printJSON<T: Encodable>(_ value: T) throws {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         encoder.keyEncodingStrategy = .convertToSnakeCase
         encoder.dateEncodingStrategy = .iso8601
-        let data = try encoder.encode(status)
+        let data = try encoder.encode(value)
         guard let json = String(data: data, encoding: .utf8) else {
-            throw ValidationError("Failed to encode status as JSON.")
+            throw ValidationError("Failed to encode response as JSON.")
         }
         print(json)
     }

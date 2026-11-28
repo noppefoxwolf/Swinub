@@ -1,6 +1,12 @@
 // swift-tools-version: 6.3
 
+import Foundation
 import PackageDescription
+
+let swinubPackageName = URL(fileURLWithPath: #filePath)
+    .deletingLastPathComponent()
+    .deletingLastPathComponent()
+    .lastPathComponent
 
 let package = Package(
     name: "SwinubCLI",
@@ -20,8 +26,8 @@ let package = Package(
         .executableTarget(
             name: "SwinubCLI",
             dependencies: [
-                .product(name: "Swinub", package: "Swinub"),
-                .product(name: "SwinubAuthenticationServices", package: "Swinub"),
+                .product(name: "Swinub", package: swinubPackageName),
+                .product(name: "SwinubAuthenticationServices", package: swinubPackageName),
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Hummingbird", package: "hummingbird"),
             ]

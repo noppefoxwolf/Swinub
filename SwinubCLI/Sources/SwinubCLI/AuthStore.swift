@@ -30,6 +30,9 @@ enum AuthStoreError: LocalizedError {
         case .decodingFailed:
             return "Failed to decode credentials from Keychain."
         case .keychainError(let status):
+            if status == errSecInteractionNotAllowed {
+                return "Keychain error (\(status)): User interaction is not allowed. Your login keychain may be locked; run 'security unlock-keychain' and try again."
+            }
             if let message = SecCopyErrorMessageString(status, nil) as String? {
                 return "Keychain error (\(status)): \(message)"
             }
@@ -66,30 +69,37 @@ struct AuthStore: Sendable {
             throw AuthStoreError.encodingFailed
         }
 
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: service,
-            kSecAttrAccount as String: auth.key,
+        let payload = data.base64EncodedString()
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/security")
+        process.arguments = [
+            "add-generic-password",
+            "-s", service,
+            "-a", auth.key,
+            "-w", payload,
+            "-U",
+            "-T", "",
         ]
 
-        let attributesToUpdate: [String: Any] = [
-            kSecValueData as String: data
-        ]
+        let stderrPipe = Pipe()
+        process.standardError = stderrPipe
+        process.standardOutput = FileHandle.nullDevice
 
-        let updateStatus = SecItemUpdate(query as CFDictionary, attributesToUpdate as CFDictionary)
-        if updateStatus == errSecSuccess {
-            return
-        }
+        try process.run()
+        process.waitUntilExit()
 
-        if updateStatus != errSecItemNotFound {
-            throw AuthStoreError.keychainError(updateStatus)
-        }
-
-        var addQuery = query
-        addQuery[kSecValueData as String] = data
-        let addStatus = SecItemAdd(addQuery as CFDictionary, nil)
-        guard addStatus == errSecSuccess else {
-            throw AuthStoreError.keychainError(addStatus)
+        guard process.terminationStatus == 0 else {
+            let stderrData = stderrPipe.fileHandleForReading.readDataToEndOfFile()
+            let stderrText = String(data: stderrData, encoding: .utf8)?
+                .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            if stderrText.contains("User interaction is not allowed") || stderrText.contains("-25308") {
+                throw AuthStoreError.keychainError(errSecInteractionNotAllowed)
+            }
+            throw ValidationError(
+                stderrText.isEmpty
+                    ? "Failed to save credentials to Keychain (exit \(process.terminationStatus))."
+                    : "Failed to save credentials to Keychain: \(stderrText)"
+            )
         }
     }
 
@@ -122,11 +132,7 @@ struct AuthStore: Sendable {
         let decoder = JSONDecoder()
         return try dataItems
             .map { data in
-                do {
-                    return try decoder.decode(StoredAuth.self, from: data)
-                } catch {
-                    throw AuthStoreError.decodingFailed
-                }
+                try decodeStoredAuth(from: data, decoder: decoder)
             }
             .sorted { $0.key.localizedCaseInsensitiveCompare($1.key) == .orderedAscending }
     }
@@ -151,11 +157,21 @@ struct AuthStore: Sendable {
         guard let data = result as? Data else {
             throw AuthStoreError.decodingFailed
         }
-        do {
-            return try JSONDecoder().decode(StoredAuth.self, from: data)
-        } catch {
-            throw AuthStoreError.decodingFailed
+        return try decodeStoredAuth(from: data, decoder: JSONDecoder())
+    }
+
+    private func decodeStoredAuth(from data: Data, decoder: JSONDecoder) throws -> StoredAuth {
+        if let auth = try? decoder.decode(StoredAuth.self, from: data) {
+            return auth
         }
+        if let base64String = String(data: data, encoding: .utf8)?
+            .trimmingCharacters(in: .whitespacesAndNewlines),
+            let decodedData = Data(base64Encoded: base64String),
+            let auth = try? decoder.decode(StoredAuth.self, from: decodedData)
+        {
+            return auth
+        }
+        throw AuthStoreError.decodingFailed
     }
 
     func delete(accountKey: String) throws {

@@ -1,5 +1,4 @@
 import ArgumentParser
-import Darwin
 import Foundation
 import Swinub
 import SwinubAuthenticationServices
@@ -247,19 +246,7 @@ extension Auth {
                 print("")
             }
 
-            let selected: StoredAuth
-            if isatty(STDIN_FILENO) != 0 && isatty(STDOUT_FILENO) != 0 {
-                selected = try selectAccountInteractively(from: switchableAccounts)
-            } else {
-                selected = try selectAccountByNumber(from: switchableAccounts)
-            }
-
-            store.setActiveAccountKey(selected.key)
-            print("Switched active account to \(selected.displayHandle)")
-        }
-
-        private func selectAccountByNumber(from accounts: [StoredAuth]) throws -> StoredAuth {
-            for (index, item) in accounts.enumerated() {
+            for (index, item) in switchableAccounts.enumerated() {
                 print("[\(index + 1)] \(item.displayHandle)")
             }
 
@@ -267,94 +254,14 @@ extension Auth {
             print("Select account number: ", terminator: "")
             guard let input = readLine()?.trimmingCharacters(in: .whitespacesAndNewlines),
                 let selection = Int(input),
-                (1...accounts.count).contains(selection)
+                (1...switchableAccounts.count).contains(selection)
             else {
                 throw ValidationError("Invalid selection.")
             }
 
-            return accounts[selection - 1]
-        }
-
-        private func selectAccountInteractively(from accounts: [StoredAuth]) throws -> StoredAuth {
-            var originalTermios = termios()
-            guard tcgetattr(STDIN_FILENO, &originalTermios) == 0 else {
-                return try selectAccountByNumber(from: accounts)
-            }
-
-            var rawTermios = originalTermios
-            rawTermios.c_lflag &= ~UInt(ICANON | ECHO)
-            rawTermios.c_cc.16 = 1 // VMIN
-            rawTermios.c_cc.17 = 0 // VTIME
-
-            guard tcsetattr(STDIN_FILENO, TCSANOW, &rawTermios) == 0 else {
-                return try selectAccountByNumber(from: accounts)
-            }
-
-            defer {
-                tcsetattr(STDIN_FILENO, TCSANOW, &originalTermios)
-            }
-
-            var selectedIndex = 0
-
-            func render(initial: Bool) {
-                if !initial {
-                    // Move cursor up to redraw the list
-                    print("\u{001B}[\(accounts.count)A", terminator: "")
-                }
-                for (index, item) in accounts.enumerated() {
-                    let prefix = index == selectedIndex ? "❯" : " "
-                    print("\u{001B}[2K\r\(prefix) \(item.displayHandle)")
-                }
-                fflush(stdout)
-            }
-
-            print("Select account to switch to (↑/↓, Enter to confirm, Esc/q to cancel):")
-            render(initial: true)
-
-            while true {
-                var byte: UInt8 = 0
-                let bytesRead = read(STDIN_FILENO, &byte, 1)
-                guard bytesRead == 1 else {
-                    throw ValidationError("Selection cancelled.")
-                }
-
-                switch byte {
-                case 0x0A, 0x0D: // Enter (LF / CR)
-                    return accounts[selectedIndex]
-                case 0x03, UInt8(ascii: "q"), UInt8(ascii: "Q"): // Ctrl-C, q
-                    throw ValidationError("Selection cancelled.")
-                case UInt8(ascii: "k"):
-                    selectedIndex = (selectedIndex - 1 + accounts.count) % accounts.count
-                    render(initial: false)
-                case UInt8(ascii: "j"):
-                    selectedIndex = (selectedIndex + 1) % accounts.count
-                    render(initial: false)
-                case 0x1B: // ESC or arrow key sequence
-                    var seq = [UInt8](repeating: 0, count: 2)
-                    var nonBlockingTermios = rawTermios
-                    nonBlockingTermios.c_cc.16 = 0 // VMIN = 0
-                    nonBlockingTermios.c_cc.17 = 1 // VTIME = 100ms
-                    tcsetattr(STDIN_FILENO, TCSANOW, &nonBlockingTermios)
-                    let n1 = read(STDIN_FILENO, &seq[0], 1)
-                    let n2 = n1 == 1 ? read(STDIN_FILENO, &seq[1], 1) : 0
-                    tcsetattr(STDIN_FILENO, TCSANOW, &rawTermios)
-
-                    if n1 == 1 && n2 == 1 && seq[0] == UInt8(ascii: "[") {
-                        if seq[1] == UInt8(ascii: "A") { // Up
-                            selectedIndex = (selectedIndex - 1 + accounts.count) % accounts.count
-                            render(initial: false)
-                        } else if seq[1] == UInt8(ascii: "B") { // Down
-                            selectedIndex = (selectedIndex + 1) % accounts.count
-                            render(initial: false)
-                        }
-                    } else if n1 == 0 {
-                        // Plain Escape key
-                        throw ValidationError("Selection cancelled.")
-                    }
-                default:
-                    break
-                }
-            }
+            let selected = switchableAccounts[selection - 1]
+            store.setActiveAccountKey(selected.key)
+            print("Switched active account to \(selected.displayHandle)")
         }
     }
 

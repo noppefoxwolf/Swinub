@@ -37,28 +37,34 @@ public struct PostV1Statuses: HTTPEndpointRequest, Sendable {
     public let method: HTTPRequest.Method = .post
     public var path: String { "/api/v1/statuses" }
     public var body: EndpointRequestBody? {
+        .json(_parameters.makeJSONBody() as Any)
+    }
+}
+
+extension PostV1Statuses.Parameters {
+    func makeJSONBody() -> [String: Any] {
         var body: [String: Any] = [:]
-        body["status"] = _parameters.status
-        if let value = _parameters.visibility?.rawValue {
+        body["status"] = status
+        if let value = visibility?.rawValue {
             body["visibility"] = value
         }
-        if let value = _parameters.inReplyToId?.rawValue {
+        if let value = inReplyToId?.rawValue {
             body["in_reply_to_id"] = value
         }
-        if let value = _parameters.mediaIDs?.map(\.rawValue), !value.isEmpty {
+        if let value = mediaIDs?.map(\.rawValue), !value.isEmpty {
             body["media_ids"] = value
         }
-        body["sensitive"] = _parameters.sensitive
-        if let value = _parameters.spoilerText {
+        body["sensitive"] = sensitive
+        if let value = spoilerText {
             body["spoiler_text"] = value
         }
         if let value = pollParameters {
             body["poll"] = value
         }
-        if let value = _parameters.language?.languageCode?.identifier {
+        if let value = language?.languageCode?.identifier {
             body["language"] = value
         }
-        if let quote = _parameters.quote {
+        if let quote {
             switch quote {
             case .fedibird(let id):
                 body["quote_id"] = id.rawValue
@@ -66,15 +72,15 @@ public struct PostV1Statuses: HTTPEndpointRequest, Sendable {
                 body["quoted_status_id"] = id.rawValue
             }
         }
-        if let value = _parameters.quoteApprovalPolicy {
+        if let value = quoteApprovalPolicy {
             body["quote_approval_policy"] = value.rawValue
         }
-        return .json(body as Any)
+        return body
     }
 
     var pollParameters: [String: Any]? {
-        guard let pollOptions = _parameters.pollOptions else { return nil }
-        guard let expiresIn = _parameters.pollExpiresIn else { return nil }
+        guard let pollOptions else { return nil }
+        guard let expiresIn = pollExpiresIn else { return nil }
         return [
             "options": pollOptions.filter({ !$0.isEmpty }),
             "expires_in": expiresIn,

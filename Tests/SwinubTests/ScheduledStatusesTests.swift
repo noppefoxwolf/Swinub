@@ -124,6 +124,41 @@ struct ScheduledStatusesTests {
     }
 
     @Test
+    func postScheduledStatusRequest() throws {
+        var parameters = PostV1Statuses.Parameters()
+        parameters.status = "scheduled hello"
+        parameters.visibility = .unlisted
+        parameters.spoilerText = "CW"
+        parameters.sensitive = true
+
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        let date = try #require(formatter.date(from: "2026-12-01T12:00:00.000Z"))
+
+        let endpoint = PostV1ScheduledStatus(
+            parameters: parameters,
+            scheduledAt: date,
+            authorization: authorization
+        )
+
+        #expect(endpoint.method == .post)
+        #expect(endpoint.path == "/api/v1/statuses")
+
+        let body = try #require(endpoint.body)
+        switch body {
+        case .json(let jsonBody):
+            let dictionary = try #require(jsonBody as? [String: Any])
+            #expect(dictionary["status"] as? String == "scheduled hello")
+            #expect(dictionary["visibility"] as? String == "unlisted")
+            #expect(dictionary["spoiler_text"] as? String == "CW")
+            #expect(dictionary["sensitive"] as? Bool == true)
+            #expect(dictionary["scheduled_at"] as? String == "2026-12-01T12:00:00.000Z")
+        case .multipart:
+            #expect(Bool(false))
+        }
+    }
+
+    @Test
     func deleteScheduledStatusRequest() throws {
         let endpoint = DeleteV1ScheduledStatus(
             id: .init(rawValue: "3221"),

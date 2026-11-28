@@ -8,10 +8,10 @@ struct Search: AsyncParsableCommand {
         abstract: "Search statuses or hashtags."
     )
 
-    @Option(help: "Instance host, for example mastodon.social.")
-    var host: String
+    @Option(help: "Instance host, for example mastodon.social. Defaults to the active account's host.")
+    var host: String?
 
-    @Option(help: "OAuth access token. Defaults to SWINUB_ACCESS_TOKEN.")
+    @Option(help: "OAuth access token. Defaults to SWINUB_ACCESS_TOKEN or the active Keychain account.")
     var accessToken: String?
 
     @Option(help: "Search query.")
@@ -42,20 +42,9 @@ struct Search: AsyncParsableCommand {
     var json = false
 
     mutating func run() async throws {
-        let token = try resolvedAccessToken()
-        let placeholderAuthorization = Authorization(
+        let authorization = try await AuthStore().resolveAuthorization(
             host: host,
-            accountID: Account.ID(rawValue: ""),
-            oauthToken: token
-        )
-        let account = try await SwinubDefaults.session.response(
-            for: GetV1AccountsVerifyCredentials(authorization: placeholderAuthorization)
-        ).response
-
-        let authorization = Authorization(
-            host: host,
-            accountID: account.id,
-            oauthToken: token
+            accessToken: accessToken
         )
 
         let result: Swinub.Search
@@ -82,14 +71,6 @@ struct Search: AsyncParsableCommand {
         } else {
             printText(result)
         }
-    }
-
-    private func resolvedAccessToken() throws -> String {
-        let token = accessToken ?? ProcessInfo.processInfo.environment["SWINUB_ACCESS_TOKEN"]
-        guard let token, !token.isEmpty else {
-            throw ValidationError("Missing access token. Pass --access-token or set SWINUB_ACCESS_TOKEN.")
-        }
-        return token
     }
 
     private func printJSON(_ result: Swinub.Search) throws {
